@@ -1,0 +1,27 @@
+#+TITLE: Symmetry Optical Keyboard
+[[./doc/image/01_overview.jpg]]
+* Feature
+** connect though usb c in two ways
+1. one's left side connect to pc and right side connect to another's left side.
+2. both left side connect to pc directly.
+* Hardware
+** keychron low profile optical
+** latency
+|    |       tr |       tf | unit |
+| pt |       18 |        5 | us   |
+| sw | 200-2000 | 200-2000 | us   |
+optical switch's speed approximate to finger's speed, which fastest is around 200 us, but nomally it takes a few ms.
+** dimension: 122 * 133 * 13.4 mm
+* Firmware
+** optical switch
+*** schmitt trigger mode
+*** adc trigger mode
+*** adc difference mode
+** function
+*** multiple layers
+*** fn
+*** repeat mode
+** usb host, device
+** led indicator
+* Thanks
+[[https://discord.com/channels/715975244896272618][Optical Future]]
