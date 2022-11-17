@@ -12,6 +12,7 @@
 
 #include "debug.h"
 
+void TIM1_UP_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
 #endif /* __CH32V20x_IT_H */
 

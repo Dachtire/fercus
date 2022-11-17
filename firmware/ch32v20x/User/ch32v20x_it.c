@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  *******************************************************************************/
 #include "ch32v20x_it.h"
+#include "keyboard.h"
 
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void HardFault_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
@@ -37,4 +38,20 @@ void HardFault_Handler(void)
   }
 }
 
+void TIM1_UP_IRQHandler(void)
+{
+    if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET) {
+        TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
 
+        switch (KB_DEVICE) {
+            default:
+            case KB_DEVICE_KEYBORAD:
+                kb_it();
+                break;
+
+            case KB_DEVICE_VENDOR:
+                kb_adc_it();
+                break;
+        }
+    }
+}
