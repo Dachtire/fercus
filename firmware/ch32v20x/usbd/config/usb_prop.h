@@ -52,7 +52,7 @@
 #define HID_SET_REPORT_DEAL_OVER          0x00
 #define HID_SET_REPORT_WAIT_DEAL          0x01
 
-
+extern uint8_t USBD_Endp1_Busy,USBD_Endp2_Busy;
 extern volatile uint8_t USBD_Sleep_Status;
 
 void USBD_init(void);
