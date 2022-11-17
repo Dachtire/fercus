@@ -28,6 +28,10 @@
 #define DEF_ENDP_SIZE_KB            8
 #define DEF_ENDP_SIZE_MS            4
 
+#define ENDP1_IN_SIZE             64
+#define ENDP1_OUT_SIZE             64
+#define ENDP2_IN_SIZE             64
+
        
 #define USBD_SIZE_DEVICE_DESC        18
 #define USBD_SIZE_CONFIG_DESC        59
@@ -38,6 +42,8 @@
 #define USBD_SIZE_STRING_PRODUCT     18
 #define USBD_SIZE_STRING_SERIAL      22
 
+#define USBD_SIZE_KEYBOARD_DESC      62
+#define USBD_SIZE_MOUSE_DESC         52
 
 #define STANDARD_ENDPOINT_DESC_SIZE             0x09
 
