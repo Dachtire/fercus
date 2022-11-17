@@ -17,6 +17,7 @@
  *
  */
 
+#include "main.h"
 #include "debug.h"
 #include "usb_lib.h"
 #include "usb_desc.h"
@@ -25,7 +26,7 @@
 #include "app.h"
 /* Global define */
 
-/* Global Variable */    
+/* Global Variable */
 
 /*********************************************************************
  * @fn      main
@@ -38,48 +39,55 @@ int main(void)
 {   
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     Delay_Init();
-    USART_Printf_Init( 115200 );
-    printf("SystemClk:%d\r\n",SystemCoreClock);
-    printf("USBD Keyboard&Mouse Demo\r\n");
+//    USART_Printf_Init( 115200 );
+//    printf("SystemClk:%d\r\n",SystemCoreClock);
+//    printf("USBD Keyboard&Mouse Demo\r\n");
 
     /* Initialize USART2 for receiving the specified keyboard data */
-    USART2_Init( 115200 );
-    printf( "USART2 Init OK!\r\n" );
+//    USART2_Init( 115200 );
+//    printf( "USART2 Init OK!\r\n" );
 
     /* Initialize GPIO for keyboard scan */
-    KB_Scan_Init( );
-    KB_Sleep_Wakeup_Cfg( );
-    printf( "KB Scan Init OK!\r\n" );
+//    KB_Scan_Init( );
+//    KB_Sleep_Wakeup_Cfg( );
+//    printf( "KB Scan Init OK!\r\n" );
 
     /* Initialize GPIO for mouse scan */
-    MS_Scan_Init( );
-    MS_Sleep_Wakeup_Cfg( );
-    printf( "MS Scan Init OK!\r\n" );
+//    MS_Scan_Init( );
+//    MS_Sleep_Wakeup_Cfg( );
+//    printf( "MS Scan Init OK!\r\n" );
 
     /* Initialize timer for Keyboard and mouse scan timing */
-    TIM3_Init( 1, 7199 );
-    printf( "TIM3 Init OK!\r\n" );
+//    TIM3_Init( 1, 7199 );
+//    printf( "TIM3 Init OK!\r\n" );
+
+    kb_init();
+    gpio_config();
+    kb_init_sync();
+    TIM1_Init();
 
     Set_USBConfig();
     USB_Init();
     USB_Interrupts_Config();
-    
+
+    kb_init_usbd();
+
     while(1)
     {
-        if( bDeviceState == CONFIGURED )
-        {
-            /* Handle keyboard scan data */
-            KB_Scan_Handle(  );
-
-            /* Handle keyboard lighting */
-            KB_LED_Handle( );
-
-            /* Handle mouse scan data */
-            MS_Scan_Handle( );
-
-            /* Handle USART2 receiving data */
-            USART2_Receive_Handle( );
-        }
+//        if( bDeviceState == CONFIGURED )
+//        {
+//            /* Handle keyboard scan data */
+//            KB_Scan_Handle(  );
+//
+//            /* Handle keyboard lighting */
+//            KB_LED_Handle( );
+//
+//            /* Handle mouse scan data */
+//            MS_Scan_Handle( );
+//
+//            /* Handle USART2 receiving data */
+//            USART2_Receive_Handle( );
+//        }
     }
 }
 
