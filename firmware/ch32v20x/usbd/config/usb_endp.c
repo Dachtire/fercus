@@ -14,6 +14,8 @@
 #include "usb_istr.h"
 #include "usb_pwr.h"
 
+#include "usbd_vendor.h"
+
 uint8_t USBD_Endp1_Busy,USBD_Endp2_Busy;
 u16 USB_Rx_Cnt=0; 
 
@@ -27,6 +29,24 @@ u16 USB_Rx_Cnt=0;
 void EP1_IN_Callback (void)
 { 
 	USBD_Endp1_Busy = 0;
+    if (KB_DEVICE == KB_DEVICE_VENDOR) {
+        if (mult_length != 0) {
+            usbd_vendor_send_mult(mult_ptr, mult_length, ENDP1);
+        }
+    }
+}
+
+void EP1_OUT_Callback(void)
+{
+    switch (KB_DEVICE) {
+        default:
+        case KB_DEVICE_KEYBORAD:
+            break;
+
+        case KB_DEVICE_VENDOR:
+            usbd_vendor_receive((uint8_t *) kb_buf_recev, ENDP1);
+            break;
+    }
 }
 
 /*********************************************************************
@@ -39,6 +59,19 @@ void EP1_IN_Callback (void)
 void EP2_IN_Callback (void)
 { 
 	USBD_Endp2_Busy = 0;
+}
+
+void EP2_OUT_Callback(void)
+{
+    switch (KB_DEVICE) {
+        default:
+        case KB_DEVICE_KEYBORAD:
+            break;
+
+        case KB_DEVICE_VENDOR:
+            usbd_vendor_receive((uint8_t *) kb_buf_recev, ENDP2);
+            break;
+    }
 }
 
 /*********************************************************************
@@ -63,7 +96,7 @@ uint8_t USBD_ENDPx_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len )
 		USB_SIL_Write( EP1_IN, pbuf, len );
 		USBD_Endp1_Busy = 1;
 		SetEPTxStatus( ENDP1, EP_TX_VALID );
-		
+
 	}
     else if( endp == ENDP2 )
 	{
