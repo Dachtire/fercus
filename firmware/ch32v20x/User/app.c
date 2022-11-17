@@ -13,8 +13,6 @@
 /* Header Files */
 #include "app.h"
 
-uint8_t USBD_ENDPx_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len );
-
 /*******************************************************************************/
 /* Variable Definition */
 
@@ -35,6 +33,176 @@ volatile uint8_t  KB_LED_Cur_Status = 0x00;                                     
 volatile uint8_t  USART_Recv_Dat = 0x00;
 volatile uint8_t  USART_Send_Flag = 0x00;
 volatile uint8_t  USART_Send_Cnt = 0x00;
+
+void gpio_config(void)
+{
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+    //    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+
+    GPIO_InitTypeDef GPIO_InitStructure;
+
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+    for (int i = 0; i < KB_COL_NUM; ++i) {
+        GPIO_InitStructure.GPIO_Pin   = KB_COL_GPIO_PIN[i];
+        GPIO_Init(KB_COL_GPIO_PORT[i], &GPIO_InitStructure);
+        GPIO_ResetBits(KB_COL_GPIO_PORT[i],KB_COL_GPIO_PIN[i]);
+    }
+
+    switch (KB_DEVICE) {
+        default:
+        case KB_DEVICE_KEYBORAD:
+            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+            GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
+            break;
+
+        case KB_DEVICE_VENDOR:
+            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+            GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AIN;
+            break;
+    }
+
+    for (int i = 0; i < KB_ROW_NUM; ++i) {
+        GPIO_InitStructure.GPIO_Pin   = KB_ROW_GPIO_PIN[i];
+        GPIO_Init(KB_ROW_GPIO_PORT, &GPIO_InitStructure);
+    }
+
+
+    //    // usart2
+    //    gpio_init(GPIOB, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_10);
+    //    gpio_init(GPIOB, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, GPIO_PIN_11);
+
+
+}
+
+void USART1_Init(u32 baudrate)
+{
+    //	GPIO_InitTypeDef GPIO_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
+
+    /* USART1 GPIO Init */
+    //	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    //    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    //    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
+    //    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_10;
+    //    GPIO_Init(GPIOA, &GPIO_InitStructure);
+    //
+    //    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    //    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+    //    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    /* USART1 Init */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+    USART_InitStructure.USART_BaudRate = baudrate;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
+    USART_Init(USART1, &USART_InitStructure);
+    USART_Cmd(USART1, ENABLE);
+    USART_ClearFlag(USART1,USART_IT_RXNE);
+}
+
+void TIM1_Init()
+{
+    NVIC_EnableIRQ(TIM1_UP_IRQn);
+    SetVTFIRQ((u32)TIM1_UP_IRQHandler,TIM1_UP_IRQn,0,ENABLE);
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE );
+
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure={0};
+    TIM_TimeBaseInitStructure.TIM_Prescaler = 144 - 1;
+    switch (KB_DEVICE) {
+        default:
+        case KB_DEVICE_KEYBORAD:
+            TIM_TimeBaseInitStructure.TIM_Period = 1000 / 8 - 1;
+            break;
+
+        case KB_DEVICE_VENDOR:
+            TIM_TimeBaseInitStructure.TIM_Period = 10 - 1;
+            break;
+    }
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM1, &TIM_TimeBaseInitStructure);
+
+    TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE);
+    TIM_Cmd( TIM1, ENABLE );
+}
+
+u16 TxBuf[1024];
+s16 Calibrattion_Val = 0;
+
+/*********************************************************************
+ * @fn      DMA_Tx_Init
+ *
+ * @brief   Initializes the DMAy Channelx configuration.
+ *
+ * @param   DMA_CHx - x can be 1 to 7.
+ *          ppadr - Peripheral base address.
+ *          memadr - Memory base address.
+ *          bufsize - DMA channel buffer size.
+ *
+ * @return  none
+ */
+void DMA_Tx_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u32 memadr, u16 bufsize)
+{
+    DMA_InitTypeDef DMA_InitStructure = {0};
+
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
+
+    DMA_DeInit(DMA_CHx);
+    DMA_InitStructure.DMA_PeripheralBaseAddr = ppadr;
+    DMA_InitStructure.DMA_MemoryBaseAddr = memadr;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
+    DMA_InitStructure.DMA_BufferSize = bufsize;
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
+    DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+    DMA_Init(DMA_CHx, &DMA_InitStructure);
+}
+
+void ADC_Function_Init(void)
+{
+    ADC_InitTypeDef  ADC_InitStructure = {0};
+    //    GPIO_InitTypeDef GPIO_InitStructure = {0};
+
+    //    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+    RCC_ADCCLKConfig(RCC_PCLK2_Div6);
+
+    //    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+    //    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+    //    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    ADC_DeInit(ADC1);
+    ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
+    ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+    ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+    ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
+    ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+    ADC_InitStructure.ADC_NbrOfChannel = 1;
+    //    ADC_InitStructure.ADC_NbrOfChannel = 6;
+    ADC_Init(ADC1, &ADC_InitStructure);
+
+    ADC_DMACmd(ADC1, ENABLE);
+    ADC_Cmd(ADC1, ENABLE);
+
+    ADC_BufferCmd(ADC1, DISABLE); //disable buffer
+    ADC_ResetCalibration(ADC1);
+    while(ADC_GetResetCalibrationStatus(ADC1));
+    ADC_StartCalibration(ADC1);
+    while(ADC_GetCalibrationStatus(ADC1));
+    Calibrattion_Val = Get_CalibrationValue(ADC1);
+
+    ADC_BufferCmd(ADC1, ENABLE); //enable buffer
+}
 
 /*******************************************************************************/
 /* Interrupt Function Declaration */
@@ -648,6 +816,24 @@ void MS_Scan_Handle( void )
             flag = 0;
         }
     }
+}
+
+/*********************************************************************
+ * @fn      USB_Sleep_Wakeup_CFG
+ *
+ * @brief   Configure USB wake up mode
+ *
+ * @return  none
+ */
+void USB_Sleep_Wakeup_CFG( void )
+{
+    EXTI_InitTypeDef EXTI_InitStructure = { 0 };
+
+    EXTI_InitStructure.EXTI_Line = EXTI_Line20;
+    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+    EXTI_Init( &EXTI_InitStructure );
 }
 
 /*********************************************************************

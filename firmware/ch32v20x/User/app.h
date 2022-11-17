@@ -20,6 +20,17 @@
 #include "usb_desc.h"
 #include "usb_prop.h"
 #include "usb_pwr.h"
+
+#include "usbd_desc.h"
+
+//#include "ch32v20x_it.h"
+#include "keyboard.h"
+
+void gpio_config(void);
+void TIM1_Init();
+void ADC_Function_Init();
+void DMA_Tx_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u32 memadr, u16 bufsize);
+
 /*******************************************************************************/
 /* Keyboard Key Value Macro Definition */
 #define DEF_KEY_CHAR_W              0x1A                                        /* "W" */
@@ -44,5 +55,6 @@ extern void MS_Sleep_Wakeup_Cfg( void );
 extern void MS_Scan( void );
 extern void MS_Scan_Handle( void );
 extern void KB_LED_Handle( void );
+extern void USB_Sleep_Wakeup_CFG( void );
 extern void MCU_Sleep_Wakeup_Operate( void );
 #endif
