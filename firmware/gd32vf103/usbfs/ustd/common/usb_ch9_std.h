@@ -148,6 +148,7 @@ enum _usbx_type {
 /* USB classes */
 #define USB_CLASS_HID                       0x03U       /*!< USB HID class */
 #define USB_CLASS_MSC                       0x08U       /*!< USB MSC class */
+#define USB_CLASS_VENDOR                       0xffU       /*!< USB MSC class */
 
 /* use the following values when USB host need to get descriptor  */
 #define USBH_DESC(x)                        (((x)<< 8U) & 0xFF00U)
