@@ -22,7 +22,7 @@
 #include "usb_desc.h"
 #include "usb_pwr.h"
 #include "usb_prop.h"
-#include "usbd_composite_km.h"
+#include "app.h"
 /* Global define */
 
 /* Global Variable */    

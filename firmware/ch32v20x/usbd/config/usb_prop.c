@@ -13,7 +13,7 @@
 #include "usb_desc.h"
 #include "usb_pwr.h"
 #include "hw_config.h"
-#include "usbd_composite_km.h"
+#include "app.h"
 
 
 uint8_t Request = 0;

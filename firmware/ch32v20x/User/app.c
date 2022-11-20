@@ -11,7 +11,7 @@
 
 /*******************************************************************************/
 /* Header Files */
-#include "usbd_composite_km.h"
+#include "app.h"
 
 uint8_t USBD_ENDPx_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len );
 

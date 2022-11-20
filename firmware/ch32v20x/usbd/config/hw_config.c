@@ -16,7 +16,7 @@
 #include "string.h"	
 #include "stdarg.h"		 
 #include "stdio.h"	
-#include "usbd_composite_km.h"
+#include "app.h"
 
 void USBWakeUp_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void USB_LP_CAN1_RX0_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
