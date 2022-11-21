@@ -56,22 +56,22 @@ void USBHD_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
  *
  * @return  none
  */
-void USBFS_RCC_Init( void )
-{
-    if( SystemCoreClock == 144000000 )
-    {
-        RCC_USBCLKConfig( RCC_USBCLKSource_PLLCLK_Div3 );
-    }
-    else if( SystemCoreClock == 96000000 )
-    {
-        RCC_USBCLKConfig( RCC_USBCLKSource_PLLCLK_Div2 );
-    }
-    else if( SystemCoreClock == 48000000 )
-    {
-        RCC_USBCLKConfig( RCC_USBCLKSource_PLLCLK_Div1 );
-    }
-    RCC_AHBPeriphClockCmd( RCC_AHBPeriph_OTG_FS, ENABLE );
-}
+//void USBFS_RCC_Init( void )
+//{
+//    if( SystemCoreClock == 144000000 )
+//    {
+//        RCC_USBCLKConfig( RCC_USBCLKSource_PLLCLK_Div3 );
+//    }
+//    else if( SystemCoreClock == 96000000 )
+//    {
+//        RCC_USBCLKConfig( RCC_USBCLKSource_PLLCLK_Div2 );
+//    }
+//    else if( SystemCoreClock == 48000000 )
+//    {
+//        RCC_USBCLKConfig( RCC_USBCLKSource_PLLCLK_Div1 );
+//    }
+//    RCC_AHBPeriphClockCmd( RCC_AHBPeriph_OTG_FS, ENABLE );
+//}
 
 /*********************************************************************
  * @fn      USBFS_Device_Endp_Init
