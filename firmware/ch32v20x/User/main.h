@@ -9,6 +9,10 @@
 #include "usb_prop.h"
 #include "ch32v20x_it.h"
 
+#include "app.h"
+
+#include "ch32v20x_usbfs_device.h"
+
 //#include "keyboard.h"
 
 //#include "led.h"

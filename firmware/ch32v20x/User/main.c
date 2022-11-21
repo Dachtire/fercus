@@ -18,12 +18,12 @@
  */
 
 #include "main.h"
-#include "debug.h"
-#include "usb_lib.h"
-#include "usb_desc.h"
-#include "usb_pwr.h"
-#include "usb_prop.h"
-#include "app.h"
+//#include "debug.h"
+//#include "usb_lib.h"
+//#include "usb_desc.h"
+//#include "usb_pwr.h"
+//#include "usb_prop.h"
+//#include "app.h"
 /* Global define */
 
 /* Global Variable */
@@ -69,6 +69,17 @@ int main(void)
     Set_USBConfig();
     USB_Init();
     USB_Interrupts_Config();
+    if( bDeviceState == CONFIGURED ) {
+        KB_USB = KB_USBD_DEVICE;
+    }
+
+    /* Initialize USBHD interface to communicate with the host  */
+    USBFS_RCC_Init( );
+    USBFS_Device_Init( ENABLE );
+    USB_Sleep_Wakeup_CFG( );
+    if (USBFS_DevEnumStatus) {
+        KB_USB = KB_USBFS_DEVICE;
+    }
 
     kb_init_usbd();
 
