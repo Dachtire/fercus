@@ -12,6 +12,7 @@
 #include "app.h"
 
 #include "ch32v20x_usbfs_device.h"
+#include "ch32v20x_usbfs_host.h"
 
 //#include "keyboard.h"
 

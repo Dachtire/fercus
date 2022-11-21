@@ -43,7 +43,7 @@ void DMA_Tx_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u32 memadr, u16 bufsiz
 extern volatile uint8_t  KB_LED_Cur_Status;
 /*******************************************************************************/
 /* Function Declaration */
-extern void TIM3_Init( uint16_t arr, uint16_t psc );
+//extern void TIM3_Init( uint16_t arr, uint16_t psc );
 extern void USART2_Init( uint32_t baudrate );
 extern void USART2_Receive_Handle( void );
 extern void KB_Scan_Init( void );
