@@ -12,6 +12,7 @@
 /********************************************************************************/
 /* Header File */
 #include "usb_host_config.h"
+#include "keyboard.h"
 
 /*******************************************************************************/
 /* Variable Definition */
@@ -1499,6 +1500,9 @@ void USBH_MainDeal( void )
 
                     /* Set the connection status of the device  */
                     RootHubDev.bStatus = ROOT_DEV_SUCCESS;
+
+                    KB_CTL |= KB_CTL_HOST;
+                    kb_init();
                 }
                 else if( s != ERR_USB_DISCON )
                 {
@@ -1562,6 +1566,9 @@ void USBH_MainDeal( void )
         index = RootHubDev.DeviceIndex;
         memset( &RootHubDev.bStatus, 0, sizeof( ROOT_HUB_DEVICE ) );
         memset( &HostCtl[ index ].InterfaceNum, 0, sizeof( HOST_CTL ) );
+
+        KB_CTL &= ~KB_CTL_HOST;
+        kb_init();
     }
 
     /* Get the data of the HID device connected to the USB host port */
@@ -1603,6 +1610,15 @@ void USBH_MainDeal( void )
                                     KB_SetReport( index, RootHubDev.bEp0MaxPks, intf_num );
                                 }
                             }
+
+                            {
+                                KB_FLAG |= KB_FLAG_COUNT;
+                                for (uint16_t j = 0; j < len; ++j) {
+//                                    kb_usbhd_buf[j] = kb_usbd_buf[j] | Com_Buf[j];
+                                    kb_usbh_buf[j] = Com_Buf[j];
+                                }
+                            }
+
                         }
                         else if( s == ERR_USB_DISCON )
                         {

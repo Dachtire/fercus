@@ -44,14 +44,14 @@ extern GPIO_TypeDef* const KB_COL_GPIO_PORT[];
 #define KB_REPEAT_SLOW_DELAY 2000
 #define KB_REPEAT_SLOW_RATE 30
 
-#define USBD_KB_SEND_SIZE  12U  // bytes
-#define USBD_KB_RECEV_SIZE 12U  // bytes
-#define USBD_CNTLR_BUF_SIZE 6U  // bytes
-#define USBD_MICE_BUF_SIZE  4U  // bytes
+#define USBD_KB_SEND_SIZE  12  // bytes
+#define USBD_KB_RECEV_SIZE 12  // bytes
+#define USBD_CNTLR_BUF_SIZE 6  // bytes
+#define USBD_MICE_BUF_SIZE  4  // bytes
 
-#define KB_LYR_NUM 4U
-#define KB_ROW_NUM 6U
-#define KB_COL_NUM 7U
+#define KB_LYR_NUM 4
+#define KB_ROW_NUM 6
+#define KB_COL_NUM 7
 
 #define BIT(x)                       0x01U<<(x)
 
@@ -63,12 +63,12 @@ extern GPIO_TypeDef* const KB_COL_GPIO_PORT[];
 //#define KB_CTL_REPEAT BIT(8)
 //#define KB_CTL_REPEAT_SLOW BIT(9)
 
-#define KB_CTL_LED BIT(16)
-#define KB_CTL_USBD          BIT(17)
-#define KB_CTL_USART BIT(18)
-#define KB_CTL_HOST          BIT(19)
-#define KB_CTL_USBFS_D          BIT(20)
-#define KB_CTL_USBFS_H          BIT(21)
+//#define KB_CTL_LED BIT(1)
+#define KB_CTL_USBD          BIT(2)
+#define KB_CTL_HOST          BIT(3)
+#define KB_CTL_USART BIT(4)
+//#define KB_CTL_USBFS_D          BIT(20)
+//#define KB_CTL_USBFS_H          BIT(21)
 
 #define KB_RELESE ((bool)0)
 #define KB_PRESS ((bool)1)
@@ -108,12 +108,14 @@ void kb_usbd_test(uint8_t data, uint16_t length);
 void kb_adc_test();
 void kb_adc_test2();
 void kb_usbd_hid_test();
+void kb_usbhd_combine();
 
 static uint8_t kb_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM], kb_cntlr_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM];
 
 extern uint8_t *kb_usb_buf;
 //extern *usb_hid_cntlr_buf;
-extern uint8_t kb_buf_main[USBD_KB_SEND_SIZE], kb_buf_host[USBD_KB_SEND_SIZE], kb_buf_device[USBD_KB_SEND_SIZE], kb_buf_recev[USBD_KB_RECEV_SIZE], kb_buf_empty[USBD_KB_SEND_SIZE];
+uint8_t kb_usbd_buf[USBD_KB_SEND_SIZE], kb_usbhd_buf[USBD_KB_SEND_SIZE], kb_usbh_buf[USBD_KB_SEND_SIZE];
+uint8_t kb_buf_recev[USBD_KB_RECEV_SIZE], kb_buf_empty[USBD_KB_SEND_SIZE];
 //struct cntlr_buf_type {
 //    uint16_t button;
 //    int8_t stick[4];
