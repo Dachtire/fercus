@@ -9,7 +9,8 @@
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  * SPDX-License-Identifier: Apache-2.0
  *********************************************************************************/
-#include "ch32v20x.h" 
+#include "ch32v20x.h"
+#include "keyboard.h"
 
 /* 
 * Uncomment the line corresponding to the desired System clock (SYSCLK) frequency (after 
@@ -682,8 +683,16 @@ static void SetSysClockTo144_HSE(void)
   {
     /* HCLK = SYSCLK */
     RCC->CFGR0 |= (uint32_t)RCC_HPRE_DIV1;
-    /* PCLK2 = HCLK */
-    RCC->CFGR0 |= (uint32_t)RCC_PPRE2_DIV1;
+    switch (KB_DEVICE) {
+        default:
+            /* PCLK2 = HCLK */
+            RCC->CFGR0 |= (uint32_t)RCC_PPRE2_DIV1;
+            break;
+
+        case KB_DEVICE_VENDOR:
+            RCC->CFGR0 |= (uint32_t)RCC_PPRE2_DIV2;
+            break;
+    }
     /* PCLK1 = HCLK */
     RCC->CFGR0 |= (uint32_t)RCC_PPRE1_DIV2;
 
