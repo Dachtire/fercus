@@ -1062,7 +1062,7 @@ void kb_adc_test2() {
     ADC_Function_Init();
 
 //    static uint16_t tmp = 0;
-    for (uint8_t j = 0; j < 6; ++j) {
+    for (uint16_t j = 0; j < 1000; ++j) {
         DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)kb_adc_value, KB_ADC_SIZE);
         DMA_Cmd(DMA1_Channel1, ENABLE);
 
@@ -1097,12 +1097,34 @@ void kb_adc_test2() {
 //        }
 //        Delay_Us(50);
 //        GPIO_ResetBits(KB_COL_GPIO_PORT[kb_col_num], KB_COL_GPIO_PIN[kb_col_num]);
-        Delay_Ms(10);
+//        Delay_Ms(10);
         if ((KB_CTL & KB_CTL_USBD)/* != 0) && (usbd_vendor_check_send() == USB_SUCCESS)*/) {
             //                usbd_vendor_send((uint8_t *) kb_adc_value, KB_ADC_LEN, ENDP1);
             usbd_vendor_send_mult((uint8_t *) kb_adc_value, KB_ADC_LEN, ENDP1);
+        } else {
+            printf(kb_adc_value);
         }
-        Delay_Ms(1000);
+//        Delay_Ms(10);
+    }
+    GPIO_ResetBits(KB_COL_GPIO_PORT[kb_col_num], KB_COL_GPIO_PIN[kb_col_num]);
+
+}
+
+void kb_adc_test3() {
+    Delay_Ms(2000);
+
+    ADC_Function_Init();
+
+    DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)kb_adc_value, KB_ADC_SIZE);
+    DMA_Cmd(DMA1_Channel1, ENABLE);
+
+    ADC_RegularChannelConfig(ADC1, 0, 1, ADC_SampleTime_1Cycles5);
+    ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+
+    Delay_Ms(10);
+
+    for (uint32_t j = 0; j < 1000000; ++j) {
+        printf(kb_adc_value);
     }
     GPIO_ResetBits(KB_COL_GPIO_PORT[kb_col_num], KB_COL_GPIO_PIN[kb_col_num]);
 
