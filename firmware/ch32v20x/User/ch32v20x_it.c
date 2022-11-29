@@ -43,9 +43,11 @@ void TIM1_UP_IRQHandler(void)
     if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET) {
         TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
 
-        switch (KB_DEVICE) {
+        switch (kb_device) {
             default:
             case KB_DEVICE_KEYBORAD:
+            case KB_DEVICE_KEYBOARD_ADC_FAST:
+            case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
                 kb_it();
                 break;
 

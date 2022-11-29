@@ -59,16 +59,15 @@ int main(void)
     kb_init();
     gpio_config();
     kb_init_sync();
-    if (KB_DEVICE == KB_DEVICE_VENDOR) {
-        kb_adc_init();
-    }
+
+    kb_adc_init();
     TIM1_Init();
 
     Set_USBConfig();
     USB_Init();
     USB_Interrupts_Config();
     //    if( bDeviceState == CONFIGURED ) {
-    //        KB_USB = KB_USBD_DEVICE;
+    //        kb_usb = KB_USBD_DEVICE;
 
     /* Initialize TIM3 */
     TIM3_Init(9, SystemCoreClock / 10000 - 1);
@@ -88,18 +87,18 @@ int main(void)
     //        USBFS_Device_Init( ENABLE );
     //        USB_Sleep_Wakeup_CFG( );
     //        if (USBFS_DevEnumStatus) {
-    //            KB_USB = KB_USBFS_DEVICE;
+    //            kb_usb = KB_USBFS_DEVICE;
     //        }
     //    }
 
-    if (KB_DEVICE == KB_DEVICE_KEYBORAD) {
+//    if (kb_device == KB_DEVICE_KEYBORAD) {
         kb_enable_usbd();
-    }
+//    }
 
     while (1) {
-        if (KB_DEVICE == KB_DEVICE_KEYBORAD) {
+//        if (kb_device == KB_DEVICE_KEYBORAD) {
             USBH_MainDeal( );
-        }
+//        }
     }
 }
 

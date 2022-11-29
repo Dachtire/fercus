@@ -50,7 +50,7 @@ void gpio_config(void)
         GPIO_ResetBits(KB_COL_GPIO_PORT[i],KB_COL_GPIO_PIN[i]);
     }
 
-    switch (KB_DEVICE) {
+    switch (kb_device) {
         default:
         case KB_DEVICE_KEYBORAD:
             GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -58,6 +58,8 @@ void gpio_config(void)
             break;
 
         case KB_DEVICE_VENDOR:
+        case KB_DEVICE_KEYBOARD_ADC_FAST:
+        case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
             GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
             GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AIN;
             break;
@@ -114,7 +116,7 @@ void TIM1_Init()
 
     TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure={0};
     TIM_TimeBaseInitStructure.TIM_Prescaler = 144 / 2 - 1;
-    switch (KB_DEVICE) {
+    switch (kb_device) {
         default:
         case KB_DEVICE_KEYBORAD:
             TIM_TimeBaseInitStructure.TIM_Period = 2 * 1000 / 8 - 1;
@@ -171,24 +173,31 @@ void DMA_Tx_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u32 memadr, u16 bufsiz
 void ADC_Function_Init(void)
 {
     ADC_InitTypeDef  ADC_InitStructure = {0};
-    //    GPIO_InitTypeDef GPIO_InitStructure = {0};
 
-    //    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
     RCC_ADCCLKConfig(RCC_PCLK2_Div6);
 
-    //    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
-    //    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
-    //    GPIO_Init(GPIOA, &GPIO_InitStructure);
-
     ADC_DeInit(ADC1);
     ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
-    ADC_InitStructure.ADC_ScanConvMode = DISABLE;
-    ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
     ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
     ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-    ADC_InitStructure.ADC_NbrOfChannel = 1;
-    //    ADC_InitStructure.ADC_NbrOfChannel = 6;
+
+    switch (kb_device) {
+        default:
+        case KB_DEVICE_VENDOR:
+            ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+            ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+            ADC_InitStructure.ADC_NbrOfChannel = 1;
+            break;
+
+        case KB_DEVICE_KEYBOARD_ADC_FAST:
+        case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
+            ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+            ADC_InitStructure.ADC_ScanConvMode = ENABLE;
+            ADC_InitStructure.ADC_NbrOfChannel = 6;
+            break;
+    }
+
     ADC_Init(ADC1, &ADC_InitStructure);
 
     ADC_DMACmd(ADC1, ENABLE);

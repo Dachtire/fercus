@@ -255,20 +255,20 @@ void USBD_Reset(void)
   _ClearDTOG_RX(ENDP0);
   _ClearDTOG_TX(ENDP0);
 
-    switch (KB_DEVICE) {
+    switch (kb_device) {
       default:
-          SetEPType(ENDP1, EP_INTERRUPT);
-          SetEPTxAddr(ENDP1, ENDP1_TXADDR);
-          SetEPTxStatus(ENDP1, EP_TX_NAK);
-          _ClearDTOG_TX(ENDP1);
-          _ClearDTOG_RX(ENDP1);
-
-          SetEPType(ENDP2, EP_INTERRUPT);
-          SetEPTxAddr(ENDP2, ENDP2_TXADDR);
-          SetEPTxStatus(ENDP2, EP_TX_NAK);
-          _ClearDTOG_TX(ENDP2);
-          _ClearDTOG_RX(ENDP2);
-          break;
+//          SetEPType(ENDP1, EP_INTERRUPT);
+//          SetEPTxAddr(ENDP1, ENDP1_TXADDR);
+//          SetEPTxStatus(ENDP1, EP_TX_NAK);
+//          _ClearDTOG_TX(ENDP1);
+//          _ClearDTOG_RX(ENDP1);
+//
+//          SetEPType(ENDP2, EP_INTERRUPT);
+//          SetEPTxAddr(ENDP2, ENDP2_TXADDR);
+//          SetEPTxStatus(ENDP2, EP_TX_NAK);
+//          _ClearDTOG_TX(ENDP2);
+//          _ClearDTOG_RX(ENDP2);
+//          break;
 
       case KB_DEVICE_KEYBORAD:
           SetEPType(ENDP1, EP_INTERRUPT);
@@ -327,10 +327,9 @@ void USBD_Reset(void)
  */
 uint8_t *USBD_GetDeviceDescriptor(uint16_t Length)
 {
-    switch (KB_DEVICE) {
+    switch (kb_device) {
         default:
-              return Standard_GetDescriptorData(Length, &Device_Descriptor);
-
+//              return Standard_GetDescriptorData(Length, &Device_Descriptor);
         case KB_DEVICE_KEYBORAD:
             return Standard_GetDescriptorData(Length, &Device_Descriptor_USBD_KB_DEV_DESC);
 
@@ -350,10 +349,9 @@ uint8_t *USBD_GetDeviceDescriptor(uint16_t Length)
  */
 uint8_t *USBD_GetConfigDescriptor(uint16_t Length)
 {
-    switch (KB_DEVICE) {
+    switch (kb_device) {
         default:
-            return Standard_GetDescriptorData(Length, &Config_Descriptor);
-
+//            return Standard_GetDescriptorData(Length, &Config_Descriptor);
         case KB_DEVICE_KEYBORAD:
             return Standard_GetDescriptorData(Length, &Config_Descriptor_USBD_KB_CONFIG_DESC);
 
@@ -403,10 +401,9 @@ uint8_t *USBD_GetReportDescriptor(uint16_t Length)
   }
   else
   {
-      switch (KB_DEVICE) {
+      switch (kb_device) {
           default:
-              return Standard_GetDescriptorData(Length, &Report_Descriptor[wIndex0]);
-
+//              return Standard_GetDescriptorData(Length, &Report_Descriptor[wIndex0]);
           case KB_DEVICE_KEYBORAD:
               return Standard_GetDescriptorData(Length, &Report_Descriptor_USBD_KB[wIndex0]);
 
@@ -435,10 +432,9 @@ uint8_t *USBD_GetHidDescriptor(uint16_t Length)
   }
   else
   {
-      switch (KB_DEVICE) {
+      switch (kb_device) {
           default:
-              return Standard_GetDescriptorData(Length, &Hid_Descriptor[wIndex0]);
-
+//              return Standard_GetDescriptorData(Length, &Hid_Descriptor[wIndex0]);
           case KB_DEVICE_KEYBORAD:
               return Standard_GetDescriptorData(Length, &Hid_Descriptor_USBD_KB[wIndex0]);
 

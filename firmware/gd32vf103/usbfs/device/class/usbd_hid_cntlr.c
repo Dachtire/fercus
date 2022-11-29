@@ -414,12 +414,12 @@ const usb_desc_dev hid_cntlr_dev_desc =
 ////        case KB_CTL_KB_OFF:
 //////            led_effect = 0;
 //////            leds_off();
-////            KB_CTL &= ~KB_CTL_CNTLR;
+////            kb_ctl &= ~KB_CTL_CNTLR;
 ////            break;
 ////
 ////        case KB_CTL_KB_ON:
 //////            leds_on();
-////            KB_CTL |= KB_CTL_CNTLR;
+////            kb_ctl |= KB_CTL_CNTLR;
 ////            break;
 ////
 //////        case LED_SPECTRUM:

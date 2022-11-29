@@ -32,8 +32,8 @@
 #define KB_COL_6_GPIO_PIN GPIO_Pin_15
 #define KB_COL_6_GPIO_PORT GPIOB
 
-extern const uint16_t KB_ROW_GPIO_PIN[], KB_COL_GPIO_PIN[];
-extern GPIO_TypeDef* const KB_COL_GPIO_PORT[];
+const uint16_t KB_ROW_GPIO_PIN[], KB_COL_GPIO_PIN[];
+GPIO_TypeDef* const KB_COL_GPIO_PORT[];
 
 #define KB_SIDE_LEFT 0
 #define KB_SIDE_RIGHT 1
@@ -112,6 +112,8 @@ void kb_adc_init();
 void kb_adc_time();
 void kb_usbd_hid_test();
 void kb_usbhd_combine();
+void kb_row_adc_fast();
+void kb_row_adc_trigger();
 
 static uint8_t kb_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM], kb_cntlr_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM];
 
@@ -129,10 +131,10 @@ extern uint8_t kb_buf_mouse[];
 extern uint8_t kb_col_num, kb_row_num;
 extern uint8_t (*kb_layout)[KB_COL_NUM];
 extern bool kb_key_state[KB_ROW_NUM][KB_COL_NUM];
-uint32_t KB_FLAG;
+uint32_t kb_flag;
 extern uint8_t kb_key_count;
-uint32_t KB_CTL;
-uint8_t KB_REPEAT, KB_DEVICE, KB_USB;
+uint32_t kb_ctl;
+uint8_t kb_repeat, kb_device, kb_usb;
 
 #define KB_ADC_SIZE (1)
 #define KB_ADC_LEN (KB_ADC_SIZE * 2)
@@ -150,6 +152,8 @@ enum kb_device {
     KB_DEVICE_CNTLR,
     KB_DEVICE_COMPOSITE,
     KB_DEVICE_VENDOR,
+    KB_DEVICE_KEYBOARD_ADC_FAST,
+    KB_DEVICE_KEYBOARD_ADC_TRIGGER
 };
 
 enum kb_usb {

@@ -29,7 +29,7 @@ u16 USB_Rx_Cnt=0;
 void EP1_IN_Callback (void)
 { 
 	USBD_Endp1_Busy = 0;
-    if (KB_DEVICE == KB_DEVICE_VENDOR) {
+    if (kb_device == KB_DEVICE_VENDOR) {
         if (mult_length != 0) {
             usbd_vendor_send_mult(mult_ptr, mult_length, ENDP1);
         }
@@ -38,7 +38,7 @@ void EP1_IN_Callback (void)
 
 void EP1_OUT_Callback(void)
 {
-    switch (KB_DEVICE) {
+    switch (kb_device) {
         default:
         case KB_DEVICE_KEYBORAD:
             break;
@@ -63,7 +63,7 @@ void EP2_IN_Callback (void)
 
 void EP2_OUT_Callback(void)
 {
-    switch (KB_DEVICE) {
+    switch (kb_device) {
         default:
         case KB_DEVICE_KEYBORAD:
             break;

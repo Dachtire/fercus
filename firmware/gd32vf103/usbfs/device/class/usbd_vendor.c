@@ -527,7 +527,7 @@ void usbd_vendor_receive(uint8_t *data, uint8_t ep_num)
 
             break;
         case KB_CTL_ADC_OFF:
-            KB_CTL &= ~KB_CTL_USBD;
+            kb_ctl &= ~KB_CTL_USBD;
 //            ADC_SoftwareStartConvCmd(ADC1, DISABLE);
             break;
         case KB_CTL_SYSCLK:

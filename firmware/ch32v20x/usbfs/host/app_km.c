@@ -1501,7 +1501,7 @@ void USBH_MainDeal( void )
                     /* Set the connection status of the device  */
                     RootHubDev.bStatus = ROOT_DEV_SUCCESS;
 
-                    KB_CTL |= KB_CTL_HOST;
+                    kb_ctl |= KB_CTL_HOST;
                     kb_init();
                 }
                 else if( s != ERR_USB_DISCON )
@@ -1567,7 +1567,7 @@ void USBH_MainDeal( void )
         memset( &RootHubDev.bStatus, 0, sizeof( ROOT_HUB_DEVICE ) );
         memset( &HostCtl[ index ].InterfaceNum, 0, sizeof( HOST_CTL ) );
 
-        KB_CTL &= ~KB_CTL_HOST;
+        kb_ctl &= ~KB_CTL_HOST;
         kb_init();
     }
 
@@ -1612,7 +1612,7 @@ void USBH_MainDeal( void )
                             }
 
                             {
-                                KB_FLAG |= KB_FLAG_COUNT;
+                                kb_flag |= KB_FLAG_COUNT;
                                 for (uint16_t j = 0; j < len; ++j) {
 //                                    kb_usbhd_buf[j] = kb_usbd_buf[j] | Com_Buf[j];
                                     kb_usbh_buf[j] = Com_Buf[j];
