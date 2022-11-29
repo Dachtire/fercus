@@ -50,7 +50,8 @@ void TIM1_UP_IRQHandler(void)
                 break;
 
             case KB_DEVICE_VENDOR:
-                kb_adc_it();
+//                kb_adc_it();
+                kb_adc_time();
                 break;
         }
     }

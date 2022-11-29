@@ -140,7 +140,7 @@ void kb_init() {
 
 }
 
-void kb_init_usbd() {
+void kb_enable_usbd() {
     KB_CTL |= KB_CTL_USBD;
 }
 
@@ -1128,4 +1128,45 @@ void kb_adc_test3() {
     }
     GPIO_ResetBits(KB_COL_GPIO_PORT[kb_col_num], KB_COL_GPIO_PIN[kb_col_num]);
 
+}
+
+void kb_adc_init() {
+    Delay_Ms(1000);
+
+    ADC_Function_Init();
+
+    DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)kb_adc_value, KB_ADC_SIZE);
+    DMA_Cmd(DMA1_Channel1, ENABLE);
+
+    ADC_RegularChannelConfig(ADC1, 0, 1, ADC_SampleTime_1Cycles5);
+    ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+
+    Delay_Ms(10);
+}
+
+void kb_adc_time() {
+    static bool min_once = 0, max_once = 0;
+    static uint32_t us = 0;
+    const static uint16_t max = 4096 * 0.9;
+    const static uint16_t min = 4096 * 0.2;
+    if (kb_adc_value[0] < min) {
+        if (!min_once) {
+            printf("us:%lu, min:%d\n", us, kb_adc_value[0]);
+            min_once = 1;
+            max_once = 0;
+            us = 0;
+        }
+    } else if (kb_adc_value[0] <= max) {
+//        printf("i:%d\n", kb_adc_value[0]);
+        ++us;
+    } else {
+        if (!max_once) {
+            printf("us:%lu, max:%d\n", us, kb_adc_value[0]);
+            max_once = 1;
+            min_once = 0;
+            us = 0;
+        }
+    }
+
+//        GPIO_ResetBits(KB_COL_GPIO_PORT[kb_col_num], KB_COL_GPIO_PIN[kb_col_num]);
 }

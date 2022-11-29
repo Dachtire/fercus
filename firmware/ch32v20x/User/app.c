@@ -113,15 +113,15 @@ void TIM1_Init()
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE );
 
     TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure={0};
-    TIM_TimeBaseInitStructure.TIM_Prescaler = 144 - 1;
+    TIM_TimeBaseInitStructure.TIM_Prescaler = 144 / 2 - 1;
     switch (KB_DEVICE) {
         default:
         case KB_DEVICE_KEYBORAD:
-            TIM_TimeBaseInitStructure.TIM_Period = 1000 / 8 - 1;
+            TIM_TimeBaseInitStructure.TIM_Period = 2 * 1000 / 8 - 1;
             break;
 
         case KB_DEVICE_VENDOR:
-            TIM_TimeBaseInitStructure.TIM_Period = 10 - 1;
+            TIM_TimeBaseInitStructure.TIM_Period = 2 * 1 - 1;
             break;
     }
     TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;

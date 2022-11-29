@@ -518,7 +518,7 @@ void usbd_vendor_receive(uint8_t *data, uint8_t ep_num)
     static uint8_t tmp = 0xff;
     switch (data[0]) {
         case KB_CTL_ADC_ON:
-            kb_init_usbd();
+            kb_enable_usbd();
 //            ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 //            for (uint16_t i = 0; i < KB_ADC_SIZE; ++i) {
 //                kb_adc_buf1[i] = 0xf0 + i;
@@ -539,7 +539,7 @@ void usbd_vendor_receive(uint8_t *data, uint8_t ep_num)
     }
 
 //    if (data[0] == KB_CTL_ADC_ON) {
-//        kb_init_usbd();
+//        kb_enable_usbd();
 //    } else {
 //        usbd_vendor_send((uint8_t *) 0xff, ep_num);
 //    }

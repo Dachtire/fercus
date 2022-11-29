@@ -97,7 +97,7 @@ void kb_usb_send();
 void kb_fn_handler();
 void kb_init_sync();
 void kb_init();
-void kb_init_usbd();
+void kb_enable_usbd();
 void kb_polling(/*uint8_t col*/);
 void kb_usart_polling();
 void kb_it();
@@ -108,6 +108,8 @@ void kb_usbd_test(uint8_t data, uint16_t length);
 void kb_adc_test();
 void kb_adc_test2();
 void kb_adc_test3();
+void kb_adc_init();
+void kb_adc_time();
 void kb_usbd_hid_test();
 void kb_usbhd_combine();
 
@@ -132,7 +134,7 @@ extern uint8_t kb_key_count;
 uint32_t KB_CTL;
 uint8_t KB_REPEAT, KB_DEVICE, KB_USB;
 
-#define KB_ADC_SIZE (1000 * 5)
+#define KB_ADC_SIZE (1)
 #define KB_ADC_LEN (KB_ADC_SIZE * 2)
 uint16_t kb_adc_value[KB_ADC_SIZE];
 
