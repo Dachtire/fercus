@@ -108,11 +108,10 @@ void kb_usbd_test(uint8_t data, uint16_t length);
 void kb_adc_test();
 void kb_adc_test2();
 void kb_adc_test3();
-void kb_adc_init();
 void kb_adc_time();
 void kb_usbd_hid_test();
 void kb_usbhd_combine();
-void kb_row_adc_fast();
+void kb_row_adc_diff();
 void kb_row_adc_trigger();
 
 static uint8_t kb_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM], kb_cntlr_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM];
@@ -135,6 +134,7 @@ uint32_t kb_flag;
 extern uint8_t kb_key_count;
 uint32_t kb_ctl;
 uint8_t kb_repeat, kb_device, kb_usb;
+uint16_t kb_row_adc[KB_ROW_NUM];
 
 #define KB_ADC_SIZE (1)
 #define KB_ADC_LEN (KB_ADC_SIZE * 2)
@@ -152,7 +152,7 @@ enum kb_device {
     KB_DEVICE_CNTLR,
     KB_DEVICE_COMPOSITE,
     KB_DEVICE_VENDOR,
-    KB_DEVICE_KEYBOARD_ADC_FAST,
+    KB_DEVICE_KEYBOARD_ADC_DIFF,
     KB_DEVICE_KEYBOARD_ADC_TRIGGER
 };
 

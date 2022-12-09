@@ -46,7 +46,7 @@ void TIM1_UP_IRQHandler(void)
         switch (kb_device) {
             default:
             case KB_DEVICE_KEYBORAD:
-            case KB_DEVICE_KEYBOARD_ADC_FAST:
+            case KB_DEVICE_KEYBOARD_ADC_DIFF:
             case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
                 kb_it();
                 break;

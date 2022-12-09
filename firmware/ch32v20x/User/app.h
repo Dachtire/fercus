@@ -27,6 +27,7 @@
 #include "keyboard.h"
 
 void gpio_config(void);
+void adc_config();
 void TIM1_Init();
 void ADC_Function_Init();
 void DMA_Tx_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u32 memadr, u16 bufsize);

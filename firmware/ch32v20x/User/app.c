@@ -58,7 +58,7 @@ void gpio_config(void)
             break;
 
         case KB_DEVICE_VENDOR:
-        case KB_DEVICE_KEYBOARD_ADC_FAST:
+        case KB_DEVICE_KEYBOARD_ADC_DIFF:
         case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
             GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
             GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AIN;
@@ -76,6 +76,41 @@ void gpio_config(void)
     //    gpio_init(GPIOB, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, GPIO_PIN_11);
 
 
+}
+
+void adc_config() {
+    switch (kb_device) {
+        default:
+        case KB_DEVICE_VENDOR:
+            DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)kb_adc_value, KB_ADC_SIZE);
+            DMA_Cmd(DMA1_Channel1, ENABLE);
+
+            ADC_Function_Init();
+            ADC_RegularChannelConfig(ADC1, 0, 1, ADC_SampleTime_1Cycles5);
+            ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+            break;
+
+        case KB_DEVICE_KEYBOARD_ADC_DIFF:
+        case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
+            DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)kb_row_adc, KB_ROW_NUM);
+            DMA_Cmd(DMA1_Channel1, ENABLE);
+
+            ADC_Function_Init();
+            // t = 1 / 12Mhz
+            // 71Cycles5 = 7 * 6 us
+            ADC_RegularChannelConfig(ADC1, ADC_Channel_0, 1, ADC_SampleTime_71Cycles5);
+            ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 2, ADC_SampleTime_71Cycles5);
+            ADC_RegularChannelConfig(ADC1, ADC_Channel_2, 3, ADC_SampleTime_71Cycles5);
+            ADC_RegularChannelConfig(ADC1, ADC_Channel_3, 4, ADC_SampleTime_71Cycles5);
+            ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 5, ADC_SampleTime_71Cycles5);
+            ADC_RegularChannelConfig(ADC1, ADC_Channel_5, 6, ADC_SampleTime_71Cycles5);
+
+            ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+            break;
+
+        case KB_DEVICE_KEYBORAD:
+            break;
+    }
 }
 
 void USART1_Init(u32 baudrate)
@@ -184,17 +219,17 @@ void ADC_Function_Init(void)
 
     switch (kb_device) {
         default:
-        case KB_DEVICE_VENDOR:
-            ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
-            ADC_InitStructure.ADC_ScanConvMode = DISABLE;
-            ADC_InitStructure.ADC_NbrOfChannel = 1;
-            break;
-
-        case KB_DEVICE_KEYBOARD_ADC_FAST:
+        case KB_DEVICE_KEYBOARD_ADC_DIFF:
         case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
             ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
             ADC_InitStructure.ADC_ScanConvMode = ENABLE;
             ADC_InitStructure.ADC_NbrOfChannel = 6;
+            break;
+
+        case KB_DEVICE_VENDOR:
+            ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+            ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+            ADC_InitStructure.ADC_NbrOfChannel = 1;
             break;
     }
 

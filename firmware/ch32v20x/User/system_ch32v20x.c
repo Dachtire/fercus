@@ -691,7 +691,7 @@ static void SetSysClockTo144_HSE(void)
             break;
 
         case KB_DEVICE_VENDOR:
-        case KB_DEVICE_KEYBOARD_ADC_FAST:
+        case KB_DEVICE_KEYBOARD_ADC_DIFF:
         case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
             RCC->CFGR0 |= (uint32_t)RCC_PPRE2_DIV2;
             break;

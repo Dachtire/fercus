@@ -32,7 +32,6 @@ uint8_t *kb_usb_buf = 0;
 uint8_t kb_row_read = 0;
 uint16_t kb_adc_value[KB_ADC_SIZE] = {}, kb_adc_buf1[KB_ADC_SIZE] = {};
 
-uint16_t kb_row_adc[KB_ROW_NUM];
 
 #if KB_SIDE == KB_SIDE_LEFT
     static uint8_t kb_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM] = {
@@ -97,21 +96,22 @@ void kb_init_sync() {
 }
 
 void kb_init() {
-//    kb_device = KB_DEVICE_KEYBORAD;
+    kb_device = KB_DEVICE_KEYBORAD;
 //    kb_device = KB_DEVICE_VENDOR;
-//    kb_device = KB_DEVICE_KEYBOARD_ADC_FAST;
-    kb_device = KB_DEVICE_KEYBOARD_ADC_TRIGGER;
+//    kb_device = KB_DEVICE_KEYBOARD_ADC_DIFF;
+//    kb_device = KB_DEVICE_KEYBOARD_ADC_TRIGGER;
 
     if ((kb_ctl & KB_CTL_HOST) != 0) {
         kb_usb_buf = kb_usbhd_buf;
     } else {
         kb_usb_buf = kb_usbd_buf;
     }
-    printf("kb_ctl:%02lx\n", kb_ctl);
+//    printf("kb_ctl:%02lx\n", kb_ctl);
 }
 
 void kb_enable_usbd() {
     kb_ctl |= KB_CTL_USBD;
+//    printf("kb_ctl:%02lx\n", kb_ctl);
 }
 
 void kb_it() {
@@ -370,6 +370,7 @@ void kb_cntlr_usb_buf_handler() {
 
 void kb_row_read_all() {
     kb_row_read = (uint8_t) (GPIO_ReadInputData(GPIOA) & 0x3F);
+//    printf("r[][%d]:%d\n", kb_col_num, kb_row_read);
 }
 
 void kb_col_reset_all() {
@@ -454,12 +455,13 @@ void kb_polling() {
             kb_row_read_all();
             break;
 
-        case KB_DEVICE_KEYBOARD_ADC_FAST:
-            kb_row_adc_fast();
+        case KB_DEVICE_KEYBOARD_ADC_DIFF:
+            kb_row_adc_diff();
             break;
 
         case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
             kb_row_adc_trigger();
+            break;
     }
     for (kb_row_num = 0; kb_row_num < KB_ROW_NUM; ++kb_row_num) {
         kb_handler();
@@ -514,7 +516,7 @@ void kb_usb_send() {
                                     kb_repeat_first = 1;
                                 } else {
     //                                if (kb_repeat_rate == KB_REPEAT_SLOW_RATE) {
-    kb_flag &= ~KB_FLAG_REPEAT;
+                                    kb_flag &= ~KB_FLAG_REPEAT;
                                     usbd_kb_report_send(kb_buf_empty);
     //                                    kb_repeat_rate = 0;
     //                                }
@@ -1112,40 +1114,7 @@ void kb_adc_test3() {
 
 }
 
-void kb_adc_init() {
 
-    switch (kb_device) {
-        default:
-        case KB_DEVICE_VENDOR:
-            DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)kb_adc_value, KB_ADC_SIZE);
-            DMA_Cmd(DMA1_Channel1, ENABLE);
-
-            ADC_Function_Init();
-            ADC_RegularChannelConfig(ADC1, 0, 1, ADC_SampleTime_1Cycles5);
-            ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-            break;
-
-        case KB_DEVICE_KEYBOARD_ADC_FAST:
-        case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
-            DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)kb_row_adc, KB_ROW_NUM);
-            DMA_Cmd(DMA1_Channel1, ENABLE);
-
-            ADC_Function_Init();
-            ADC_RegularChannelConfig(ADC1, ADC_Channel_0, 1, ADC_SampleTime_13Cycles5);
-            ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 2, ADC_SampleTime_13Cycles5);
-            ADC_RegularChannelConfig(ADC1, ADC_Channel_2, 3, ADC_SampleTime_13Cycles5);
-            ADC_RegularChannelConfig(ADC1, ADC_Channel_3, 4, ADC_SampleTime_13Cycles5);
-            ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 5, ADC_SampleTime_13Cycles5);
-            ADC_RegularChannelConfig(ADC1, ADC_Channel_5, 6, ADC_SampleTime_13Cycles5);
-
-            ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-            break;
-
-        case KB_DEVICE_KEYBORAD:
-            break;
-    }
-
-}
 
 void kb_adc_time() {
     static bool min_once = 0, max_once = 0;
@@ -1174,72 +1143,29 @@ void kb_adc_time() {
 //        GPIO_ResetBits(KB_COL_GPIO_PORT[kb_col_num], KB_COL_GPIO_PIN[kb_col_num]);
 }
 
-void kb_row_adc_fast() {
+void kb_row_adc_diff() {
     static uint16_t kb_sw_adc[KB_ROW_NUM][KB_COL_NUM];
-    static const uint16_t adc_step = 256;
-
-    static bool min_once, max_once;
-//    static uint32_t us;
-    const static uint16_t max = 4096 * 0.8;
-    const static uint16_t min = 4096 * 0.2;
-
-    static bool debug_once, print0_once;
-    if (!debug_once) {
-        static uint8_t count;
-        if (count == KB_COL_NUM - 1) {
-            debug_once = 1;
-            printf("debug_once");
-        } else {
-            ++count;
-        }
-
-        for (int i = 0; i < KB_ROW_NUM; ++i) {
-            printf("kb_row_adc[%d]:%d\n", i, kb_row_adc[i]);
-            kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
-            printf("akb_sw_adc[%d][%d]:%d\n", i, kb_col_num, kb_sw_adc[i][kb_col_num]);
-        }
-
-    }
+    static const uint16_t press_step = 64, release_step = 256;
 
     kb_row_read = 0;
     for (int i = 0; i < KB_ROW_NUM; ++i) {
-//        if (kb_sw_adc[i][kb_col_num] == 0) {
-//            kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
-//        } else
-//        if (kb_row_adc[i] > (kb_sw_adc[i][kb_col_num] + adc_step)) {
-        if (kb_row_adc[i] > max) {
-//            if (!max_once) {
+        if (kb_sw_adc[i][kb_col_num] == 0) {
+            kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
+        } else if (kb_row_adc[i] > (kb_sw_adc[i][kb_col_num] + press_step)) {
+            kb_row_read |= 0x1 << i;
+            kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
+        } else if (kb_row_adc[i] < (kb_sw_adc[i][kb_col_num] - release_step)) {
+            kb_row_read &= ~(0x1 << i);
+            kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
+        } else {
+            if (kb_key_state[i][kb_col_num] != 0) {
                 kb_row_read |= 0x1 << i;
-//                printf("kb_row_read_max[%d][%d]:%d\n", i, kb_col_num, kb_row_read);
-
-//                printf("us:%lu, max:%d\n", us, kb_row_adc[0]);
-//                printf("kb_row_adc[%d][%d]:%d\n", i, kb_col_num, kb_row_adc[0]);
-
-//                max_once = 1;
-//                min_once = 0;
-//                us = 0;
-//            }
-//            kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
-//        } else if (kb_row_adc[i] < (kb_sw_adc[i][kb_col_num] - adc_step)) {
-        } else if (kb_row_adc[i] < min) {
-//            if (!min_once) {
+            } else {
                 kb_row_read &= ~(0x1 << i);
-//                printf("kb_row_read:%d\n", kb_row_read);
-//                printf("kb_row_read_min[%d][%d]:%d\n", i, kb_col_num, kb_row_read);
-
-
-//                printf("us:%lu, min:%d\n", us, kb_row_adc[0]);
-//                min_once = 1;
-//                max_once = 0;
-//                us = 0;
-//            }
-//            kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
+            }
         }
-
-        kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
-//        printf("akb_sw_adc[%d][%d]:%d\n", i, kb_col_num, kb_sw_adc[i][kb_col_num]);
     }
-//    printf("kb_row_read_min[][%d]:%d\n", kb_col_num, kb_row_read);
+//    printf("r[][%d]:%d\n", kb_col_num, kb_row_read);
 }
 
 void kb_row_adc_trigger() {

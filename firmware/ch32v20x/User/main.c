@@ -60,7 +60,7 @@ int main(void)
     gpio_config();
     kb_init_sync();
 
-    kb_adc_init();
+    adc_config();
     TIM1_Init();
 
     Set_USBConfig();
