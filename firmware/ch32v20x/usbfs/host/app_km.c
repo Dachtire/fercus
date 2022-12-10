@@ -125,6 +125,50 @@ void TIM3_IRQHandler( void )
     }
 }
 
+void usbh_epin_time() {
+    uint8_t index;
+    uint8_t hub_port;
+    uint8_t intf_num, in_num;
+
+    /* USB HID Device Input Endpoint Timing */
+    if( RootHubDev.bStatus >= ROOT_DEV_SUCCESS )
+    {
+        index = RootHubDev.DeviceIndex;
+        if( RootHubDev.bType == USB_DEV_CLASS_HID )
+        {
+            for( intf_num = 0; intf_num < HostCtl[ index ].InterfaceNum; intf_num++ )
+            {
+                for( in_num = 0; in_num < HostCtl[ index ].Interface[ intf_num ].InEndpNum; in_num++ )
+                {
+                    HostCtl[ index ].Interface[ intf_num ].InEndpTimeCount[ in_num ]++;
+                }
+            }
+        }
+        else if( RootHubDev.bType == USB_DEV_CLASS_HUB )
+        {
+            HostCtl[ index ].Interface[ 0 ].InEndpTimeCount[ 0 ]++;
+            for( hub_port = 0; hub_port < RootHubDev.bPortNum; hub_port++ )
+            {
+                if( RootHubDev.Device[ hub_port ].bStatus >= ROOT_DEV_SUCCESS )
+                {
+                    index = RootHubDev.Device[ hub_port ].DeviceIndex;
+
+                    if( RootHubDev.Device[ hub_port ].bType == USB_DEV_CLASS_HID )
+                    {
+                        for( intf_num = 0; intf_num < HostCtl[ index ].InterfaceNum; intf_num++ )
+                        {
+                            for( in_num = 0; in_num < HostCtl[ index ].Interface[ intf_num ].InEndpNum; in_num++ )
+                            {
+                                HostCtl[ index ].Interface[ intf_num ].InEndpTimeCount[ in_num ]++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 /*********************************************************************
  * @fn      USBH_AnalyseType
  *

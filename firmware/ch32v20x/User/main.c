@@ -37,25 +37,6 @@ int main(void)
     //    printf("SystemClk:%d\r\n",SystemCoreClock);
     //    printf("USBD Keyboard&Mouse Demo\r\n");
 
-    /* Initialize USART2 for receiving the specified keyboard data */
-    //    USART2_Init( 115200 );
-    //    printf( "USART2 Init OK!\r\n" );
-
-    /* Initialize GPIO for keyboard scan */
-    //    KB_Scan_Init( );
-    //    KB_Sleep_Wakeup_Cfg( );
-    //    printf( "KB Scan Init OK!\r\n" );
-
-
-    /* Initialize GPIO for mouse scan */
-    //    MS_Scan_Init( );
-    //    MS_Sleep_Wakeup_Cfg( );
-    //    printf( "MS Scan Init OK!\r\n" );
-
-    /* Initialize timer for Keyboard and mouse scan timing */
-    //    TIM3_Init( 1, 7199 );
-    //    printf( "TIM3 Init OK!\r\n" );
-
     kb_init();
     gpio_config();
     kb_init_sync();
@@ -68,10 +49,6 @@ int main(void)
     USB_Interrupts_Config();
     //    if( bDeviceState == CONFIGURED ) {
     //        kb_usb = KB_USBD_DEVICE;
-
-    /* Initialize TIM3 */
-    TIM3_Init(9, SystemCoreClock / 10000 - 1);
-    DUG_PRINTF("TIM3 Init OK!\r\n");
 
     /* Initialize USBFS host */
     #if DEF_USBFS_PORT_EN
@@ -91,14 +68,9 @@ int main(void)
     //        }
     //    }
 
-//    if (kb_device == KB_DEVICE_KEYBORAD) {
-        kb_enable_usbd();
-//    }
+    kb_enable_usbd();
 
     while (1) {
-//        if (kb_device == KB_DEVICE_KEYBORAD) {
-            USBH_MainDeal( );
-//        }
     }
 }
 

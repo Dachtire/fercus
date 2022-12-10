@@ -129,6 +129,9 @@ void kb_it() {
 
             GPIO_ResetBits(KB_COL_GPIO_PORT[kb_col_num], KB_COL_GPIO_PIN[kb_col_num]);
             ++kb_col_num;
+
+            usbh_epin_time();
+            USBH_MainDeal();
             break;
 
         case 7:

@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "usb_type.h"
 #include "app.h"
+#include "app_km.h"
 
 #define KB_ROW_GPIO_PORT   GPIOA
 #define KB_ROW_0_GPIO_PIN  GPIO_Pin_0
@@ -156,10 +157,10 @@ enum kb_device {
     KB_DEVICE_KEYBOARD_ADC_TRIGGER
 };
 
-enum kb_usb {
-    KB_USBD_DEVICE,
-    KB_USBFS_DEVICE
-};
+//enum kb_usb {
+//    KB_USBD_DEVICE,
+//    KB_USBFS_DEVICE
+//};
 
 enum kb_ctl_option {
     KB_CTL_LYR_0 = (uint8_t)0x80,
