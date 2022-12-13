@@ -10,28 +10,29 @@
 #include "app.h"
 #include "app_km.h"
 
-#define KB_ROW_GPIO_PORT   GPIOA
-#define KB_ROW_0_GPIO_PIN  GPIO_Pin_0
+#define KB_ROW_GPIO_PORT  GPIOA
+#define KB_ROW_0_GPIO_PIN GPIO_Pin_0
 #define KB_ROW_1_GPIO_PIN GPIO_Pin_1
 #define KB_ROW_2_GPIO_PIN GPIO_Pin_2
 #define KB_ROW_3_GPIO_PIN GPIO_Pin_3
 #define KB_ROW_4_GPIO_PIN GPIO_Pin_4
 #define KB_ROW_5_GPIO_PIN GPIO_Pin_5
 
-#define KB_COL_0_GPIO_PIN GPIO_Pin_1
+
+#define KB_COL_0_GPIO_PIN GPIO_Pin_10
 #define KB_COL_0_GPIO_PORT GPIOB
-#define KB_COL_1_GPIO_PIN GPIO_Pin_10
+#define KB_COL_1_GPIO_PIN GPIO_Pin_11
 #define KB_COL_1_GPIO_PORT GPIOB
-#define KB_COL_2_GPIO_PIN GPIO_Pin_11
+#define KB_COL_2_GPIO_PIN GPIO_Pin_12
 #define KB_COL_2_GPIO_PORT GPIOB
-#define KB_COL_3_GPIO_PIN GPIO_Pin_12
+#define KB_COL_3_GPIO_PIN GPIO_Pin_13
 #define KB_COL_3_GPIO_PORT GPIOB
-#define KB_COL_4_GPIO_PIN GPIO_Pin_13
+#define KB_COL_4_GPIO_PIN GPIO_Pin_14
 #define KB_COL_4_GPIO_PORT GPIOB
-#define KB_COL_5_GPIO_PIN GPIO_Pin_14
+#define KB_COL_5_GPIO_PIN GPIO_Pin_15
 #define KB_COL_5_GPIO_PORT GPIOB
-#define KB_COL_6_GPIO_PIN GPIO_Pin_15
-#define KB_COL_6_GPIO_PORT GPIOB
+#define KB_COL_6_GPIO_PIN GPIO_Pin_8
+#define KB_COL_6_GPIO_PORT GPIOA
 
 const uint16_t KB_ROW_GPIO_PIN[], KB_COL_GPIO_PIN[];
 GPIO_TypeDef* const KB_COL_GPIO_PORT[];

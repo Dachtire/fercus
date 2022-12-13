@@ -373,7 +373,9 @@ void kb_cntlr_usb_buf_handler() {
 
 void kb_row_read_all() {
     kb_row_read = (uint8_t) (GPIO_ReadInputData(GPIOA) & 0x3F);
-//    printf("r[][%d]:%d\n", kb_col_num, kb_row_read);
+    //    if (kb_row_read != 0) {
+    //        printf("r[][%d]:%d\n", kb_col_num, kb_row_read);
+    //   }
 }
 
 void kb_col_reset_all() {
