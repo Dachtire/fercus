@@ -674,12 +674,12 @@ void kb_usb_receive() {
 
 void kb_usbhd_combine() {
     if ((kb_flag & KB_FLAG_COUNT) && (kb_ctl & KB_CTL_HOST)) {
-        printf("usbhd: ");
+//        printf("usbhd: ");
         for (uint8_t i = 0; i < USBD_KB_SEND_SIZE; ++i) {
             kb_usbhd_buf[i] = kb_usbd_buf[i] | kb_usbh_buf[i];
-            printf("%02x ", kb_usb_buf[i]);
+//            printf("%02x ", kb_usb_buf[i]);
         }
-        printf("\n");
+//        printf("\n");
     }
 }
 
