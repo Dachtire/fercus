@@ -14,14 +14,13 @@ optical switch's speed approximate to finger's speed, which fastest is around 20
 ** dimension: 122 * 133 * 13.4 mm
 * Firmware
 ** optical switch
-*** schmitt trigger mode
-*** adc trigger mode
-*** adc difference mode
+- schmitt trigger mode
+- adc trigger mode
+- adc difference mode
 ** function
-*** multiple layers
-*** fn
-*** repeat mode
+- multiple layers
+- fn
+- repeat mode
 ** usb host, device
-** led indicator
 * Thanks
 [[https://discord.com/channels/715975244896272618][Optical Future]]
