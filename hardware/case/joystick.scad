@@ -20,7 +20,7 @@ js_offset0_z = 5 + 3;
 js_offset1_z = js_offset0_z + 5;
 js_z = js_offset1_z + js_down_z + js_up_z;
 //js_plate_low_z = sw_plate_low_z - sw_plate_low_cutin_z;
-js_hole_d = 2.5;
+js_hole_d = 2.3;
 
 sw_snap_x = 5;
 sw_snap_y = 1;
