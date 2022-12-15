@@ -42,10 +42,12 @@ OF SUCH DAMAGE.
 
 //#define HID_MOUSE_CONFIG_DESC_LEN          0x22U
 #define HID_MOUSE_CONFIG_DESC_LEN USBD_HID_CONFIG_DESC_SIZE
-#define HID_MOUSE_REPORT_DESC_LEN 0x34U
+#define HID_MOUSE_REPORT_DESC_SIZE 0x34U
 //#define USB_HID_REPORT_DESC_LEN          0x4AU
 
 #define NO_CMD                           0xFFU
+
+const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE];
 
 //typedef struct {
 //    uint32_t protocol;

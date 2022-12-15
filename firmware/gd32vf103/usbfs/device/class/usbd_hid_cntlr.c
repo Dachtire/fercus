@@ -108,7 +108,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //        .bCountryCode         = 0x00U,
 //        .bNumDescriptors      = 0x01U,
 //        .bDescriptorType      = USB_DESCTYPE_REPORT,
-//        .wDescriptorLength    = HID_CNTLR_REPORT_DESC_LEN,
+//        .wDescriptorLength    = HID_CNTLR_REPORT_DESC_SIZE,
 //    },
 //
 //    .epin =
@@ -196,35 +196,35 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //};
 //
 //
-//const uint8_t hid_cntlr_report_desc[HID_CNTLR_REPORT_DESC_LEN] =
-//{
-//    USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
-//        USAGE, USAGE_GENERIC_DESKTOP_PAGE_GAMEPAD,
-//        COLLECTION, COLLECTION_APPLICATION,
-//
-//            COLLECTION, COLLECTION_PHYSICAL,
-//            USAGE_PAGE, USAGE_PAGE_BUTTON,
-//            USAGE_MINIMUM, USAGE_BUTTON_PAGE_1,
-//            USAGE_MAXIMUM, USAGE_BUTTON_PAGE_16,
-//            LOGICAL_MINIMUM, 0x00,
-//            LOGICAL_MAXIMUM, 0x01,
-//            REPORT_SIZE, 0x01,
-//            REPORT_COUNT, 0x10,
-//            USAGE_TYPE_INPUT, USAGE_TYPE_DATA_DV,
-//
-//            USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
-//            USAGE, USAGE_GENERIC_DESKTOP_PAGE_X,
-//            USAGE, USAGE_GENERIC_DESKTOP_PAGE_Y,
-//            USAGE, USAGE_GENERIC_DESKTOP_PAGE_RX,
-//            USAGE, USAGE_GENERIC_DESKTOP_PAGE_RY,
-//            LOGICAL_MINIMUM, 0x81,
-//            LOGICAL_MAXIMUM, 0x7f,
-//            REPORT_SIZE, 0x08,
-//            REPORT_COUNT, 0x04,
-//            USAGE_TYPE_INPUT, USAGE_TYPE_DATA_DV,
-//        END_COLECTION,
-//    END_COLECTION
-//};
+const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
+{
+    USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
+        USAGE, USAGE_GENERIC_DESKTOP_PAGE_GAMEPAD,
+        COLLECTION, COLLECTION_APPLICATION,
+
+            COLLECTION, COLLECTION_PHYSICAL,
+            USAGE_PAGE, USAGE_PAGE_BUTTON,
+            USAGE_MINIMUM, USAGE_BUTTON_PAGE_1,
+            USAGE_MAXIMUM, USAGE_BUTTON_PAGE_16,
+            LOGICAL_MINIMUM, 0x00,
+            LOGICAL_MAXIMUM, 0x01,
+            REPORT_SIZE, 0x01,
+            REPORT_COUNT, 0x10,
+            USAGE_TYPE_INPUT, USAGE_TYPE_DATA_DV,
+
+            USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
+            USAGE, USAGE_GENERIC_DESKTOP_PAGE_X,
+            USAGE, USAGE_GENERIC_DESKTOP_PAGE_Y,
+            USAGE, USAGE_GENERIC_DESKTOP_PAGE_RX,
+            USAGE, USAGE_GENERIC_DESKTOP_PAGE_RY,
+            LOGICAL_MINIMUM, 0x81,
+            LOGICAL_MAXIMUM, 0x7f,
+            REPORT_SIZE, 0x08,
+            REPORT_COUNT, 0x04,
+            USAGE_TYPE_INPUT, USAGE_TYPE_DATA_DV,
+        END_COLECTION,
+    END_COLECTION
+};
 //
 ///* local function prototypes ('static') */
 //static uint8_t hid_cntlr_init    (usb_dev *udev, uint8_t config_index);
@@ -371,8 +371,8 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //
 //    case USB_GET_DESCRIPTOR:
 //        if (USB_DESCTYPE_REPORT == (req->wValue >> 8U)) {
-//            transc->remain_len = USB_MIN(HID_CNTLR_REPORT_DESC_LEN, req->wLength);
-//            transc->xfer_buf = (uint8_t *)hid_cntlr_report_desc;
+//            transc->remain_len = USB_MIN(HID_CNTLR_REPORT_DESC_SIZE, req->wLength);
+//            transc->xfer_buf = (uint8_t *)USBD_CNTLR_REPORT_DESC;
 //
 //            return REQ_SUPP;
 //        }

@@ -171,7 +171,7 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
         .bCountryCode         = HID_COUNTRYCODE,
         .bNumDescriptors      = 0x01U,
         .bDescriptorType      = USB_DESCTYPE_REPORT,
-        .wDescriptorLength    = HID_MOUSE_REPORT_DESC_LEN,
+        .wDescriptorLength    = HID_MOUSE_REPORT_DESC_SIZE,
     },
 
     .mouse_epin =
@@ -228,7 +228,7 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
         .bCountryCode         = HID_COUNTRYCODE,
         .bNumDescriptors      = 0x01U,
         .bDescriptorType      = USB_DESCTYPE_REPORT,
-        .wDescriptorLength    = HID_CNTLR_REPORT_DESC_LEN,
+        .wDescriptorLength    = HID_CNTLR_REPORT_DESC_SIZE,
     },
 
     .cntlr_epin =

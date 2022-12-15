@@ -45,10 +45,12 @@ OF SUCH DAMAGE.
 //#define USB_HID_REPORT_DESC_LEN          0x4AU
 
 #define HID_CNTLR_CONFIG_DESC_LEN          USB_HID_CONFIG_DESC_LEN
-#define HID_CNTLR_REPORT_DESC_LEN 0x2eU
-//#define HID_CNTLR_REPORT_DESC_LEN 0x48U
+#define HID_CNTLR_REPORT_DESC_SIZE         0x2eU
+//#define HID_CNTLR_REPORT_DESC_SIZE 0x48U
 
 #define NO_CMD                           0xFFU
+
+const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE];
 
 //typedef struct {
 //    uint32_t protocol;

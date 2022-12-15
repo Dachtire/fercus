@@ -106,7 +106,7 @@ const usb_hid_desc_config_set hid_mouse_config_desc =
         .bCountryCode         = HID_COUNTRYCODE,
         .bNumDescriptors      = 0x01U,
         .bDescriptorType      = USB_DESCTYPE_REPORT,
-        .wDescriptorLength    = HID_MOUSE_REPORT_DESC_LEN,
+        .wDescriptorLength    = HID_MOUSE_REPORT_DESC_SIZE,
     },
 
     .epin =
@@ -194,35 +194,35 @@ static usb_desc_str serial_string =
 //};
 
 
-const uint8_t usb_hid_mouse_report_desc[HID_MOUSE_REPORT_DESC_LEN] =
+const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE] =
 {
-    0x05, 0x01,  /* USAGE_PAGE (Generic Desktop) */
-    0x09, 0x02,  /* USAGE (Mouse) */
-    0xa1, 0x01,  /* COLLECTION (Application) */
-        0x09, 0x01,  /* USAGE (Pointer) */
-        0xa1, 0x00,  /* COLLECTION (Physical) */
-            0x05, 0x09,  /* USAGE_PAGE (Button) */
-            0x19, 0x01,  /* USAGE_MINIMUM (1) */
-            0x29, 0x03,  /* USAGE_MAXIMUM (3) */
-            0x15, 0x00,  /* LOGICAL_MINIMUM (0) */
-            0x25, 0x01,  /* LOGICAL_MAXIMUM (1) */
-            0x95, 0x03,  /* REPORT_COUNT (3) */
-            0x75, 0x01,  /* REPORT_SIZE (1) */
-            0x81, 0x02,  /* USAGE_TYPE_INPUT (Data,Var,Abs) */
-            0x95, 0x01,  /* REPORT_COUNT (1) */
-            0x75, 0x05,  /* REPORT_SIZE (5) */
-            0x81, 0x01,  /* USAGE_TYPE_INPUT (Cnst,Var,Abs) */
+    USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
+    USAGE, USAGE_GENERIC_DESKTOP_PAGE_MOUSE,
+    COLLECTION, COLLECTION_APPLICATION,
+        USAGE, USAGE_GENERIC_DESKTOP_PAGE_POINTER,
+        COLLECTION, COLLECTION_PHYSICAL,
+            USAGE_PAGE, USAGE_PAGE_BUTTON,
+            USAGE_MINIMUM, 0x01,
+            USAGE_MAXIMUM, 0x03,
+            LOGICAL_MINIMUM, 0x00,
+            LOGICAL_MAXIMUM, 0x01,
+            REPORT_COUNT, 0x03,
+            REPORT_SIZE, 0x01,
+            USAGE_TYPE_INPUT, USAGE_TYPE_DATA_DV,
+            REPORT_COUNT, 0x01,
+            REPORT_SIZE, 0x05,
+            USAGE_TYPE_INPUT, 0x01,  /* USAGE_TYPE_INPUT (Cnst,Var,Abs) */
 
-            0x05, 0x01,  /* USAGE_PAGE (Generic Desktop) */
-            0x09, 0x30,  /* USAGE (X) */
-            0x09, 0x31,  /* USAGE (Y) */
-            0x09, 0x38,  /* USAGE (Wheel) */
-            0x15, 0x81,  /* LOGICAL_MINIMUM (81) */
-            0x25, 0x7F,  /* LOGICAL_MAXIMUM (7F) */
-            0x75, 0x08,  /* REPORT_SIZE (8) */
-            0x95, 0x03,  /* REPORT_COUNT (3) */
-            0x81, 0x06,  /* USAGE_TYPE_INPUT (Data,Ary,Abs) */
-        0xc0,        /* END_COLLECTION */
+            USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
+            USAGE, USAGE_GENERIC_DESKTOP_PAGE_X,
+            USAGE, USAGE_GENERIC_DESKTOP_PAGE_Y,
+            USAGE, 0x38,  /* USAGE (Wheel) */
+            LOGICAL_MINIMUM, 0x81,  /* LOGICAL_MINIMUM (81) */
+            LOGICAL_MAXIMUM, 0x7F,  /* LOGICAL_MAXIMUM (7F) */
+            REPORT_SIZE, 0x08,  /* REPORT_SIZE (8) */
+            REPORT_COUNT, 0x03,  /* REPORT_COUNT (3) */
+            USAGE_TYPE_INPUT, 0x06,  /* USAGE_TYPE_INPUT (Data,Ary,Abs) */
+        END_COLECTION,        /* END_COLLECTION */
 
 //        0x09, 0x3c,  /* USAGE (Motion Wakeup) */
 //        0x05, 0xff,  /* USAGE PAGE (vendor defined) */
@@ -235,7 +235,7 @@ const uint8_t usb_hid_mouse_report_desc[HID_MOUSE_REPORT_DESC_LEN] =
 //        0x75, 0x06,  /* REPORT_SIZE (6) */
 //        0x95, 0x01,  /* REPORT_COUNT (1) */
 //        0xb1, 0x01,  /* Feature (cnst) */
-    0xc0
+    END_COLECTION
 };
 
 /* local function prototypes ('static') */
@@ -382,8 +382,8 @@ const uint8_t usb_hid_mouse_report_desc[HID_MOUSE_REPORT_DESC_LEN] =
 //
 //    case USB_GET_DESCRIPTOR:
 //        if (USB_DESCTYPE_REPORT == (req->wValue >> 8U)) {
-//            transc->remain_len = USB_MIN(HID_MOUSE_REPORT_DESC_LEN, req->wLength);
-//            transc->xfer_buf = (uint8_t *)usb_hid_mouse_report_desc;
+//            transc->remain_len = USB_MIN(HID_MOUSE_REPORT_DESC_SIZE, req->wLength);
+//            transc->xfer_buf = (uint8_t *)USBD_MOUSE_REPORT_DESC;
 //
 //            return REQ_SUPP;
 //        }
