@@ -63,7 +63,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
     .bNumberConfigurations = USBD_CFG_MAX_NUM
 };
 
-//const usb_hid_desc_config_set hid_cntlr_config_desc =
+//const usb_hid_desc_config_set USBD_CNTLR_CONFIG_DESC =
 //{
 //    .config =
 //    {
@@ -191,7 +191,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //
 //usb_desc hid_cntlr_desc = {
 //    .dev_desc    = (uint8_t *)&hid_cntlr_dev_desc,
-//    .config_desc = (uint8_t *)&hid_cntlr_config_desc,
+//    .config_desc = (uint8_t *)&USBD_CNTLR_CONFIG_DESC,
 //    .strings     = usbd_hid_cntlr_strings
 //};
 //
@@ -295,8 +295,8 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //    memset((void *)&hid_handler, 0U, sizeof(hid_cntlr_handler));
 //
 //    /* Initialize the data Tx endpoint */
-//    usbd_ep_setup (udev, &(hid_cntlr_config_desc.epin));
-//    usbd_ep_setup (udev, &(hid_cntlr_config_desc.epout));
+//    usbd_ep_setup (udev, &(USBD_CNTLR_CONFIG_DESC.epin));
+//    usbd_ep_setup (udev, &(USBD_CNTLR_CONFIG_DESC.epout));
 //
 //    usbd_ep_recev (udev, HID_CNTLR_OUT_EP, hid_handler.data_out, HID_CNTLR_OUT_PACKET);
 //
