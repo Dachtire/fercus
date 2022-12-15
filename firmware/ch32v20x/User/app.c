@@ -53,23 +53,41 @@ void gpio_config(void)
     switch (kb_device) {
         default:
         case KB_DEVICE_KEYBORAD:
-            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        case KB_DEVICE_COMPOSITE:
             GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
             break;
 
         case KB_DEVICE_VENDOR:
         case KB_DEVICE_KEYBOARD_ADC_DIFF:
         case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
-            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
             GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AIN;
             break;
     }
 
     for (int i = 0; i < KB_ROW_NUM; ++i) {
-        GPIO_InitStructure.GPIO_Pin   = KB_ROW_GPIO_PIN[i];
+        GPIO_InitStructure.GPIO_Pin = KB_ROW_GPIO_PIN[i];
         GPIO_Init(KB_ROW_GPIO_PORT, &GPIO_InitStructure);
     }
 
+    #if KB_SIDE == KB_SIDE_LEFT
+        for (int i = 0; i < JS_NUM; ++i) {
+            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+            GPIO_InitStructure.GPIO_Pin = JS_AXIS_GPIO_PIN[i];
+            GPIO_Init(JS_AXIS_GPIO_PORT[i], &GPIO_InitStructure);
+        }
+        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
+        GPIO_InitStructure.GPIO_Pin = JS0_SW_GPIO_PIN;
+        GPIO_Init(JS0_SW_GPIO_PORT, &GPIO_InitStructure);
+    #else
+        for (int i = JS_NUM; i < JS_AXIS_NUM; ++i) {
+            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+            GPIO_InitStructure.GPIO_Pin = JS_AXIS_GPIO_PIN[i];
+            GPIO_Init(JS_AXIS_GPIO_PORT[i], &GPIO_InitStructure);
+        }
+        GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
+        GPIO_InitStructure.GPIO_Pin = JS1_SW_GPIO_PIN;
+        GPIO_Init(JS1_SW_GPIO_PORT, &GPIO_InitStructure);
+    #endif
 
     //    // usart2
     //    gpio_init(GPIOB, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_10);
@@ -105,6 +123,23 @@ void adc_config() {
             ADC_RegularChannelConfig(ADC1, ADC_Channel_4, 5, ADC_SampleTime_71Cycles5);
             ADC_RegularChannelConfig(ADC1, ADC_Channel_5, 6, ADC_SampleTime_71Cycles5);
 
+            ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+            break;
+
+        case KB_DEVICE_COMPOSITE:
+            DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)js_axis_adc, JS_NUM);
+            DMA_Cmd(DMA1_Channel1, ENABLE);
+
+            ADC_Function_Init();
+            // t = 1 / 12Mhz
+            // 71Cycles5 = 7 * 6 us
+            #if KB_SIDE == KB_SIDE_LEFT
+                ADC_RegularChannelConfig(ADC1, ADC_Channel_6, 1, ADC_SampleTime_71Cycles5);
+                ADC_RegularChannelConfig(ADC1, ADC_Channel_7, 2, ADC_SampleTime_71Cycles5);
+            #else
+                ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 1, ADC_SampleTime_71Cycles5);
+                ADC_RegularChannelConfig(ADC1, ADC_Channel_9, 2, ADC_SampleTime_71Cycles5);
+            #endif
             ADC_SoftwareStartConvCmd(ADC1, ENABLE);
             break;
 
@@ -154,6 +189,7 @@ void TIM1_Init()
     switch (kb_device) {
         default:
         case KB_DEVICE_KEYBORAD:
+        case KB_DEVICE_COMPOSITE:
             TIM_TimeBaseInitStructure.TIM_Period = 2 * 1000 / 8 - 1;
             break;
 
@@ -223,13 +259,22 @@ void ADC_Function_Init(void)
         case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
             ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
             ADC_InitStructure.ADC_ScanConvMode = ENABLE;
-            ADC_InitStructure.ADC_NbrOfChannel = 6;
+            ADC_InitStructure.ADC_NbrOfChannel = KB_ROW_NUM;
             break;
+
+        case KB_DEVICE_COMPOSITE:
+            ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+            ADC_InitStructure.ADC_ScanConvMode = ENABLE;
+            ADC_InitStructure.ADC_NbrOfChannel = JS_NUM;
+            break ;
 
         case KB_DEVICE_VENDOR:
             ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
             ADC_InitStructure.ADC_ScanConvMode = DISABLE;
             ADC_InitStructure.ADC_NbrOfChannel = 1;
+            break;
+
+        case KB_DEVICE_KEYBORAD:
             break;
     }
 

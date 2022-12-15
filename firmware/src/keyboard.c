@@ -13,6 +13,11 @@ GPIO_TypeDef* const KB_COL_GPIO_PORT[KB_COL_NUM] = {
         KB_COL_0_GPIO_PORT, KB_COL_1_GPIO_PORT, KB_COL_2_GPIO_PORT,KB_COL_3_GPIO_PORT,
         KB_COL_4_GPIO_PORT, KB_COL_5_GPIO_PORT, KB_COL_6_GPIO_PORT};
 
+const uint16_t JS_AXIS_GPIO_PIN[JS_AXIS_NUM] = {
+        JS0_A1_GPIO_PIN, JS0_A2_GPIO_PIN, JS1_A1_GPIO_PIN, JS1_A2_GPIO_PIN};
+GPIO_TypeDef* const JS_AXIS_GPIO_PORT[JS_AXIS_NUM] = {
+        JS0_A1_GPIO_PORT, JS0_A2_GPIO_PORT, JS1_A1_GPIO_PORT, JS1_A2_GPIO_PORT};
+
 uint8_t kb_usbhd_buf[USBD_KB_SEND_SIZE] = {}, kb_usbd_buf[USBD_KB_SEND_SIZE] = {}, kb_buf_device[USBD_KB_SEND_SIZE] = {}, kb_buf_empty[USBD_KB_SEND_SIZE] = {};
 uint8_t kb_buf_cntrl[USBD_CNTLR_BUF_SIZE] = {};
 uint8_t kb_buf_mouse[USBD_MICE_BUF_SIZE] = {};

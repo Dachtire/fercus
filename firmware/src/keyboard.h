@@ -18,7 +18,6 @@
 #define KB_ROW_4_GPIO_PIN GPIO_Pin_4
 #define KB_ROW_5_GPIO_PIN GPIO_Pin_5
 
-
 #define KB_COL_0_GPIO_PIN GPIO_Pin_10
 #define KB_COL_0_GPIO_PORT GPIOB
 #define KB_COL_1_GPIO_PIN GPIO_Pin_11
@@ -34,8 +33,26 @@
 #define KB_COL_6_GPIO_PIN GPIO_Pin_8
 #define KB_COL_6_GPIO_PORT GPIOA
 
-const uint16_t KB_ROW_GPIO_PIN[], KB_COL_GPIO_PIN[];
+#define JS_AXIS_NUM 4
+#define JS_NUM 2
+
+#define JS0_A1_GPIO_PIN GPIO_Pin_6
+#define JS0_A1_GPIO_PORT GPIOA
+#define JS0_A2_GPIO_PIN GPIO_Pin_7
+#define JS0_A2_GPIO_PORT GPIOA
+#define JS1_A1_GPIO_PIN GPIO_Pin_0
+#define JS1_A1_GPIO_PORT GPIOB
+#define JS1_A2_GPIO_PIN GPIO_Pin_1
+#define JS1_A2_GPIO_PORT GPIOB
+
+#define JS0_SW_GPIO_PIN GPIO_Pin_13
+#define JS0_SW_GPIO_PORT GPIOA
+#define JS1_SW_GPIO_PIN GPIO_Pin_14
+#define JS1_SW_GPIO_PORT GPIOA
+
+const uint16_t KB_ROW_GPIO_PIN[], KB_COL_GPIO_PIN[], JS_AXIS_GPIO_PIN[];
 GPIO_TypeDef* const KB_COL_GPIO_PORT[];
+GPIO_TypeDef* const JS_AXIS_GPIO_PORT[];
 
 #define KB_SIDE_LEFT 0
 #define KB_SIDE_RIGHT 1
@@ -133,7 +150,8 @@ uint32_t kb_flag;
 extern uint8_t kb_key_count;
 uint32_t kb_ctl;
 uint8_t kb_repeat, kb_device, kb_usb;
-uint16_t kb_row_adc[KB_ROW_NUM];
+uint16_t kb_row_adc[KB_ROW_NUM], js_axis_adc[JS_NUM];
+
 
 #define KB_ADC_SIZE (1)
 #define KB_ADC_LEN (KB_ADC_SIZE * 2)
