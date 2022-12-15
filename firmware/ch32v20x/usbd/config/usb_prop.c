@@ -18,6 +18,8 @@
 #include "usbd_hid_keyboard.h"
 #include "usbd_vendor.h"
 #include "usbd_composite.h"
+#include "usbd_hid_mouse.h"
+#include "usbd_hid_cntlr.h"
 
 uint8_t Request = 0;
 
@@ -125,7 +127,8 @@ ONE_DESCRIPTOR Config_Descriptor_USBD_VENDOR_CONFIG_DESC = {
 
 ONE_DESCRIPTOR Report_Descriptor_USBD_COMPOSITE[USBD_COMPOSITE_ITF_NUM] = {
     {(uint8_t*)USBD_KB_REPORT_DESC, USBD_KB_REPORT_DESC_SIZE},
-    //	{(uint8_t*)USBD_MouseRepDesc, USBD_SIZE_MOUSE_DESC},
+    {(uint8_t*)USBD_MOUSE_REPORT_DESC, HID_MOUSE_REPORT_DESC_SIZE},
+    {(uint8_t*)USBD_CNTLR_REPORT_DESC, HID_CNTLR_REPORT_DESC_SIZE}
 };
 
 ONE_DESCRIPTOR Report_Descriptor_USBD_KB[2] = {
@@ -134,8 +137,9 @@ ONE_DESCRIPTOR Report_Descriptor_USBD_KB[2] = {
 };
 
 ONE_DESCRIPTOR Hid_Descriptor_USBD_COMPOSITE[USBD_COMPOSITE_ITF_NUM] = {
-        {(uint8_t*)&USBD_KB_CONFIG_DESC.itf.iInterface, 0x09},
-        //    {(uint8_t*)&USBD_ConfigDescriptor[43], 0x09},
+    {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.kb_inf.iInterface, 0x09},
+    {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.mouse_inf.iInterface, 0x09},
+    {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.cntlr_inf.iInterface, 0x09},
 };
 
 ONE_DESCRIPTOR Hid_Descriptor_USBD_KB[2] = {
