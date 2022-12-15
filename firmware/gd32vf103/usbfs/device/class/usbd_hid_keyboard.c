@@ -88,7 +88,7 @@ const usb_hid_desc_config_set USBD_KB_CONFIG_DESC =
     },
 
     // interface descriptor
-    .hid_itf =
+    .itf =
     {
         .header =
         {
@@ -105,7 +105,7 @@ const usb_hid_desc_config_set USBD_KB_CONFIG_DESC =
     },
 
     // hid descriptor
-    .hid_vendor =
+    .hid =
     {
         .header =
         {
@@ -120,7 +120,7 @@ const usb_hid_desc_config_set USBD_KB_CONFIG_DESC =
     },
 
     // endpoint descriptor
-    .hid_epin =
+    .epin =
     {
         .header =
         {
@@ -133,7 +133,7 @@ const usb_hid_desc_config_set USBD_KB_CONFIG_DESC =
         .bInterval            = 0x01U
     },
 
-    .hid_epout =
+    .epout =
     {
         .header =
         {
@@ -350,8 +350,8 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //    memset((void *)&hid_handler, 0U, sizeof(hid_kb_handler));
 //
 //     Initialize the data Tx endpoint
-//    usbd_ep_setup (udev, &(hid_kb_config_desc.hid_epin));
-//    usbd_ep_setup (udev, &(hid_kb_config_desc.hid_epout));
+//    usbd_ep_setup (udev, &(hid_kb_config_desc.epin));
+//    usbd_ep_setup (udev, &(hid_kb_config_desc.epout));
 //
 //    usbd_ep_recev (udev, HID_KB_OUT_EP, hid_handler.data_out, USBD_KB_RECEV_SIZE);
 //

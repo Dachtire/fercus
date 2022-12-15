@@ -81,7 +81,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //    },
 //
 //    // interface descriptor
-//    .hid_itf =
+//    .itf =
 //    {
 //        .header =
 //         {
@@ -97,7 +97,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //        .iInterface           = 0x00U
 //    },
 //
-//    .hid_vendor =
+//    .hid =
 //    {
 //        .header =
 //         {
@@ -111,7 +111,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //        .wDescriptorLength    = HID_CNTLR_REPORT_DESC_LEN,
 //    },
 //
-//    .hid_epin =
+//    .epin =
 //    {
 //        .header =
 //         {
@@ -124,7 +124,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //        .bInterval            = 0x01U
 //    },
 //
-//    .hid_epout =
+//    .epout =
 //    {
 //        .header =
 //         {
@@ -295,8 +295,8 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //    memset((void *)&hid_handler, 0U, sizeof(hid_cntlr_handler));
 //
 //    /* Initialize the data Tx endpoint */
-//    usbd_ep_setup (udev, &(hid_cntlr_config_desc.hid_epin));
-//    usbd_ep_setup (udev, &(hid_cntlr_config_desc.hid_epout));
+//    usbd_ep_setup (udev, &(hid_cntlr_config_desc.epin));
+//    usbd_ep_setup (udev, &(hid_cntlr_config_desc.epout));
 //
 //    usbd_ep_recev (udev, HID_CNTLR_OUT_EP, hid_handler.data_out, HID_CNTLR_OUT_PACKET);
 //

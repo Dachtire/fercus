@@ -79,7 +79,7 @@ const usb_hid_desc_config_set hid_mouse_config_desc =
         .bMaxPower            = HID_MAXPOWER(500)
     },
 
-    .hid_itf =
+    .itf =
     {
         .header =
          {
@@ -95,7 +95,7 @@ const usb_hid_desc_config_set hid_mouse_config_desc =
         .iInterface           = 0x00U
     },
 
-    .hid_vendor =
+    .hid =
     {
         .header =
          {
@@ -109,7 +109,7 @@ const usb_hid_desc_config_set hid_mouse_config_desc =
         .wDescriptorLength    = HID_MOUSE_REPORT_DESC_LEN,
     },
 
-    .hid_epin =
+    .epin =
     {
         .header =
          {
@@ -122,7 +122,7 @@ const usb_hid_desc_config_set hid_mouse_config_desc =
         .bInterval            = 0x01U
     },
 
-    .hid_epout =
+    .epout =
     {
         .header =
          {
@@ -307,8 +307,8 @@ const uint8_t usb_hid_mouse_report_desc[HID_MOUSE_REPORT_DESC_LEN] =
 //    memset((void *)&hid_handler, 0U, sizeof(hid_mouse_handler));
 //
 //    /* Initialize the data Tx endpoint */
-//    usbd_ep_setup (udev, &(hid_mouse_config_desc.hid_epin));
-//    usbd_ep_setup (udev, &(hid_mouse_config_desc.hid_epout));
+//    usbd_ep_setup (udev, &(hid_mouse_config_desc.epin));
+//    usbd_ep_setup (udev, &(hid_mouse_config_desc.epout));
 //
 //    usbd_ep_recev (udev, HID_MOUSE_OUT_EP, hid_handler.data_out, HID_MOUSE_OUT_PACKET);
 //

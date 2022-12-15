@@ -422,10 +422,10 @@ typedef struct
 typedef struct
 {
     usb_desc_config         config;
-    usb_desc_itf            hid_itf;
-    usb_desc_hid            hid_vendor;
-    usb_desc_ep             hid_epin;
-    usb_desc_ep             hid_epout;
+    usb_desc_itf itf;
+    usb_desc_hid hid;
+    usb_desc_ep epin;
+    usb_desc_ep epout;
 }usb_hid_desc_config_set;
 
 #endif /* __USB_HID_H */

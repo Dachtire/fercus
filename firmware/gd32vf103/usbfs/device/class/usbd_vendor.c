@@ -359,8 +359,8 @@ static const usb_desc_str serial_string =
 //    memset((void *)&hid_handler, 0U, sizeof(hid_kb_handler));
 //
 //     Initialize the data Tx endpoint
-//    usbd_ep_setup (udev, &(hid_kb_config_desc.hid_epin));
-//    usbd_ep_setup (udev, &(hid_kb_config_desc.hid_epout));
+//    usbd_ep_setup (udev, &(hid_kb_config_desc.epin));
+//    usbd_ep_setup (udev, &(hid_kb_config_desc.epout));
 //
 //    usbd_ep_recev (udev, HID_KB_OUT_EP, hid_handler.data_out, USBD_KB_RECEV_SIZE);
 //

@@ -118,7 +118,7 @@ ONE_DESCRIPTOR Report_Descriptor_USBD_KB[2] = {
 };
 
 ONE_DESCRIPTOR Hid_Descriptor_USBD_KB[2] = {
-    {(uint8_t*)&USBD_KB_CONFIG_DESC.hid_itf.iInterface, 0x09},
+    {(uint8_t*)&USBD_KB_CONFIG_DESC.itf.iInterface, 0x09},
 //    {(uint8_t*)&USBD_ConfigDescriptor[43], 0x09},
 };
 
