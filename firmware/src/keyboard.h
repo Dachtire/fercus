@@ -10,6 +10,10 @@
 #include "app.h"
 #include "app_km.h"
 
+#define KB_LYR_NUM 4
+#define KB_ROW_NUM 6
+#define KB_COL_NUM 7
+
 #define KB_ROW_GPIO_PORT  GPIOA
 #define KB_ROW_0_GPIO_PIN GPIO_Pin_0
 #define KB_ROW_1_GPIO_PIN GPIO_Pin_1
@@ -50,9 +54,9 @@
 #define JS1_SW_GPIO_PIN GPIO_Pin_14
 #define JS1_SW_GPIO_PORT GPIOA
 
-const uint16_t KB_ROW_GPIO_PIN[], KB_COL_GPIO_PIN[], JS_AXIS_GPIO_PIN[];
-GPIO_TypeDef* const KB_COL_GPIO_PORT[];
-GPIO_TypeDef* const JS_AXIS_GPIO_PORT[];
+const uint16_t KB_ROW_GPIO_PIN[KB_ROW_NUM], KB_COL_GPIO_PIN[KB_COL_NUM], JS_AXIS_GPIO_PIN[JS_AXIS_NUM];
+GPIO_TypeDef* const KB_COL_GPIO_PORT[KB_COL_NUM];
+GPIO_TypeDef* const JS_AXIS_GPIO_PORT[JS_AXIS_NUM];
 
 #define KB_SIDE_LEFT 0
 #define KB_SIDE_RIGHT 1
@@ -67,10 +71,6 @@ GPIO_TypeDef* const JS_AXIS_GPIO_PORT[];
 #define USBD_KB_RECEV_SIZE 12  // bytes
 #define USBD_CNTLR_BUF_SIZE 6  // bytes
 #define USBD_MICE_BUF_SIZE  4  // bytes
-
-#define KB_LYR_NUM 4
-#define KB_ROW_NUM 6
-#define KB_COL_NUM 7
 
 #define BIT(x)                       0x01U<<(x)
 
