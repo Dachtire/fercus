@@ -17,6 +17,7 @@
 
 #include "usbd_hid_keyboard.h"
 #include "usbd_vendor.h"
+#include "usbd_composite.h"
 
 uint8_t Request = 0;
 
@@ -92,6 +93,11 @@ ONE_DESCRIPTOR Hid_Descriptor[2] =
 	{(uint8_t*)&USBD_ConfigDescriptor[43], 0x09},
 };
 
+ONE_DESCRIPTOR Device_Descriptor_USBD_COMPOSITE_DEV_DESC = {
+    (uint8_t*)&USBD_COMPOSITE_DEV_DESC,
+    USBD_SIZE_DEVICE_DESC
+};
+
 ONE_DESCRIPTOR Device_Descriptor_USBD_KB_DEV_DESC = {
     (uint8_t*)&USBD_KB_DEV_DESC,
     USBD_SIZE_DEVICE_DESC
@@ -100,6 +106,11 @@ ONE_DESCRIPTOR Device_Descriptor_USBD_KB_DEV_DESC = {
 ONE_DESCRIPTOR Device_Descriptor_USBD_VENDOR_DEV_DESC = {
     (uint8_t*)&USBD_VENDOR_DEV_DESC,
     USBD_SIZE_DEVICE_DESC
+};
+
+ONE_DESCRIPTOR Config_Descriptor_USBD_COMPOSITE_CONFIG_DESC = {
+    (uint8_t*)&USBD_COMPOSITE_CONFIG_DESC,
+    USBD_COMPOSITE_CONFIG_DESC_SIZE
 };
 
 ONE_DESCRIPTOR Config_Descriptor_USBD_KB_CONFIG_DESC = {
@@ -112,9 +123,19 @@ ONE_DESCRIPTOR Config_Descriptor_USBD_VENDOR_CONFIG_DESC = {
     USBD_SIZE_CONFIG_DESC
 };
 
+ONE_DESCRIPTOR Report_Descriptor_USBD_COMPOSITE[USBD_COMPOSITE_ITF_NUM] = {
+    {(uint8_t*)USBD_KB_REPORT_DESC, USBD_KB_REPORT_DESC_SIZE},
+    //	{(uint8_t*)USBD_MouseRepDesc, USBD_SIZE_MOUSE_DESC},
+};
+
 ONE_DESCRIPTOR Report_Descriptor_USBD_KB[2] = {
     {(uint8_t*)USBD_KB_REPORT_DESC, USBD_KB_REPORT_DESC_SIZE},
     //	{(uint8_t*)USBD_MouseRepDesc, USBD_SIZE_MOUSE_DESC},
+};
+
+ONE_DESCRIPTOR Hid_Descriptor_USBD_COMPOSITE[USBD_COMPOSITE_ITF_NUM] = {
+        {(uint8_t*)&USBD_KB_CONFIG_DESC.itf.iInterface, 0x09},
+        //    {(uint8_t*)&USBD_ConfigDescriptor[43], 0x09},
 };
 
 ONE_DESCRIPTOR Hid_Descriptor_USBD_KB[2] = {
@@ -269,7 +290,7 @@ void USBD_Reset(void)
 //          _ClearDTOG_TX(ENDP2);
 //          _ClearDTOG_RX(ENDP2);
 //          break;
-
+      case KB_DEVICE_COMPOSITE:
       case KB_DEVICE_KEYBORAD:
           SetEPType(ENDP1, EP_INTERRUPT);
           SetEPTxAddr(ENDP1, ENDP1_TXADDR);
@@ -330,6 +351,9 @@ uint8_t *USBD_GetDeviceDescriptor(uint16_t Length)
     switch (kb_device) {
         default:
 //              return Standard_GetDescriptorData(Length, &Device_Descriptor);
+        case KB_DEVICE_COMPOSITE:
+            return Standard_GetDescriptorData(Length, &Device_Descriptor_USBD_COMPOSITE_DEV_DESC);
+
         case KB_DEVICE_KEYBORAD:
             return Standard_GetDescriptorData(Length, &Device_Descriptor_USBD_KB_DEV_DESC);
 
@@ -352,6 +376,9 @@ uint8_t *USBD_GetConfigDescriptor(uint16_t Length)
     switch (kb_device) {
         default:
 //            return Standard_GetDescriptorData(Length, &Config_Descriptor);
+        case KB_DEVICE_COMPOSITE:
+            return Standard_GetDescriptorData(Length, &Config_Descriptor_USBD_COMPOSITE_CONFIG_DESC);
+
         case KB_DEVICE_KEYBORAD:
             return Standard_GetDescriptorData(Length, &Config_Descriptor_USBD_KB_CONFIG_DESC);
 
@@ -404,6 +431,9 @@ uint8_t *USBD_GetReportDescriptor(uint16_t Length)
       switch (kb_device) {
           default:
 //              return Standard_GetDescriptorData(Length, &Report_Descriptor[wIndex0]);
+          case KB_DEVICE_COMPOSITE:
+              return Standard_GetDescriptorData(Length, &Report_Descriptor_USBD_COMPOSITE[wIndex0]);
+
           case KB_DEVICE_KEYBORAD:
               return Standard_GetDescriptorData(Length, &Report_Descriptor_USBD_KB[wIndex0]);
 
@@ -435,6 +465,9 @@ uint8_t *USBD_GetHidDescriptor(uint16_t Length)
       switch (kb_device) {
           default:
 //              return Standard_GetDescriptorData(Length, &Hid_Descriptor[wIndex0]);
+          case KB_DEVICE_COMPOSITE:
+              return Standard_GetDescriptorData(Length, &Hid_Descriptor_USBD_COMPOSITE[wIndex0]);
+
           case KB_DEVICE_KEYBORAD:
               return Standard_GetDescriptorData(Length, &Hid_Descriptor_USBD_KB[wIndex0]);
 

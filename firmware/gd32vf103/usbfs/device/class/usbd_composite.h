@@ -62,6 +62,9 @@ typedef struct
     usb_desc_ep cntlr_epout;
 } usbd_composite_desc_config_set;
 
+const usb_desc_dev USBD_COMPOSITE_DEV_DESC;
+const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC;
+
 //extern usb_desc usb_composite_desc;
 //extern usb_class_core usb_composite_cb;
 
