@@ -2,8 +2,10 @@
 [[./doc/image/01_overview.jpg]]
 * Feature
 ** connect though usb c in two ways
-1. one's left side connect to pc and right side connect to another's left side.
-2. both left side connect to pc directly.
+1. Daisy chain
+one's left side connect to pc and right side connect to another's left side.
+2. point to point
+both left side connect to pc directly.
 * Hardware
 ** keychron low profile optical
 ** latency
