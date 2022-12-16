@@ -33,8 +33,9 @@ OF SUCH DAMAGE.
 */
 
 #include "usbd_hid_cntlr.h"
-#include "usb_hid.h"
-#include "usbd_conf.h"
+//#include "usb_prop.h"
+//#include "usb_hid.h"
+//#include "usbd_conf.h"
 //#include <string.h>
 
 #define USBD_VID                     0x28e9U
@@ -280,7 +281,7 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
 //
 //    return USBD_OK;
 //}
-//
+
 ///*!
 //    \brief      initialize the HID device
 //    \param[in]  udev: pointer to USB device instance
@@ -435,3 +436,19 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
 //
 //    return USBD_OK;
 //}
+void usbd_cntlr_report_send(uint8_t *report)
+{
+    UserToPMABufferCopy(report, ENDP3_TXADDR, USBD_CNTLR_BUF_SIZE);
+    SetEPTxCount(ENDP3, USBD_CNTLR_BUF_SIZE);
+    SetEPTxValid(ENDP3);
+    usbd_ep_busy[HID_CNTLR_INF] = TRUE;
+}
+
+uint8_t usbd_cntlr_check_send()
+{
+    if (usbd_ep_busy[HID_CNTLR_INF] == FALSE) {
+        return USB_SUCCESS;
+    } else {
+        return USB_ERROR;
+    }
+}
