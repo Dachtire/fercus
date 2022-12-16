@@ -95,7 +95,7 @@ const usb_hid_desc_config_set USBD_KB_CONFIG_DESC =
             .bLength         = USB_ITF_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_ITF
         },
-        .bInterfaceNumber     = HID_KB_INF,
+        .bInterfaceNumber     = USBD_INF_KB,
         .bAlternateSetting    = 0x00U,
         .bNumEndpoints        = 0x02U,
         .bInterfaceClass      = USB_HID_CLASS,
@@ -127,7 +127,7 @@ const usb_hid_desc_config_set USBD_KB_CONFIG_DESC =
             .bLength         = USB_EP_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_EP
         },
-        .bEndpointAddress     = HID_KB_IN_EP,
+        .bEndpointAddress     = USBD_EP_IN_KB,
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_KB_IN_PACKET,
         .bInterval            = 0x01U
@@ -140,7 +140,7 @@ const usb_hid_desc_config_set USBD_KB_CONFIG_DESC =
             .bLength         = USB_EP_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_EP
         },
-        .bEndpointAddress     = HID_KB_OUT_EP,
+        .bEndpointAddress     = USBD_EP_OUT_KB,
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_KB_OUT_PACKET,
         .bInterval            = 0x01U
@@ -265,7 +265,7 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //*/
 //uint8_t hid_kb_check_send(usb_dev *udev)
 //{
-//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[HID_KB_INF];
+//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
 //
 //    if (1U == hid->sent_flag) {
 //        return USBD_OK;
@@ -276,7 +276,7 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //
 //uint8_t hid_kb_check_recev(usb_dev *udev)
 //{
-//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[HID_KB_INF];
+//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
 //
 //    if (1U == hid->receive_flag) {
 //        return USBD_OK;
@@ -313,11 +313,11 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //*/
 //uint8_t hid_kb_report_send (usb_dev *udev, uint8_t *report, uint32_t len)
 //{
-//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[HID_KB_INF];
+//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
 //
 //    hid->sent_flag = 0U;
 //
-//    usbd_ep_send(udev, HID_KB_IN_EP, report, USBD_KB_SEND_SIZE);
+//    usbd_ep_send(udev, USBD_EP_IN_KB, report, USBD_REPORT_SIZE_KB);
 //
 //    return USBD_OK;
 //}
@@ -330,9 +330,9 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //*/
 //uint8_t hid_kb_report_receive (usb_dev *udev)
 //{
-//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[HID_KB_INF];
+//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
 //    hid->receive_flag = 0U;
-//    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_buf_recev, USBD_KB_RECEV_SIZE);
+//    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_report_recev, USBD_KB_RECEV_SIZE);
 //    return USBD_OK;
 //}
 //
@@ -353,12 +353,12 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //    usbd_ep_setup (udev, &(hid_kb_config_desc.epin));
 //    usbd_ep_setup (udev, &(hid_kb_config_desc.epout));
 //
-//    usbd_ep_recev (udev, HID_KB_OUT_EP, hid_handler.data_out, USBD_KB_RECEV_SIZE);
+//    usbd_ep_recev (udev, USBD_EP_OUT_KB, hid_handler.data_out, USBD_KB_RECEV_SIZE);
 //
 //    hid_handler.sent_flag = 1U;
 //    hid_handler.receive_flag = 1U;
 //
-//    udev->dev.class_data[HID_KB_INF] = (void *)&hid_handler;
+//    udev->dev.class_data[USBD_INF_KB] = (void *)&hid_handler;
 //
 //    if (NULL != udev->dev.user_data) {
 //        ((hid_kb_fop_handler *)udev->dev.user_data)->hid_itf_config();
@@ -377,8 +377,8 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //static uint8_t hid_kb_deinit (usb_dev *udev, uint8_t config_index)
 //{
 //     deinitialize HID endpoints
-//    usbd_ep_clear(udev, HID_KB_IN_EP);
-//    usbd_ep_clear(udev, HID_KB_OUT_EP);
+//    usbd_ep_clear(udev, USBD_EP_IN_KB);
+//    usbd_ep_clear(udev, USBD_EP_OUT_KB);
 //
 //    return USBD_OK;
 //}
@@ -394,7 +394,7 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //{
 //    usb_transc *transc = &udev->dev.transc_in[0];
 //
-//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[HID_KB_INF];
+//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
 //
 //    switch (req->bRequest) {
 //        case GET_REPORT:
@@ -451,7 +451,7 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //static uint8_t hid_kb_data_in (usb_dev *udev, uint8_t ep_num)
 //{
 //
-//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[HID_KB_INF];
+//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
 //
 //    hid->sent_flag = 1U;
 //
@@ -467,7 +467,7 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //*/
 //static uint8_t hid_kb_data_out (usb_dev *udev, uint8_t ep_num)
 //{
-//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[HID_KB_INF];
+//    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
 //
 //    hid->receive_flag = 1U;
 //
@@ -476,24 +476,23 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 
 void usbd_kb_report_send(uint8_t *report)
 {
-//    while (Endp1Busy);
-    UserToPMABufferCopy(report, ENDP1_TXADDR, USBD_KB_SEND_SIZE);
-    SetEPTxCount(ENDP1, USBD_KB_SEND_SIZE);
+    UserToPMABufferCopy(report, ENDP1_TXADDR, USBD_REPORT_SIZE_KB);
+    SetEPTxCount(ENDP1, USBD_REPORT_SIZE_KB);
     SetEPTxValid(ENDP1);
-    USBD_Endp1_Busy = TRUE;
+    usbd_epin_busy[ENDP1] = TRUE;
 }
 
 uint8_t usbd_kb_report_receive()
 {
-    //    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[HID_KB_INF];
+    //    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
     //    hid->receive_flag = 0U;
-    //    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_buf_recev, USBD_KB_RECEV_SIZE);
+    //    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_report_recev, USBD_KB_RECEV_SIZE);
     //    return USBD_OK;
 }
 
 uint8_t usbd_kb_check_send()
 {
-    if (USBD_Endp1_Busy == FALSE) {
+    if (usbd_epin_busy[ENDP1] == FALSE) {
         return USB_SUCCESS;
     } else {
         return USB_ERROR;
@@ -502,7 +501,7 @@ uint8_t usbd_kb_check_send()
 
 uint8_t usbd_kb_check_recev()
 {
-    //    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[HID_KB_INF];
+    //    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
     //
     //    if (1U == hid->receive_flag) {
     //        return USBD_OK;

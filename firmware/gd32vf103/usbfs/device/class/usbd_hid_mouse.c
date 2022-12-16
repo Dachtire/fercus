@@ -86,7 +86,7 @@ const usb_hid_desc_config_set hid_mouse_config_desc =
              .bLength         = USB_ITF_DESC_LEN,
              .bDescriptorType = USB_DESCTYPE_ITF
          },
-        .bInterfaceNumber     = HID_MOUSE_INF,
+        .bInterfaceNumber     = USBD_INF_MOUSE,
         .bAlternateSetting    = 0x00U,
         .bNumEndpoints        = 0x02U,
         .bInterfaceClass      = USB_HID_CLASS,
@@ -116,7 +116,7 @@ const usb_hid_desc_config_set hid_mouse_config_desc =
              .bLength         = USB_EP_DESC_LEN,
              .bDescriptorType = USB_DESCTYPE_EP
          },
-        .bEndpointAddress     = HID_MOUSE_IN_EP,
+        .bEndpointAddress     = USBD_EP_IN_MOUSE,
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_MOUSE_IN_PACKET,
         .bInterval            = 0x01U
@@ -129,7 +129,7 @@ const usb_hid_desc_config_set hid_mouse_config_desc =
              .bLength         = USB_EP_DESC_LEN,
              .bDescriptorType = USB_DESCTYPE_EP
          },
-        .bEndpointAddress     = HID_MOUSE_OUT_EP,
+        .bEndpointAddress     = USBD_EP_OUT_MOUSE,
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_MOUSE_OUT_PACKET,
         .bInterval            = 0x01U
@@ -202,27 +202,24 @@ const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE] =
         USAGE, USAGE_GENERIC_DESKTOP_PAGE_POINTER,
         COLLECTION, COLLECTION_PHYSICAL,
             USAGE_PAGE, USAGE_PAGE_BUTTON,
-            USAGE_MINIMUM, 0x01,
-            USAGE_MAXIMUM, 0x03,
+            USAGE_MINIMUM, USAGE_BUTTON_PAGE_1,
+            USAGE_MAXIMUM, 0x50,
             LOGICAL_MINIMUM, 0x00,
             LOGICAL_MAXIMUM, 0x01,
-            REPORT_COUNT, 0x03,
             REPORT_SIZE, 0x01,
+            REPORT_COUNT, 0x50,
             USAGE_TYPE_INPUT, USAGE_TYPE_DATA_DV,
-            REPORT_COUNT, 0x01,
-            REPORT_SIZE, 0x05,
-            USAGE_TYPE_INPUT, 0x01,  /* USAGE_TYPE_INPUT (Cnst,Var,Abs) */
 
             USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
             USAGE, USAGE_GENERIC_DESKTOP_PAGE_X,
             USAGE, USAGE_GENERIC_DESKTOP_PAGE_Y,
-            USAGE, 0x38,  /* USAGE (Wheel) */
-            LOGICAL_MINIMUM, 0x81,  /* LOGICAL_MINIMUM (81) */
-            LOGICAL_MAXIMUM, 0x7F,  /* LOGICAL_MAXIMUM (7F) */
-            REPORT_SIZE, 0x08,  /* REPORT_SIZE (8) */
-            REPORT_COUNT, 0x03,  /* REPORT_COUNT (3) */
-            USAGE_TYPE_INPUT, 0x06,  /* USAGE_TYPE_INPUT (Data,Ary,Abs) */
-        END_COLECTION,        /* END_COLLECTION */
+            USAGE, USAGE_GENERIC_DESKTOP_PAGE_WHEEL,
+            LOGICAL_MINIMUM, 0x81,
+            LOGICAL_MAXIMUM, 0x7f,
+            REPORT_SIZE, 0x08,
+            REPORT_COUNT, 0x03,
+            USAGE_TYPE_INPUT, USAGE_TYPE_DATA_DVR,
+        END_COLECTION,
 
 //        0x09, 0x3c,  /* USAGE (Motion Wakeup) */
 //        0x05, 0xff,  /* USAGE PAGE (vendor defined) */
@@ -284,11 +281,11 @@ const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE] =
 //*/
 //uint8_t hid_mouse_report_send (usb_dev *udev, uint8_t *report, uint32_t len)
 //{
-//    hid_mouse_handler *hid = (hid_mouse_handler *)udev->dev.class_data[HID_MOUSE_INF];
+//    hid_mouse_handler *hid = (hid_mouse_handler *)udev->dev.class_data[USBD_INF_MOUSE];
 //
 //    hid->prev_transfer_complete = 0U;
 //
-//    usbd_ep_send(udev, HID_MOUSE_IN_EP, report, len);
+//    usbd_ep_send(udev, USBD_EP_IN_MOUSE, report, len);
 //
 //    return USBD_OK;
 //}
@@ -310,11 +307,11 @@ const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE] =
 //    usbd_ep_setup (udev, &(hid_mouse_config_desc.epin));
 //    usbd_ep_setup (udev, &(hid_mouse_config_desc.epout));
 //
-//    usbd_ep_recev (udev, HID_MOUSE_OUT_EP, hid_handler.data_out, HID_MOUSE_OUT_PACKET);
+//    usbd_ep_recev (udev, USBD_EP_OUT_MOUSE, hid_handler.data_out, HID_MOUSE_OUT_PACKET);
 //
 //    hid_handler.prev_transfer_complete = 1U;
 //
-//    udev->dev.class_data[HID_MOUSE_INF] = (void *)&hid_handler;
+//    udev->dev.class_data[USBD_INF_MOUSE] = (void *)&hid_handler;
 //
 //    if (NULL != udev->dev.user_data) {
 //        ((hid_mouse_fop_handler *)udev->dev.user_data)->hid_itf_config();
@@ -333,7 +330,7 @@ const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE] =
 //static uint8_t hid_mouse_deinit (usb_dev *udev, uint8_t config_index)
 //{
 //    /* deinitialize HID endpoints */
-//    usbd_ep_clear(udev, HID_MOUSE_IN_EP);
+//    usbd_ep_clear(udev, USBD_EP_IN_MOUSE);
 //
 //    return USBD_OK;
 //}
@@ -349,7 +346,7 @@ const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE] =
 //{
 //    usb_transc *transc = &udev->dev.transc_in[0];
 //
-//    hid_mouse_handler *hid = (hid_mouse_handler *)udev->dev.class_data[HID_MOUSE_INF];
+//    hid_mouse_handler *hid = (hid_mouse_handler *)udev->dev.class_data[USBD_INF_MOUSE];
 //
 //    switch (req->bRequest) {
 //    case GET_REPORT:
@@ -405,12 +402,12 @@ const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE] =
 */
 //static uint8_t hid_mouse_data_in (usb_dev *udev, uint8_t ep_num)
 //{
-//    /*hid_mouse_handler *hid = (hid_mouse_handler *)udev->dev.class_data[HID_MOUSE_INF];
+//    /*hid_mouse_handler *hid = (hid_mouse_handler *)udev->dev.class_data[USBD_INF_MOUSE];
 //
 //    if (0U != hid->data[2]) {
 //        hid->data[2] = 0x00U;
 //
-//        usbd_ep_send(udev, HID_MOUSE_IN_EP, hid->data, HID_MOUSE_IN_PACKET);
+//        usbd_ep_send(udev, USBD_EP_IN_MOUSE, hid->data, HID_MOUSE_IN_PACKET);
 //    } else {
 //        hid->prev_transfer_complete = 1U;
 //    }*/
@@ -421,3 +418,20 @@ const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE] =
 //static uint8_t hid_mouse_data_out (usb_dev *udev, uint8_t ep_num) {
 //    return USBD_OK;
 //}
+
+void usbd_mouse_report_send(uint8_t *report)
+{
+    UserToPMABufferCopy(report, ENDP3_TXADDR, USBD_REPORT_SIZE_MOUSE);
+    SetEPTxCount(ENDP3, USBD_REPORT_SIZE_MOUSE);
+    SetEPTxValid(ENDP3);
+    usbd_epin_busy[ENDP3] = TRUE;
+}
+
+uint8_t usbd_mouse_check_send()
+{
+    if (usbd_epin_busy[ENDP3] == FALSE) {
+        return USB_SUCCESS;
+    } else {
+        return USB_ERROR;
+    }
+}

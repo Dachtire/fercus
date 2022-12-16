@@ -2,7 +2,6 @@
 #include "usbd_hid_keyboard.h"
 #include "usbd_vendor.h"
 
-
 const uint16_t KB_ROW_GPIO_PIN[KB_ROW_NUM] = {
         KB_ROW_0_GPIO_PIN, KB_ROW_1_GPIO_PIN, KB_ROW_2_GPIO_PIN,
         KB_ROW_3_GPIO_PIN, KB_ROW_4_GPIO_PIN, KB_ROW_5_GPIO_PIN};
@@ -18,18 +17,15 @@ const uint16_t JS_AXIS_GPIO_PIN[JS_AXIS_NUM] = {
 GPIO_TypeDef* const JS_AXIS_GPIO_PORT[JS_AXIS_NUM] = {
         JS0_A1_GPIO_PORT, JS0_A2_GPIO_PORT, JS1_A1_GPIO_PORT, JS1_A2_GPIO_PORT};
 
-uint8_t kb_usbhd_buf[USBD_KB_SEND_SIZE] = {}, kb_usbd_buf[USBD_KB_SEND_SIZE] = {}, kb_buf_device[USBD_KB_SEND_SIZE] = {}, kb_buf_empty[USBD_KB_SEND_SIZE] = {};
-uint8_t kb_buf_cntrl[USBD_CNTLR_BUF_SIZE] = {};
-uint8_t kb_buf_mouse[USBD_MICE_BUF_SIZE] = {};
+uint8_t kb_report_usbhd[USBD_REPORT_SIZE_KB] = {}, kb_report_usbd[USBD_REPORT_SIZE_KB] = {}, kb_buf_device[USBD_REPORT_SIZE_KB] = {}, kb_report_empty[USBD_REPORT_SIZE_KB] = {};
 
-uint8_t kb_buf_recev[USBD_KB_RECEV_SIZE];
+uint8_t kb_report_recev[USBD_KB_RECEV_SIZE];
 
 uint8_t kb_col_num = 0, kb_row_num = 0;
 uint8_t (*kb_layout)[KB_COL_NUM] = kb_lyrs[0];
 bool kb_key_state[KB_ROW_NUM][KB_COL_NUM] = {};
 uint32_t kb_flag;
 uint8_t kb_key_count = 0;
-uint8_t kb_cntlr_buf_num = 0, kb_cntlr_buf_tmp = 0;
 
 uint32_t kb_ctl = 0;
 uint8_t *kb_usb_buf = 0;
@@ -81,15 +77,38 @@ uint16_t kb_adc_value[KB_ADC_SIZE] = {}, kb_adc_buf1[KB_ADC_SIZE] = {};
         KEY_SLASH_QUESTION, KEY_N, KEY_M, KEY_COMMA_AND_LESS, KEY_DOT_GREATER, KEY_SINGLE_AND_DOUBLE_QUOTE, KEY_RIGHT_SHIFT,
         KEY_RIGHT_ALT, KEY_SPACEBAR, KEY_RIGHT_CONTROL, KEY_DELETE, KEY_RIGHT_GUI, KEY_INSERT, KEY_FN,
 
-   };
+};
 
     static uint8_t kb_cntlr_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM] = {
+        CNTLR_BUTTON_1, CNTLR_BUTTON_2, CNTLR_BUTTON_3, CNTLR_BUTTON_4, CNTLR_BUTTON_5, CNTLR_BUTTON_6, CNTLR_BUTTON_7,
+        CNTLR_BUTTON_8, CNTLR_BUTTON_9, CNTLR_BUTTON_10, CNTLR_BUTTON_11, CNTLR_BUTTON_12, CNTLR_BUTTON_13, CNTLR_BUTTON_14,
+        CNTLR_BUTTON_15, CNTLR_BUTTON_16, 0x10, 0x11, 0x12, 0x13, 0x14,
+        0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b,
+        0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22,
+        0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29,
+
         CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE,
         CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE,
         CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_RIGHT_STICK_UP, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE,
         CNTLR_NONE, CNTLR_NONE, CNTLR_RIGHT_STICK_LEFT, CNTLR_RIGHT_STICK_DOWN, CNTLR_RIGHT_STICK_RIGHT, CNTLR_Y, CNTLR_NONE,
         CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE,
         CNTLR_RIGHT_STICK_BUTTON, CNTLR_LEFT_TRIGGER, CNTLR_RIGHT_TRIGGER, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE, CNTLR_NONE,
+    };
+
+    static uint8_t mouse_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM] = {
+        CNTLR_BUTTON_1, CNTLR_BUTTON_2, CNTLR_BUTTON_3, CNTLR_BUTTON_4, CNTLR_BUTTON_5, CNTLR_BUTTON_6, CNTLR_BUTTON_7,
+        CNTLR_BUTTON_8, CNTLR_BUTTON_9, CNTLR_BUTTON_10, CNTLR_BUTTON_11, CNTLR_BUTTON_12, CNTLR_BUTTON_13, CNTLR_BUTTON_14,
+        CNTLR_BUTTON_15, CNTLR_BUTTON_16, 0x10, 0x11, 0x12, 0x13, 0x14,
+        0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b,
+        0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22,
+        0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29,
+
+        MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE,
+        MOUSE_BUTTON_1, MOUSE_BUTTON_2, MOUSE_BUTTON_3, MOUSE_BUTTON_4, MOUSE_BUTTON_5, MOUSE_BUTTON_6, MOUSE_BUTTON_7,
+        MOUSE_NONE, MOUSE_NONE, MOUSE_WHEEL_NEG, MOUSE_Y_POS, MOUSE_WHEEL_POS, MOUSE_NONE, MOUSE_NONE,
+        MOUSE_NONE, MOUSE_NONE, MOUSE_X_NEG, MOUSE_Y_NEG, MOUSE_X_POS, MOUSE_BUTTON_8, MOUSE_NONE,
+        MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE,
+        MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE, MOUSE_NONE,
     };
 #endif
 
@@ -101,15 +120,16 @@ void kb_init_sync() {
 }
 
 void kb_init() {
-    kb_device = KB_DEVICE_KEYBORAD;
+    kb_device = KB_DEVICE_COMPOSITE;
+//    kb_device = KB_DEVICE_KEYBORAD;
 //    kb_device = KB_DEVICE_VENDOR;
 //    kb_device = KB_DEVICE_KEYBOARD_ADC_DIFF;
 //    kb_device = KB_DEVICE_KEYBOARD_ADC_TRIGGER;
 
     if ((kb_ctl & KB_CTL_HOST) != 0) {
-        kb_usb_buf = kb_usbhd_buf;
+        kb_usb_buf = kb_report_usbhd;
     } else {
-        kb_usb_buf = kb_usbd_buf;
+        kb_usb_buf = kb_report_usbd;
     }
 //    printf("kb_ctl:%02lx\n", kb_ctl);
 }
@@ -181,7 +201,7 @@ void kb_fn_handler() {
 
             case KEY_F1:
             case KEY_F6: {
-                static uint8_t lyr = 0;
+                static uint8_t lyr;
                 if (lyr == 0) {
                     lyr = 1;
                     kb_remap(lyr);
@@ -194,37 +214,66 @@ void kb_fn_handler() {
             }
 
             case KEY_F2:
-            case KEY_F7:
-                //                    kb_fn = kb_fn_lyr;
-                if (kb_repeat == KB_REPEAT_SLOW) {
-                    kb_repeat = KB_REPEAT_NONE;
-                } else {
-                    kb_repeat = KB_REPEAT_SLOW;
+            case KEY_F7: {
+                switch (kb_device) {
+                    default:
+                        kb_device = KB_DEVICE_COMPOSITE;
+                        printf("KB_DEVICE_COMPOSITE: %d\n", kb_device);
+                        break;
+
+                    case KB_DEVICE_COMPOSITE:
+                        kb_device = KB_DEVICE_CNTLR;
+                        printf("KB_DEVICE_CNTLR: %d\n", kb_device);
+                        break;
+
+                    case KB_DEVICE_CNTLR:
+                        kb_device = KB_DEVICE_MOUSE;
+                        printf("KB_DEVICE_MOUSE: %d\n", kb_device);
+                        break;
+
+                    case KB_DEVICE_MOUSE:
+                        kb_device = KB_DEVICE_COMPOSITE;
+                        printf("KB_DEVICE_COMPOSITE: %d\n", kb_device);
+                        break;
                 }
-//                kb_flag &= ~KB_FLAG_FN;
+                break;
+            }
+
+            case KEY_F3:
+            case KEY_F8:
+                //                    kb_fn = kb_fn_usb;
+                //                if (kb_ctl & KB_CTL_USBD) {
+                //                    kb_ctl &= ~KB_CTL_USBD;
+                //                } else {
+                //                    kb_ctl |= KB_CTL_USBD;
+                //                }
                 break;
 
-            case KEY_F4:
-            case KEY_F9:
-//                    kb_fn = kb_fn_lyr;
-                if (kb_repeat == KB_REPEAT_FAST) {
-//                    kb_ctl &= ~KB_CTL_REPEAT;
-kb_repeat = KB_REPEAT_NONE;
-                } else {
-                    kb_repeat = KB_REPEAT_FAST;
-                }
-//                kb_flag &= ~KB_FLAG_FN;
-                break;
-
-            case KEY_F5:
-            case KEY_F10:
-//                    kb_fn = kb_fn_usb;
-//                if (kb_ctl & KB_CTL_USBD) {
-//                    kb_ctl &= ~KB_CTL_USBD;
+//            case KEY_F4:
+//            case KEY_F9:
+//                if (kb_repeat == KB_REPEAT_SLOW) {
+//                    kb_repeat = KB_REPEAT_NONE;
+//                    printf("KB_REPEAT_NONE\n");
 //                } else {
-//                    kb_ctl |= KB_CTL_USBD;
+//                    kb_repeat = KB_REPEAT_SLOW;
+//                    printf("KB_REPEAT_SLOW\n");
 //                }
-                break;
+//                break;
+
+
+//            case KEY_F5:
+//            case KEY_F10:
+////                    kb_fn = kb_fn_lyr;
+//                if (kb_repeat == KB_REPEAT_FAST) {
+////                    kb_ctl &= ~KB_CTL_REPEAT;
+//                    kb_repeat = KB_REPEAT_NONE;
+//                    printf("KB_REPEAT_NONE: %d\n", kb_repeat);
+//                } else {
+//                    kb_repeat = KB_REPEAT_FAST;
+//                    printf("KB_REPEAT_FAST: %d\n", kb_repeat);
+//                }
+////                kb_flag &= ~KB_FLAG_FN;
+//                break;
        }
 //        }
 //        if (kb_row_num == 0) {
@@ -270,7 +319,7 @@ kb_repeat = KB_REPEAT_NONE;
 //                            break;
 //                        case kb_fn_uart:
 //                            kb_ctl &= ~KB_CTL_USART;
-//                            kb_usb_buf = kb_usbd_buf;
+//                            kb_usb_buf = kb_report_usbd;
 //                            break;
 //                        case kb_fn_ms:
 //                            kb_ctl &= ~KB_CTL_HOST;
@@ -295,7 +344,7 @@ kb_repeat = KB_REPEAT_NONE;
 //                            break;
 //                        case kb_fn_uart:
 //                            kb_ctl |= KB_CTL_USART;
-//                            kb_usb_buf = kb_usbhd_buf;
+//                            kb_usb_buf = kb_report_usbhd;
 //                            break;
 //                        case kb_fn_ms:
 //                            kb_ctl |= KB_CTL_HOST;
@@ -328,54 +377,6 @@ kb_repeat = KB_REPEAT_NONE;
 //    }
 }
 
-void kb_cntlr_usb_buf_handler() {
-    switch (kb_cntlr_lyrs[0][kb_row_num][kb_col_num]) {
-        default:
-            kb_cntlr_buf_num = kb_cntlr_lyrs[0][kb_row_num][kb_col_num] / 8;
-            kb_cntlr_buf_tmp = 1U << kb_cntlr_lyrs[0][kb_row_num][kb_col_num] % 8;
-            break;
-
-        case CNTLR_NONE:
-            break;
-
-        case CNTLR_LEFT_STICK_LEFT:
-            kb_cntlr_buf_num = 2;
-            kb_cntlr_buf_tmp = -CNTLR_STICK_VALUE;
-            break;
-        case CNTLR_LEFT_STICK_RIGHT:
-            kb_cntlr_buf_num = 2;
-            kb_cntlr_buf_tmp = CNTLR_STICK_VALUE;
-            break;
-
-        case CNTLR_LEFT_STICK_UP:
-            kb_cntlr_buf_num = 3;
-            kb_cntlr_buf_tmp = -CNTLR_STICK_VALUE;
-            break;
-        case CNTLR_LEFT_STICK_DOWN:
-            kb_cntlr_buf_num = 3;
-            kb_cntlr_buf_tmp = CNTLR_STICK_VALUE;
-            break;
-
-        case CNTLR_RIGHT_STICK_LEFT:
-            kb_cntlr_buf_num = 4;
-            kb_cntlr_buf_tmp = -CNTLR_STICK_VALUE;
-            break;
-        case CNTLR_RIGHT_STICK_RIGHT:
-            kb_cntlr_buf_num = 4;
-            kb_cntlr_buf_tmp = CNTLR_STICK_VALUE;
-            break;
-
-        case CNTLR_RIGHT_STICK_UP:
-            kb_cntlr_buf_num = 5;
-            kb_cntlr_buf_tmp = -CNTLR_STICK_VALUE;
-            break;
-        case CNTLR_RIGHT_STICK_DOWN:
-            kb_cntlr_buf_num = 5;
-            kb_cntlr_buf_tmp = CNTLR_STICK_VALUE;
-            break;
-    }
-}
-
 void kb_row_read_all() {
     kb_row_read = (uint8_t) (GPIO_ReadInputData(GPIOA) & 0x3F);
     //    if (kb_row_read != 0) {
@@ -383,30 +384,25 @@ void kb_row_read_all() {
     //   }
 }
 
-void kb_col_reset_all() {
-    for (int i = 0; i < KB_COL_NUM; ++i) {
-        GPIO_ResetBits(KB_COL_GPIO_PORT[i], KB_COL_GPIO_PIN[i]);
-    }
-}
-
 void kb_handler(){
-    static bool signal = 0;
+//    static bool signal = 0;
 //    signal = (bool) GPIO_ReadInputDataBit(GPIOA, KB_ROW_GPIO_PIN[kb_row_num]);
-    signal = (bool) ((kb_row_read >> kb_row_num) & 0x1);
+    bool signal = (bool) ((kb_row_read >> kb_row_num) & 0x1);
     if (kb_key_state[kb_row_num][kb_col_num] != signal) {
         kb_key_state[kb_row_num][kb_col_num] = signal;
         kb_flag |= KB_FLAG_COUNT;
 
         if (kb_layout[kb_row_num][kb_col_num] == KEY_FN) {
+            kb_flag &= ~KB_FLAG_COUNT;
             if (signal == KB_PRESS) {
                 kb_flag |= KB_FLAG_FN;
+//                printf("+KEY_FN\n");
 //                kb_ctl &= ~KB_CTL_USBD;
-                kb_flag &= ~KB_FLAG_COUNT;
 //                kb_remap(1);
             } else {
                 kb_flag &= ~KB_FLAG_FN;
+//                printf("-KEY_FN\n");
 //                kb_ctl |= KB_CTL_USBD;
-                kb_flag &= ~KB_FLAG_COUNT;
 //                kb_remap(0);
             }
         } else {
@@ -414,48 +410,241 @@ void kb_handler(){
                 if (signal == KB_PRESS) {
                     kb_fn_handler();
                 }
-                kb_flag &= ~KB_FLAG_COUNT;
+//                kb_flag &= ~KB_FLAG_COUNT;
             }
         }
 
         switch (kb_device) {
             default:
             case KB_DEVICE_KEYBORAD: {
-                uint8_t kb_buf_tmp = 0, kb_buf_num = 0;
+                uint8_t kb_buf_tmp, kb_buf_num;
                 kb_buf_num = kb_layout[kb_row_num][kb_col_num] / 8;
                 kb_buf_tmp = 1U << kb_layout[kb_row_num][kb_col_num] % 8;
                 if (signal == KB_PRESS) {
                     ++kb_key_count;
-                    kb_usbd_buf[kb_buf_num] |= kb_buf_tmp;
+                    kb_report_usbd[kb_buf_num] |= kb_buf_tmp;
                 } else {
                     --kb_key_count;
-                    kb_usbd_buf[kb_buf_num] &= ~kb_buf_tmp;
+                    kb_report_usbd[kb_buf_num] &= ~kb_buf_tmp;
                 }
+
+//                printf("axis: %d, %d\n", js_axis_adc[0], js_axis_adc[1]);
+
                 break;
             }
 
-            case KB_DEVICE_CNTLR:
+            case KB_DEVICE_CNTLR: {
 //                if (kb_ctl & KB_CTL_CNTLR) {
-                    if (kb_cntlr_lyrs[0][kb_row_num][kb_col_num] != CNTLR_NONE) {
-                        kb_cntlr_usb_buf_handler();
-                        if (signal == KB_PRESS) {
-                            if (kb_cntlr_buf_num < 2) {
-                                kb_buf_cntrl[kb_cntlr_buf_num] |= kb_cntlr_buf_tmp;
-                            } else {
-                                kb_buf_cntrl[kb_cntlr_buf_num] = kb_cntlr_buf_tmp;
-                            }
-                        } else {
-                            if (kb_cntlr_buf_num < 2) {
-                                kb_buf_cntrl[kb_cntlr_buf_num] &= ~kb_cntlr_buf_tmp;
-                            } else {
-                                kb_buf_cntrl[kb_cntlr_buf_num] = 0;
-                            }
-                        }
-                    }
+//                if (kb_cntlr_lyrs[0][kb_row_num][kb_col_num] != CNTLR_NONE) {
+//                kb_cntlr_usb_buf_handler();
 //                }
+//                }
+                uint16_t kb_cntlr_buf_num, kb_cntlr_buf_tmp;
+                switch (kb_cntlr_lyrs[0][kb_row_num][kb_col_num]) {
+                    default:
+                        kb_cntlr_buf_num = kb_cntlr_lyrs[0][kb_row_num][kb_col_num] / 16;
+                        kb_cntlr_buf_tmp = 1U << kb_cntlr_lyrs[0][kb_row_num][kb_col_num] % 16;
+                        break;
+
+                    case CNTLR_NONE:
+                        break;
+
+//                    case CNTLR_LEFT_STICK_LEFT:
+//                        kb_cntlr_buf_num = CNTLR_REPORT_POS;
+//                        kb_cntlr_buf_tmp = CNTLR_AXIS_MIN;
+//                        break;
+//                    case CNTLR_LEFT_STICK_RIGHT:
+//                        kb_cntlr_buf_num = CNTLR_REPORT_POS;
+//                        kb_cntlr_buf_tmp = CNTLR_AXIS_MAX;
+//                        break;
+//
+//                    case CNTLR_LEFT_STICK_UP:
+//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 1;
+//                        kb_cntlr_buf_tmp = CNTLR_AXIS_MIN;
+//                        break;
+//                    case CNTLR_LEFT_STICK_DOWN:
+//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 1;
+//                        kb_cntlr_buf_tmp = CNTLR_AXIS_MAX;
+//                        break;
+//
+//                    case CNTLR_RIGHT_STICK_LEFT:
+//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 2;
+//                        kb_cntlr_buf_tmp = CNTLR_AXIS_MIN;
+//                        break;
+//                    case CNTLR_RIGHT_STICK_RIGHT:
+//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 2;
+//                        kb_cntlr_buf_tmp = CNTLR_AXIS_MAX;
+//                        break;
+//
+//                    case CNTLR_RIGHT_STICK_UP:
+//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 3;
+//                        kb_cntlr_buf_tmp = CNTLR_AXIS_MIN;
+//                        break;
+//                    case CNTLR_RIGHT_STICK_DOWN:
+//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 3;
+//                        kb_cntlr_buf_tmp = CNTLR_AXIS_MAX;
+//                        break;
+                }
+
+                if (signal == KB_PRESS) {
+                    if (kb_cntlr_buf_num < CNTLR_REPORT_POS) {
+                        cntlr_report.button[kb_cntlr_buf_num] |= kb_cntlr_buf_tmp;
+                    } else {
+//                        cntlr_report[kb_cntlr_buf_num] = kb_cntlr_buf_tmp;
+                    }
+                } else {
+                    if (kb_cntlr_buf_num < CNTLR_REPORT_POS) {
+                        cntlr_report.button[kb_cntlr_buf_num] &= ~kb_cntlr_buf_tmp;
+                    } else {
+//                        cntlr_report[kb_cntlr_buf_num] = 0;
+                    }
+                }
+//                printf("buf_cntrl: %d\n", cntlr_report[kb_cntlr_buf_num]);
+//                printf("KB_FLAG_COUNT: %lu\n", kb_flag);
                 break;
+            }
+
+            case KB_DEVICE_MOUSE: {
+                uint8_t mouse_report_num, mouse_report_tmp;
+                switch (mouse_lyrs[0][kb_row_num][kb_col_num]) {
+                    default:
+                        mouse_report_num = mouse_lyrs[0][kb_row_num][kb_col_num] / 8;
+                        mouse_report_tmp = 1U << mouse_lyrs[0][kb_row_num][kb_col_num] % 8;
+                        break;
+                        
+                    case MOUSE_NONE:
+                        break;
+
+//                    case MOUSE_X_NEG:
+//                        mouse_report_num = 1;
+//                        mouse_report_tmp = CNTLR_AXIS_MIN;
+//                        break;
+//                    case MOUSE_X_POS:
+//                        mouse_report_num = 1;
+//                        mouse_report_tmp = CNTLR_AXIS_MAX;
+//                        break;
+//
+//                    case MOUSE_Y_POS:
+//                        mouse_report_num = 2;
+//                        mouse_report_tmp = CNTLR_AXIS_MIN;
+//                        break;
+//                    case MOUSE_Y_NEG:
+//                        mouse_report_num = 2;
+//                        mouse_report_tmp = CNTLR_AXIS_MAX;
+//                        break;
+//
+//                    case MOUSE_WHEEL_NEG:
+//                        mouse_report_num = 3;
+//                        mouse_report_tmp = CNTLR_AXIS_MIN;
+//                        break;
+//                    case MOUSE_WHEEL_POS:
+//                        mouse_report_num = 3;
+//                        mouse_report_tmp = CNTLR_AXIS_MAX;
+//                        break;
+                }
+
+                if (signal == KB_PRESS) {
+                    if (mouse_report_num < MOUSE_REPORT_POS) {
+                        mouse_report[mouse_report_num] |= mouse_report_tmp;
+                    } else {
+//                        mouse_report[mouse_report_num] = mouse_report_tmp;
+                    }
+                } else {
+                    if (mouse_report_num < MOUSE_REPORT_POS) {
+                        mouse_report[mouse_report_num] &= ~mouse_report_tmp;
+                    } else {
+//                        mouse_report[mouse_report_num] = 0;
+                    }
+                }
+//                printf("mouse_report: %d\n", mouse_report[mouse_report_num]);
+//                printf("KB_FLAG_COUNT: %lu\n", kb_flag);
+                break;
+            }
         }
     }
+
+    switch (kb_device) {
+        default:
+            break;
+
+        case KB_DEVICE_CNTLR: {
+            static uint16_t js_adc_state[JS_NUM];
+            static const uint16_t press_step = 8, release_step = 8;
+            static uint16_t js_adc_mid[JS_NUM];
+            static uint16_t js_adc_min_limit[JS_NUM] = {0, 0}, js_adc_max_limit[JS_NUM] = {4095, 4095};
+            static uint16_t js_adc_min[JS_NUM] = {512, 512}, js_adc_max[JS_NUM] = {3584, 3584};
+
+            //    kb_row_read = 0;
+            static bool init;
+            uint16_t js_adc_current[JS_NUM];
+            for (int i = 0; i < JS_NUM; ++i) {
+                js_adc_current[i] = js_axis_adc[i];
+            }
+             
+            for (int i = 0; i < JS_NUM; ++i) {
+                if (js_adc_state[i] == 0 && js_adc_current[i] != 0 && init == 0) {
+                    js_adc_state[i] = js_adc_current[i];
+                    js_adc_mid[i] = js_adc_state[i];
+                    if (i == 1) {
+                        init = 1;
+                    }
+                } else if (js_adc_current[i] < js_adc_min_limit[i]) {
+                    //                    js_adc_state[i] = js_adc_min_limit[i];
+                    uint16_t tmp = CNTLR_AXIS_HALF * (js_adc_mid[i] - js_adc_min_limit[i]) / (js_adc_mid[i] - js_adc_min[i]);
+                    if (i == 0) {
+                        cntlr_report.axis[i] = CNTLR_AXIS_HALF - tmp;
+                    } else {
+                        cntlr_report.axis[i] = CNTLR_AXIS_HALF + tmp;
+                    }
+                    kb_flag |= KB_FLAG_COUNT;
+                } else if (js_adc_current[i] < js_adc_mid[i] && js_adc_current[i] > js_adc_min_limit[i]) {
+                    if (js_adc_current[i] > (js_adc_state[i] + press_step) || js_adc_current[i] < (js_adc_state[i] - release_step)) {
+                        js_adc_state[i] = js_adc_current[i];
+                        if (js_adc_min[i] - release_step > js_adc_state[i] && js_adc_state[i] > js_adc_min_limit[i]) {
+                            js_adc_min[i] = js_adc_state[i];
+                            //                            printf("min%d:%d\n", i, js_adc_min[i]);
+                        }
+                        uint16_t tmp = CNTLR_AXIS_HALF * (js_adc_mid[i] - js_adc_state[i]) / (js_adc_mid[i] - js_adc_min[i]);
+                        if (i == 0) {
+                            cntlr_report.axis[i] = CNTLR_AXIS_HALF - tmp;
+                        } else {
+                            cntlr_report.axis[i] = CNTLR_AXIS_HALF + tmp;
+                        }
+                        kb_flag |= KB_FLAG_COUNT;
+                        //                        printf("a%d:%d\n", i, js_adc_state[i]);
+                        //                        printf("a%d:%d\n", i, cntlr_report[2 + i]);
+                    }
+                } else if (js_adc_current[i] > js_adc_mid[i] && js_adc_current[i] < js_adc_max_limit[i]) {
+                    if (js_adc_current[i] > (js_adc_state[i] + press_step) || js_adc_current[i] < (js_adc_state[i] - release_step)) {
+                        js_adc_state[i] = js_adc_current[i];
+                        if (js_adc_max[i] + press_step < js_adc_state[i] && js_adc_state[i] < js_adc_max_limit[i]) {
+                            js_adc_max[i] = js_adc_state[i];
+//                            printf("max%d:%d\n", i, js_adc_max[i]);
+                        }
+                        uint16_t tmp = CNTLR_AXIS_HALF * (js_adc_state[i] - js_adc_mid[i]) / (js_adc_max[i] - js_adc_mid[i]);
+                        if (i == 0) {
+                            cntlr_report.axis[i] = CNTLR_AXIS_HALF + tmp;
+                        } else {
+                            cntlr_report.axis[i] = CNTLR_AXIS_HALF - tmp;
+                        }
+                        kb_flag |= KB_FLAG_COUNT;
+//                        printf("a%d:%d\n", i, js_adc_state[i]);
+//                        printf("a%d:%d\n", i, cntlr_report[2 + i]);
+                    }
+                } else if (js_adc_current[i] > js_adc_max_limit[i]) {
+//                        js_adc_state[i] = js_adc_max_limit[i];
+                        uint16_t tmp = CNTLR_AXIS_HALF * (js_adc_max_limit[i] - js_adc_mid[i]) / (js_adc_max[i] - js_adc_mid[i]);
+                        if (i == 0) {
+                            cntlr_report.axis[i] = CNTLR_AXIS_HALF + tmp;
+                        } else {
+                            cntlr_report.axis[i] = CNTLR_AXIS_HALF - tmp;
+                        }
+                        kb_flag |= KB_FLAG_COUNT;
+                }
+            }
+        }
+    }
+
 }
 
 void kb_polling() {
@@ -499,7 +688,7 @@ void kb_usb_send() {
                                 usbd_kb_report_send(kb_usb_buf);
                             } else {
                                 kb_flag &= ~KB_FLAG_REPEAT;
-                                usbd_kb_report_send(kb_buf_empty);
+                                usbd_kb_report_send(kb_report_empty);
                             }
                         } else {
                             if ((kb_flag & KB_FLAG_COUNT) && (usbd_kb_check_send() == USB_SUCCESS)) {
@@ -527,7 +716,7 @@ void kb_usb_send() {
                                 } else {
     //                                if (kb_repeat_rate == KB_REPEAT_SLOW_RATE) {
                                     kb_flag &= ~KB_FLAG_REPEAT;
-                                    usbd_kb_report_send(kb_buf_empty);
+                                    usbd_kb_report_send(kb_report_empty);
     //                                    kb_repeat_rate = 0;
     //                                }
                                 }
@@ -556,22 +745,38 @@ void kb_usb_send() {
                 break;
 
             case KB_DEVICE_CNTLR:
-                //            hid_cntlr_report_send(kb_buf_cntrl, USBD_CNTLR_BUF_SIZE);
+                if ((kb_flag & KB_FLAG_COUNT) && (usbd_cntlr_check_send() == USB_SUCCESS)) {
+                    kb_flag &= ~KB_FLAG_COUNT;
+                    usbd_cntlr_report_send((uint8_t *) &cntlr_report);
 
+//                    printf("send: ");
+//                    for (uint8_t i = 0; i < USBD_REPORT_SIZE_CNTLR; ++i) {
+//                        printf("%02x ", cntlr_report[i]);
+//                    }
+//                    printf("\n");
+                };
                 break;
 
             case KB_DEVICE_MOUSE:
-                //            hid_mouse_report_send(kb_buf_mouse, USBD_MICE_BUF_SIZE);
+                if ((kb_flag & KB_FLAG_COUNT) && (usbd_mouse_check_send() == USB_SUCCESS)) {
+                    kb_flag &= ~KB_FLAG_COUNT;
+                    usbd_mouse_report_send(mouse_report);
 
+//                    printf("send: ");
+//                    for (uint8_t i = 0; i < USBD_REPORT_SIZE_MOUSE; ++i) {
+//                        printf("%02x ", mouse_report[i]);
+//                    }
+//                    printf("\n");
+                };
                 break;
         }
 
 //        if (kb_ctl & KB_CTL_CNTLR) {
-//            hid_cntlr_report_send(kb_buf_cntrl, USBD_CNTLR_BUF_SIZE);
+//            hid_cntlr_report_send(cntlr_report, USBD_REPORT_SIZE_CNTLR);
 //        }
 
 //        if (kb_ctl & KB_CTL_MOUSE) {
-//            hid_mouse_report_send(kb_buf_mouse, USBD_MICE_BUF_SIZE);
+//            hid_mouse_report_send(mouse_report, USBD_MICE_BUF_SIZE);
 //        }
     }
 }
@@ -579,7 +784,7 @@ void kb_usb_send() {
 void kb_usb_receive() {
     usbd_kb_report_receive();
     if (usbd_kb_check_recev() == USB_SUCCESS) {
-/*        switch (kb_buf_recev[0]){
+/*        switch (kb_report_recev[0]){
             case LED_NONE:
 //            leds_off();
 //            led_color_set(pwm, 0x00U, led_sys[0][r]);
@@ -607,7 +812,7 @@ void kb_usb_receive() {
                 break;
         }
 
-        switch (kb_buf_recev[1]) {
+        switch (kb_report_recev[1]) {
             case LED_OFF:
 //            kb_ctl &= ~KB_CTL_LED;
 //            led_effect = 0;
@@ -633,7 +838,7 @@ void kb_usb_receive() {
                 break;
         }*/
 
-        switch (kb_buf_recev[2]) {
+        switch (kb_report_recev[2]) {
             case KB_CTL_LYR_0:
                 kb_remap(0);
                 break;
@@ -680,8 +885,8 @@ void kb_usb_receive() {
 void kb_usbhd_combine() {
     if ((kb_flag & KB_FLAG_COUNT) && (kb_ctl & KB_CTL_HOST)) {
 //        printf("usbhd: ");
-        for (uint8_t i = 0; i < USBD_KB_SEND_SIZE; ++i) {
-            kb_usbhd_buf[i] = kb_usbd_buf[i] | kb_usbh_buf[i];
+        for (uint8_t i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
+            kb_report_usbhd[i] = kb_report_usbd[i] | kb_report_usbh[i];
 //            printf("%02x ", kb_usb_buf[i]);
         }
 //        printf("\n");
@@ -704,7 +909,7 @@ void kb_usbhd_combine() {
 
                 // delete noise
                 if (dma_transfer_number_get(DMA0, DMA_CH2) != 0) {
-                    for (uint8_t i = 0; i < USBD_KB_SEND_SIZE; ++i) {
+                    for (uint8_t i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
                         kb_buf_device[i] = 0;
                     }
                 } else {
@@ -720,8 +925,8 @@ void kb_usbhd_combine() {
 
             }
 
-            for (uint8_t i = 0; i < USBD_KB_SEND_SIZE; ++i) {
-                kb_usbhd_buf[i] = kb_usbd_buf[i] | kb_buf_device[i];
+            for (uint8_t i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
+                kb_report_usbhd[i] = kb_report_usbd[i] | kb_buf_device[i];
             }
 
         } else {
@@ -759,23 +964,23 @@ void kb_usbhd_combine() {
 //        usart_polling();
     if (kb_ctl & KB_CTL_USBD) {
 //        cdc_acm_data_send_2(&usb_device, kb_usb_buf, 12);
-        cdc_acm_data_send_2(&usb_device, kb_buf_device, USBD_KB_SEND_SIZE);
+        cdc_acm_data_send_2(&usb_device, kb_buf_device, USBD_REPORT_SIZE_KB);
     }
         //    usart_flag_clear(USART2, USART_FLAG_RBNE);
-//        for (int i = 0; i < USBD_KB_SEND_SIZE; ++i) {
+//        for (int i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
 //            kb_buf_device[i] = 0x01;
 //        }
-//        for (int i = 0; i < USBD_KB_SEND_SIZE; ++i) {
-//            kb_usbhd_buf[i] = 0x02;
+//        for (int i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
+//            kb_report_usbhd[i] = 0x02;
 //        }
     #else
     // tx
         static uint8_t j = 0;
-        for (int i = 0; i < USBD_KB_SEND_SIZE; ++i) {
+        for (int i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
             if (j == 0xff) {
                 j = 0;
             }
-            kb_usbd_buf[i] = ++j;
+            kb_report_usbd[i] = ++j;
         }
         dma_config(4);
         dma_channel_enable(DMA0, DMA_CH1);
@@ -1037,11 +1242,11 @@ void kb_row_adc_diff() {
         if (kb_sw_adc[i][kb_col_num] == 0) {
             kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
         } else if (kb_row_adc[i] > (kb_sw_adc[i][kb_col_num] + press_step)) {
+            kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
             kb_row_read |= 0x1 << i;
-            kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
         } else if (kb_row_adc[i] < (kb_sw_adc[i][kb_col_num] - release_step)) {
-            kb_row_read &= ~(0x1 << i);
             kb_sw_adc[i][kb_col_num] = kb_row_adc[i];
+            kb_row_read &= ~(0x1 << i);
         } else {
             if (kb_key_state[i][kb_col_num] != 0) {
                 kb_row_read |= 0x1 << i;

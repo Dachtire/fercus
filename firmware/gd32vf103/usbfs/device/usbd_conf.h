@@ -38,17 +38,18 @@ OF SUCH DAMAGE.
 #include "usb_conf.h"
 #include "drv_usb_regs.h"
 
+
 #define USBD_CFG_MAX_NUM                    1U
-#define USBD_COMPOSITE_ITF_NUM              3
+#define USBD_ITF_NUM_COMPOSITE              3
 //#define USBD_ITF_MAX_NUM                    1U
 
 //#define USB_STR_DESC_MAX_SIZE               64
 
 //#define USB_STRING_COUNT                    4U
 
-#define HID_KB_INF 0x00U
-#define HID_MOUSE_INF 0x01U
-#define HID_CNTLR_INF 0x02U
+#define USBD_INF_KB    0x00
+#define USBD_INF_CNTLR 0x01
+#define USBD_INF_MOUSE 0x02
 
 #define CDC_COM_INTERFACE 0x00U
 #define CDC_DATA_INTERFACE 0x02U
@@ -63,19 +64,25 @@ OF SUCH DAMAGE.
 #define USBD_DFU_INTERFACE           0
 
 /* endpoint count used by the HID device */
+#define USBD_EP_KB ENDP1
+#define USBD_EP_CNTLR ENDP2
+#define USBD_EP_MOUSE ENDP3
 
-#define HID_KB_IN_EP                           EP1_IN
-#define HID_KB_OUT_EP                          EP1_OUT
+#define USBD_EP_IN_KB                          EP1_IN
+#define USBD_EP_OUT_KB                         EP1_OUT
 
-#define HID_MOUSE_IN_EP                           EP2_IN
-#define HID_MOUSE_OUT_EP                          EP2_OUT
+#define USBD_EP_IN_CNTLR                          EP2_IN
+#define USBD_EP_OUT_CNTLR                         EP2_OUT
 
-#define HID_CNTLR_IN_EP                           EP3_IN
-#define HID_CNTLR_OUT_EP                          EP3_OUT
+#define USBD_EP_IN_MOUSE                          EP3_IN
+#define USBD_EP_OUT_MOUSE                         EP3_OUT
 
 #define CDC_CMD_EP                          EP2_IN
 #define CDC_DATA_IN_EP                           EP1_IN
 #define CDC_DATA_OUT_EP                          EP3_OUT
+
+#define USBD_REPORT_SIZE_KB    12
+#define USBD_KB_RECEV_SIZE 12
 
 /* DFU endpoint define */
 #define DFU_IN_EP                    EP0_IN
@@ -88,11 +95,12 @@ OF SUCH DAMAGE.
 #define HID_KB_IN_PACKET                       64
 #define HID_KB_OUT_PACKET                      64
 
-#define HID_MOUSE_IN_PACKET                       8
-#define HID_MOUSE_OUT_PACKET                      8
+#define HID_CNTLR_IN_PACKET                       64
+#define HID_CNTLR_OUT_PACKET                      64
 
-#define HID_CNTLR_IN_PACKET                       8
-#define HID_CNTLR_OUT_PACKET                      8
+#define HID_MOUSE_IN_PACKET                       64
+#define HID_MOUSE_OUT_PACKET                      64
+
 
 //#define HID_COMPOSITE_IN_PACKET                       8
 //#define HID_COMPOSITE_OUT_PACKET                      8
@@ -120,5 +128,7 @@ OF SUCH DAMAGE.
 #define STR_IDX_MFC 0x1
 #define STR_IDX_PRODUCT 0x2
 #define STR_IDX_SERIAL 0x3
+
+uint8_t usbd_epin_busy[8];
 
 #endif /* USBD_CONF_H */

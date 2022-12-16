@@ -55,6 +55,8 @@
 extern uint8_t USBD_Endp1_Busy,USBD_Endp2_Busy;
 extern volatile uint8_t USBD_Sleep_Status;
 
+#include "usbd_conf.h"
+
 void USBD_init(void);
 void USBD_Reset(void);
 void USBD_SetConfiguration(void);

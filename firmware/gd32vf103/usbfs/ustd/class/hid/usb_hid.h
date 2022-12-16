@@ -92,7 +92,10 @@ OF SUCH DAMAGE.
 #define USAGE_TYPE_OUTPUT 0x81
 #define END_COLECTION 0xc0
 
+#define USAGE_TYPE_DATA_SEL 0x00
+#define USAGE_TYPE_DATA_SV 0x01
 #define USAGE_TYPE_DATA_DV 0x02
+#define USAGE_TYPE_DATA_DVR 0x06
 
 enum hid_usage_page {
     USAGE_PAGE_GENERIC_DESKTOP = (uint8_t) 0x01,
@@ -131,6 +134,7 @@ enum hid_generic_desktop_page {
     USAGE_GENERIC_DESKTOP_PAGE_RY,
     USAGE_GENERIC_DESKTOP_PAGE_RZ,
 
+    USAGE_GENERIC_DESKTOP_PAGE_WHEEL = (uint8_t) 0x38,
     USAGE_GENERIC_DESKTOP_PAGE_HAT_SWITCH = (uint8_t) 0x39,
 
     USAGE_GENERIC_DESKTOP_PAGE_DPAD_UP = (uint8_t) 0x90,
@@ -157,7 +161,7 @@ enum hid_button_page {
     USAGE_BUTTON_PAGE_13,
     USAGE_BUTTON_PAGE_14,
     USAGE_BUTTON_PAGE_15,
-    USAGE_BUTTON_PAGE_16
+    USAGE_BUTTON_PAGE_16,
 };
 
 // report descriptor collection

@@ -35,24 +35,22 @@ OF SUCH DAMAGE.
 #ifndef __HID_CNTLR_CORE_H
 #define __HID_CNTLR_CORE_H
 
-//#include "usbd_enum.h"
 #include "usb_hid.h"
-//#include "usb_composite.h"
-//#include "hid_define.h"
-//#include "keyboard.h"
-//#include "usb_prop.h"
-#include "keyboard.h"
+#include "usbd_conf.h"
+#include "usb_lib.h"
 
-//#define USB_HID_CONFIG_DESC_LEN          0x22U
-//#define USB_HID_REPORT_DESC_LEN          0x4AU
+//#define HID_CNTLR_CONFIG_DESC_LEN          USB_HID_CONFIG_DESC_LEN
+#define USBD_REPORT_DESC_SIZE_CNTLR        0x2f
+#define USBD_REPORT_SIZE_CNTLR 18
 
-#define HID_CNTLR_CONFIG_DESC_LEN          USB_HID_CONFIG_DESC_LEN
-#define HID_CNTLR_REPORT_DESC_SIZE         0x2eU
-//#define HID_CNTLR_REPORT_DESC_SIZE 0x48U
+#define CNTLR_AXIS_MIN  0
+#define CNTLR_AXIS_MAX  (1024 - 2)
+#define CNTLR_AXIS_HALF (CNTLR_AXIS_MAX / 2)
 
 #define NO_CMD                           0xFFU
 
-const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE];
+const uint8_t USBD_REPORT_DESC_CNTLR[USBD_REPORT_DESC_SIZE_CNTLR];
+//uint8_t cntlr_report[USBD_REPORT_SIZE_CNTLR];
 
 //typedef struct {
 //    uint32_t protocol;
@@ -81,5 +79,76 @@ __attribute__((optimize("O0"))) void usbd_cntlr_report_send(uint8_t *report/*, u
 __attribute__((optimize("O0"))) uint8_t usbd_cntlr_report_receive();
 __attribute__((optimize("O0"))) uint8_t usbd_cntlr_check_send();
 __attribute__((optimize("O0"))) uint8_t usbd_cntlr_check_recev();
+
+#define CNTLR_REPORT_POS 10
+
+struct cntlr_report_struct {
+    uint16_t button[5];
+    uint16_t axis[4];
+}cntlr_report;
+
+enum cntlr_report_code {
+    CNTLR_BUTTON_1 = (uint8_t) 0x00,
+    CNTLR_BUTTON_2,
+    CNTLR_BUTTON_3,
+    CNTLR_BUTTON_4,
+    CNTLR_BUTTON_5,
+    CNTLR_BUTTON_6,
+    CNTLR_BUTTON_7,
+    CNTLR_BUTTON_8,
+
+    CNTLR_BUTTON_9,
+    CNTLR_BUTTON_10,
+    CNTLR_BUTTON_11,
+    CNTLR_BUTTON_12,
+    CNTLR_BUTTON_13,
+    CNTLR_BUTTON_14,
+    CNTLR_BUTTON_15,
+    CNTLR_BUTTON_16,
+
+    CNTLR_LEFT_STICK_X_NEG = 0x58,
+    CNTLR_LEFT_STICK_X_POS,
+
+    CNTLR_LEFT_STICK_Y_NEG,
+    CNTLR_LEFT_STICK_Y_POS,
+
+    CNTLR_RIGHT_STICK_X_NEG,
+    CNTLR_RIGHT_STICK_X_POS,
+
+    CNTLR_RIGHT_STICK_Y_NEG,
+    CNTLR_RIGHT_STICK_Y_POS,
+
+};
+
+enum cntlr_report_xbox_code {
+    CNTLR_A = (uint8_t) 0x00,
+    CNTLR_B,
+    CNTLR_X,
+    CNTLR_Y,
+    CNTLR_LEFT_BUMPER,
+    CNTLR_RIGHT_BUMPER,
+    CNTLR_LEFT_TRIGGER,
+    CNTLR_RIGHT_TRIGGER,
+
+    CNTLR_BACK,
+    CNTLR_START,
+    CNTLR_LEFT_STICK_BUTTON,
+    CNTLR_RIGHT_STICK_BUTTON,
+    CNTLR_DPAD_UP,
+    CNTLR_DPAD_DOWN,
+    CNTLR_DPAD_LEFT,
+    CNTLR_DPAD_RIGHT,
+
+    CNTLR_LEFT_STICK_LEFT,
+    CNTLR_LEFT_STICK_RIGHT,
+    CNTLR_LEFT_STICK_UP,
+    CNTLR_LEFT_STICK_DOWN,
+    CNTLR_RIGHT_STICK_LEFT,
+    CNTLR_RIGHT_STICK_RIGHT,
+    CNTLR_RIGHT_STICK_UP,
+    CNTLR_RIGHT_STICK_DOWN,
+
+    CNTLR_NONE = 0xff,
+};
 
 #endif /* __HID_CNTLR_CORE_H */

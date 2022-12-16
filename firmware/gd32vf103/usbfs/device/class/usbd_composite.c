@@ -33,7 +33,7 @@ OF SUCH DAMAGE.
 */
 
 #include "usbd_composite.h"
-#include "main.h"
+//#include "main.h"
 
 #define USBD_VID                     0x28e9U
 #if KB_SIDE == KB_SIDE_LEFT
@@ -77,7 +77,7 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
              .bDescriptorType = USB_DESCTYPE_CONFIG
          },
         .wTotalLength         = USBD_COMPOSITE_CONFIG_DESC_SIZE,
-        .bNumInterfaces       = USBD_COMPOSITE_ITF_NUM,
+        .bNumInterfaces       = USBD_ITF_NUM_COMPOSITE,
         .bConfigurationValue  = 0x01U,
         .iConfiguration       = 0x00U,
         .bmAttributes         = HID_BUS_POWERED | HID_REMOTEWAKEUP,
@@ -92,7 +92,7 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
             .bLength         = USB_ITF_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_ITF
         },
-        .bInterfaceNumber     = HID_KB_INF,
+        .bInterfaceNumber     = USBD_INF_KB,
         .bAlternateSetting    = 0x00U,
         .bNumEndpoints        = 0x02U,
         .bInterfaceClass      = USB_HID_CLASS,
@@ -124,7 +124,7 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
             .bLength         = USB_EP_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_EP
         },
-        .bEndpointAddress     = HID_KB_IN_EP,
+        .bEndpointAddress     = USBD_EP_IN_KB,
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_KB_IN_PACKET,
         .bInterval            = 0x01U
@@ -137,9 +137,66 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
             .bLength         = USB_EP_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_EP
         },
-        .bEndpointAddress     = HID_KB_OUT_EP,
+        .bEndpointAddress     = USBD_EP_OUT_KB,
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_KB_OUT_PACKET,
+        .bInterval            = 0x01U
+    },
+
+    // interface descriptor
+    .cntlr_inf =
+    {
+        .header =
+         {
+             .bLength         = USB_ITF_DESC_LEN,
+             .bDescriptorType = USB_DESCTYPE_ITF
+         },
+        .bInterfaceNumber     = USBD_INF_CNTLR,
+        .bAlternateSetting    = 0x00U,
+        .bNumEndpoints        = 0x02U,
+        .bInterfaceClass      = USB_HID_CLASS,
+        .bInterfaceSubClass   = USB_HID_SUBCLASS_BOOT_ITF,
+        .bInterfaceProtocol   = USB_HID_PROTOCOL_CNTLR,
+        .iInterface           = 0x00U
+    },
+
+    .cntlr_hid =
+    {
+        .header =
+         {
+             .bLength         = USB_HID_DESC_LEN,
+             .bDescriptorType = USB_DESCTYPE_HID
+         },
+        .bcdHID               = HID_CD,
+        .bCountryCode         = HID_COUNTRYCODE,
+        .bNumDescriptors      = 0x01U,
+        .bDescriptorType      = USB_DESCTYPE_REPORT,
+        .wDescriptorLength    = USBD_REPORT_DESC_SIZE_CNTLR,
+    },
+
+    .cntlr_epin =
+    {
+        .header =
+         {
+             .bLength         = USB_EP_DESC_LEN,
+             .bDescriptorType = USB_DESCTYPE_EP
+         },
+        .bEndpointAddress     = USBD_EP_IN_CNTLR,
+        .bmAttributes         = USB_EP_ATTR_INT,
+        .wMaxPacketSize       = HID_CNTLR_IN_PACKET,
+        .bInterval            = 0x01U
+    },
+
+    .cntlr_epout =
+    {
+        .header =
+         {
+             .bLength         = USB_EP_DESC_LEN,
+             .bDescriptorType = USB_DESCTYPE_EP
+         },
+        .bEndpointAddress     = USBD_EP_OUT_CNTLR,
+        .bmAttributes         = USB_EP_ATTR_INT,
+        .wMaxPacketSize       = HID_CNTLR_OUT_PACKET,
         .bInterval            = 0x01U
     },
 
@@ -151,7 +208,7 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
              .bLength         = USB_ITF_DESC_LEN,
              .bDescriptorType = USB_DESCTYPE_ITF
          },
-        .bInterfaceNumber     = HID_MOUSE_INF,
+        .bInterfaceNumber     = USBD_INF_MOUSE,
         .bAlternateSetting    = 0x00U,
         .bNumEndpoints        = 0x02U,
         .bInterfaceClass      = USB_HID_CLASS,
@@ -181,7 +238,7 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
              .bLength         = USB_EP_DESC_LEN,
              .bDescriptorType = USB_DESCTYPE_EP
          },
-        .bEndpointAddress     = HID_MOUSE_IN_EP,
+        .bEndpointAddress     = USBD_EP_IN_MOUSE,
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_MOUSE_IN_PACKET,
         .bInterval            = 0x01U
@@ -194,66 +251,9 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
              .bLength         = USB_EP_DESC_LEN,
              .bDescriptorType = USB_DESCTYPE_EP
          },
-        .bEndpointAddress     = HID_MOUSE_OUT_EP,
+        .bEndpointAddress     = USBD_EP_OUT_MOUSE,
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_MOUSE_OUT_PACKET,
-        .bInterval            = 0x01U
-    },
-
-    // interface descriptor
-    .cntlr_inf =
-    {
-        .header =
-         {
-             .bLength         = USB_ITF_DESC_LEN,
-             .bDescriptorType = USB_DESCTYPE_ITF
-         },
-        .bInterfaceNumber     = HID_CNTLR_INF,
-        .bAlternateSetting    = 0x00U,
-        .bNumEndpoints        = 0x02U,
-        .bInterfaceClass      = USB_HID_CLASS,
-        .bInterfaceSubClass   = USB_HID_SUBCLASS_BOOT_ITF,
-        .bInterfaceProtocol   = USB_HID_PROTOCOL_CNTLR,
-        .iInterface           = 0x00U
-    },
-
-    .cntlr_hid =
-    {
-        .header =
-         {
-             .bLength         = USB_HID_DESC_LEN,
-             .bDescriptorType = USB_DESCTYPE_HID
-         },
-        .bcdHID               = HID_CD,
-        .bCountryCode         = HID_COUNTRYCODE,
-        .bNumDescriptors      = 0x01U,
-        .bDescriptorType      = USB_DESCTYPE_REPORT,
-        .wDescriptorLength    = HID_CNTLR_REPORT_DESC_SIZE,
-    },
-
-    .cntlr_epin =
-    {
-        .header =
-         {
-             .bLength         = USB_EP_DESC_LEN,
-             .bDescriptorType = USB_DESCTYPE_EP
-         },
-        .bEndpointAddress     = HID_CNTLR_IN_EP,
-        .bmAttributes         = USB_EP_ATTR_INT,
-        .wMaxPacketSize       = HID_CNTLR_IN_PACKET,
-        .bInterval            = 0x01U
-    },
-
-    .cntlr_epout =
-    {
-        .header =
-         {
-             .bLength         = USB_EP_DESC_LEN,
-             .bDescriptorType = USB_DESCTYPE_EP
-         },
-        .bEndpointAddress     = HID_CNTLR_OUT_EP,
-        .bmAttributes         = USB_EP_ATTR_INT,
-        .wMaxPacketSize       = HID_CNTLR_OUT_PACKET,
         .bInterval            = 0x01U
     }
 };
@@ -400,11 +400,11 @@ static usb_desc_str serial_string =
 //static uint8_t usb_composite_req_handler (usb_dev *udev, usb_req *req)
 //{
 //    switch (req->wIndex & 0xFF) {
-//        case HID_KB_INF:
+//        case USBD_INF_KB:
 //            return hid_kb_cb.req_proc(udev, req);
-//        case HID_MOUSE_INF:
+//        case USBD_INF_MOUSE:
 //            return hid_mouse_cb.req_proc(udev, req);
-//        case HID_CNTLR_INF:
+//        case USBD_INF_CNTLR:
 //            return hid_cntlr_cb.req_proc(udev, req);
 //        default:
 //            break;
@@ -421,14 +421,14 @@ static usb_desc_str serial_string =
 //static uint8_t usb_composite_data_in (usb_dev *udev, uint8_t ep_num)
 //{
 //    switch (ep_num) {
-////        case HID_KB_IN_EP & 0x7F:
-//        case EP_ID(HID_KB_IN_EP):
+////        case USBD_EP_IN_KB & 0x7F:
+//        case EP_ID(USBD_EP_IN_KB):
 //            return hid_kb_cb.data_in(udev, ep_num);
-////        case HID_MOUSE_IN_EP & 0x7F:
-//        case EP_ID(HID_MOUSE_IN_EP):
+////        case USBD_EP_IN_MOUSE & 0x7F:
+//        case EP_ID(USBD_EP_IN_MOUSE):
 //            return hid_mouse_cb.data_in(udev, ep_num);
-////        case HID_CNTLR_IN_EP & 0x7F:
-//        case EP_ID(HID_CNTLR_IN_EP):
+////        case USBD_EP_IN_CNTLR & 0x7F:
+//        case EP_ID(USBD_EP_IN_CNTLR):
 //            return hid_cntlr_cb.data_in(udev, ep_num);
 //        default:
 //            break;
@@ -445,14 +445,14 @@ static usb_desc_str serial_string =
 //static uint8_t usb_composite_data_out (usb_dev *udev, uint8_t ep_num)
 //{
 //    switch (ep_num) {
-////        case HID_KB_OUT_EP & 0x7F:
-//        case EP_ID(HID_KB_IN_EP):
+////        case USBD_EP_OUT_KB & 0x7F:
+//        case EP_ID(USBD_EP_IN_KB):
 //            return hid_kb_cb.data_out(udev, ep_num);
-////        case HID_MOUSE_OUT_EP & 0x7F:
-//        case EP_ID(HID_MOUSE_IN_EP):
+////        case USBD_EP_OUT_MOUSE & 0x7F:
+//        case EP_ID(USBD_EP_IN_MOUSE):
 //            return hid_mouse_cb.data_out(udev, ep_num);
-////        case HID_CNTLR_OUT_EP & 0x7F:
-//        case EP_ID(HID_CNTLR_IN_EP):
+////        case USBD_EP_OUT_CNTLR & 0x7F:
+//        case EP_ID(USBD_EP_IN_CNTLR):
 //            return hid_cntlr_cb.data_out(udev, ep_num);
 //        default:
 //            break;

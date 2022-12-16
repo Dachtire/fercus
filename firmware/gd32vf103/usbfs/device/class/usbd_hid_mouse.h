@@ -42,13 +42,14 @@ OF SUCH DAMAGE.
 
 //#define HID_MOUSE_CONFIG_DESC_LEN          0x22U
 #define HID_MOUSE_CONFIG_DESC_LEN USBD_HID_CONFIG_DESC_SIZE
-#define HID_MOUSE_REPORT_DESC_SIZE 0x34U
+#define HID_MOUSE_REPORT_DESC_SIZE 0x2e
+#define USBD_REPORT_SIZE_MOUSE 13
 //#define USB_HID_REPORT_DESC_LEN          0x4AU
 
 #define NO_CMD                           0xFFU
 
 const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE];
-
+uint8_t mouse_report[USBD_REPORT_SIZE_MOUSE];
 //typedef struct {
 //    uint32_t protocol;
 //    uint32_t idle_state;
@@ -71,5 +72,10 @@ const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE];
 //uint8_t hid_mouse_itfop_register (usb_dev *udev, hid_mouse_fop_handler *hid_fop);
 /* send keyboard report */
 //uint8_t hid_mouse_report_send (usb_dev *udev, uint8_t *report, uint32_t len);
+
+__attribute__((optimize("O0"))) void usbd_mouse_report_send(uint8_t *report/*, uint32_t len*/);
+__attribute__((optimize("O0"))) uint8_t usbd_mouse_report_receive();
+__attribute__((optimize("O0"))) uint8_t usbd_mouse_check_send();
+__attribute__((optimize("O0"))) uint8_t usbd_mouse_check_recev();
 
 #endif /* __HID_MOUSE_CORE_H */

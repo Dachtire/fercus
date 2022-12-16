@@ -89,7 +89,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //             .bLength         = USB_ITF_DESC_LEN,
 //             .bDescriptorType = USB_DESCTYPE_ITF
 //         },
-//        .bInterfaceNumber     = HID_CNTLR_INF,
+//        .bInterfaceNumber     = USBD_INF_CNTLR,
 //        .bAlternateSetting    = 0x00U,
 //        .bNumEndpoints        = 0x01U,
 //        .bInterfaceClass      = USB_HID_CLASS,
@@ -109,7 +109,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //        .bCountryCode         = 0x00U,
 //        .bNumDescriptors      = 0x01U,
 //        .bDescriptorType      = USB_DESCTYPE_REPORT,
-//        .wDescriptorLength    = HID_CNTLR_REPORT_DESC_SIZE,
+//        .wDescriptorLength    = USBD_REPORT_DESC_SIZE_CNTLR,
 //    },
 //
 //    .epin =
@@ -119,7 +119,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //             .bLength         = USB_EP_DESC_LEN,
 //             .bDescriptorType = USB_DESCTYPE_EP
 //         },
-//        .bEndpointAddress     = HID_CNTLR_IN_EP,
+//        .bEndpointAddress     = USBD_EP_IN_CNTLR,
 //        .bmAttributes         = USB_EP_ATTR_INT,
 //        .wMaxPacketSize       = HID_CNTLR_IN_PACKET,
 //        .bInterval            = 0x01U
@@ -132,7 +132,7 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //             .bLength         = USB_EP_DESC_LEN,
 //             .bDescriptorType = USB_DESCTYPE_EP
 //         },
-//        .bEndpointAddress     = HID_CNTLR_OUT_EP,
+//        .bEndpointAddress     = USBD_EP_OUT_CNTLR,
 //        .bmAttributes         = USB_EP_ATTR_INT,
 //        .wMaxPacketSize       = HID_CNTLR_OUT_PACKET,
 //        .bInterval            = 0x01U
@@ -197,20 +197,19 @@ const usb_desc_dev hid_cntlr_dev_desc =
 //};
 //
 //
-const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
+const uint8_t USBD_REPORT_DESC_CNTLR[USBD_REPORT_DESC_SIZE_CNTLR] =
 {
     USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
-        USAGE, USAGE_GENERIC_DESKTOP_PAGE_GAMEPAD,
-        COLLECTION, COLLECTION_APPLICATION,
-
-            COLLECTION, COLLECTION_PHYSICAL,
+    USAGE, USAGE_GENERIC_DESKTOP_PAGE_GAMEPAD,
+    COLLECTION, COLLECTION_APPLICATION,
+        COLLECTION, COLLECTION_PHYSICAL,
             USAGE_PAGE, USAGE_PAGE_BUTTON,
             USAGE_MINIMUM, USAGE_BUTTON_PAGE_1,
-            USAGE_MAXIMUM, USAGE_BUTTON_PAGE_16,
+            USAGE_MAXIMUM, 0x50,
             LOGICAL_MINIMUM, 0x00,
             LOGICAL_MAXIMUM, 0x01,
             REPORT_SIZE, 0x01,
-            REPORT_COUNT, 0x10,
+            REPORT_COUNT, 0x50,
             USAGE_TYPE_INPUT, USAGE_TYPE_DATA_DV,
 
             USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
@@ -218,9 +217,9 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
             USAGE, USAGE_GENERIC_DESKTOP_PAGE_Y,
             USAGE, USAGE_GENERIC_DESKTOP_PAGE_RX,
             USAGE, USAGE_GENERIC_DESKTOP_PAGE_RY,
-            LOGICAL_MINIMUM, 0x81,
-            LOGICAL_MAXIMUM, 0x7f,
-            REPORT_SIZE, 0x08,
+            LOGICAL_MINIMUM, 0x00,
+            0x26, 0xfe, 0x03,  // LOGICAL_MAXIMUM
+            REPORT_SIZE, 0x10,
             REPORT_COUNT, 0x04,
             USAGE_TYPE_INPUT, USAGE_TYPE_DATA_DV,
         END_COLECTION,
@@ -273,11 +272,11 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
 //*/
 //uint8_t hid_cntlr_report_send (usb_dev *udev, uint8_t *report, uint32_t len)
 //{
-//    hid_cntlr_handler *hid = (hid_cntlr_handler *)udev->dev.class_data[HID_CNTLR_INF];
+//    hid_cntlr_handler *hid = (hid_cntlr_handler *)udev->dev.class_data[USBD_INF_CNTLR];
 //
 //    hid->prev_transfer_complete = 0U;
 //
-//    usbd_ep_send(udev, HID_CNTLR_IN_EP, report, len);
+//    usbd_ep_send(udev, USBD_EP_IN_CNTLR, report, len);
 //
 //    return USBD_OK;
 //}
@@ -299,11 +298,11 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
 //    usbd_ep_setup (udev, &(USBD_CNTLR_CONFIG_DESC.epin));
 //    usbd_ep_setup (udev, &(USBD_CNTLR_CONFIG_DESC.epout));
 //
-//    usbd_ep_recev (udev, HID_CNTLR_OUT_EP, hid_handler.data_out, HID_CNTLR_OUT_PACKET);
+//    usbd_ep_recev (udev, USBD_EP_OUT_CNTLR, hid_handler.data_out, HID_CNTLR_OUT_PACKET);
 //
 //    hid_handler.prev_transfer_complete = 1U;
 //
-//    udev->dev.class_data[HID_CNTLR_INF] = (void *)&hid_handler;
+//    udev->dev.class_data[USBD_INF_CNTLR] = (void *)&hid_handler;
 //
 //    if (NULL != udev->dev.user_data) {
 //        ((hid_cntlr_fop_handler *)udev->dev.user_data)->hid_itf_config();
@@ -322,8 +321,8 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
 //static uint8_t hid_cntlr_deinit (usb_dev *udev, uint8_t config_index)
 //{
 //    /* deinitialize HID endpoints */
-//    usbd_ep_clear(udev, HID_CNTLR_IN_EP);
-//    usbd_ep_clear(udev, HID_CNTLR_OUT_EP);
+//    usbd_ep_clear(udev, USBD_EP_IN_CNTLR);
+//    usbd_ep_clear(udev, USBD_EP_OUT_CNTLR);
 //
 //    return USBD_OK;
 //}
@@ -339,7 +338,7 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
 //{
 //    usb_transc *transc = &udev->dev.transc_in[0];
 //
-//    hid_cntlr_handler *hid = (hid_cntlr_handler *)udev->dev.class_data[HID_CNTLR_INF];
+//    hid_cntlr_handler *hid = (hid_cntlr_handler *)udev->dev.class_data[USBD_INF_CNTLR];
 //
 //    switch (req->bRequest) {
 //    case GET_REPORT:
@@ -372,8 +371,8 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
 //
 //    case USB_GET_DESCRIPTOR:
 //        if (USB_DESCTYPE_REPORT == (req->wValue >> 8U)) {
-//            transc->remain_len = USB_MIN(HID_CNTLR_REPORT_DESC_SIZE, req->wLength);
-//            transc->xfer_buf = (uint8_t *)USBD_CNTLR_REPORT_DESC;
+//            transc->remain_len = USB_MIN(USBD_REPORT_DESC_SIZE_CNTLR, req->wLength);
+//            transc->xfer_buf = (uint8_t *)USBD_REPORT_DESC_CNTLR;
 //
 //            return REQ_SUPP;
 //        }
@@ -409,7 +408,7 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
 //}
 //
 //static uint8_t hid_cntlr_data_out (usb_dev *udev, uint8_t ep_num) {
-//    hid_cntlr_handler *hid = (hid_cntlr_handler *)udev->dev.class_data[HID_CNTLR_INF];
+//    hid_cntlr_handler *hid = (hid_cntlr_handler *)udev->dev.class_data[USBD_INF_CNTLR];
 //
 ////    switch (hid->data_out[2]) {
 ////        case KB_CTL_KB_OFF:
@@ -432,21 +431,21 @@ const uint8_t USBD_CNTLR_REPORT_DESC[HID_CNTLR_REPORT_DESC_SIZE] =
 ////            break;
 ////    }
 //
-//    usbd_ep_recev(udev, HID_CNTLR_OUT_EP, hid->data_out, HID_CNTLR_OUT_PACKET);
+//    usbd_ep_recev(udev, USBD_EP_OUT_CNTLR, hid->data_out, HID_CNTLR_OUT_PACKET);
 //
 //    return USBD_OK;
 //}
 void usbd_cntlr_report_send(uint8_t *report)
 {
-    UserToPMABufferCopy(report, ENDP3_TXADDR, USBD_CNTLR_BUF_SIZE);
-    SetEPTxCount(ENDP3, USBD_CNTLR_BUF_SIZE);
-    SetEPTxValid(ENDP3);
-    usbd_ep_busy[HID_CNTLR_INF] = TRUE;
+    UserToPMABufferCopy(report, ENDP2_TXADDR, USBD_REPORT_SIZE_CNTLR);
+    SetEPTxCount(ENDP2, USBD_REPORT_SIZE_CNTLR);
+    SetEPTxValid(ENDP2);
+    usbd_epin_busy[ENDP2] = TRUE;
 }
 
 uint8_t usbd_cntlr_check_send()
 {
-    if (usbd_ep_busy[HID_CNTLR_INF] == FALSE) {
+    if (usbd_epin_busy[ENDP2] == FALSE) {
         return USB_SUCCESS;
     } else {
         return USB_ERROR;

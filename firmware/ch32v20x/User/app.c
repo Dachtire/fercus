@@ -99,12 +99,20 @@ void gpio_config(void)
 void adc_config() {
     switch (kb_device) {
         default:
-        case KB_DEVICE_VENDOR:
-            DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)kb_adc_value, KB_ADC_SIZE);
+        case KB_DEVICE_COMPOSITE:
+            DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)js_axis_adc, JS_NUM);
             DMA_Cmd(DMA1_Channel1, ENABLE);
 
             ADC_Function_Init();
-            ADC_RegularChannelConfig(ADC1, 0, 1, ADC_SampleTime_1Cycles5);
+            // t = 1 / 12Mhz
+            // 71Cycles5 = 7 * 6 us
+            #if KB_SIDE == KB_SIDE_LEFT
+                ADC_RegularChannelConfig(ADC1, ADC_Channel_6, 1, ADC_SampleTime_71Cycles5);
+                ADC_RegularChannelConfig(ADC1, ADC_Channel_7, 2, ADC_SampleTime_71Cycles5);
+            #else
+                ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 1, ADC_SampleTime_71Cycles5);
+                ADC_RegularChannelConfig(ADC1, ADC_Channel_9, 2, ADC_SampleTime_71Cycles5);
+            #endif
             ADC_SoftwareStartConvCmd(ADC1, ENABLE);
             break;
 
@@ -126,24 +134,16 @@ void adc_config() {
             ADC_SoftwareStartConvCmd(ADC1, ENABLE);
             break;
 
-        case KB_DEVICE_COMPOSITE:
-            DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)js_axis_adc, JS_NUM);
+        case KB_DEVICE_KEYBORAD:
+            break;
+
+        case KB_DEVICE_VENDOR:
+            DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)kb_adc_value, KB_ADC_SIZE);
             DMA_Cmd(DMA1_Channel1, ENABLE);
 
             ADC_Function_Init();
-            // t = 1 / 12Mhz
-            // 71Cycles5 = 7 * 6 us
-            #if KB_SIDE == KB_SIDE_LEFT
-                ADC_RegularChannelConfig(ADC1, ADC_Channel_6, 1, ADC_SampleTime_71Cycles5);
-                ADC_RegularChannelConfig(ADC1, ADC_Channel_7, 2, ADC_SampleTime_71Cycles5);
-            #else
-                ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 1, ADC_SampleTime_71Cycles5);
-                ADC_RegularChannelConfig(ADC1, ADC_Channel_9, 2, ADC_SampleTime_71Cycles5);
-            #endif
+            ADC_RegularChannelConfig(ADC1, 0, 1, ADC_SampleTime_1Cycles5);
             ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-            break;
-
-        case KB_DEVICE_KEYBORAD:
             break;
     }
 }

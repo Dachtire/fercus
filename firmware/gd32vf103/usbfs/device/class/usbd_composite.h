@@ -51,15 +51,15 @@ typedef struct
     usb_desc_ep kb_epin;
     usb_desc_ep kb_epout;
 
-    usb_desc_itf mouse_inf;
-    usb_desc_hid mouse_hid;
-    usb_desc_ep mouse_epin;
-    usb_desc_ep mouse_epout;
-
     usb_desc_itf cntlr_inf;
     usb_desc_hid cntlr_hid;
     usb_desc_ep cntlr_epin;
     usb_desc_ep cntlr_epout;
+
+    usb_desc_itf mouse_inf;
+    usb_desc_hid mouse_hid;
+    usb_desc_ep mouse_epin;
+    usb_desc_ep mouse_epout;
 } usbd_composite_desc_config_set;
 
 const usb_desc_dev USBD_COMPOSITE_DEV_DESC;

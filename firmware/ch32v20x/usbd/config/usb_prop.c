@@ -125,10 +125,10 @@ ONE_DESCRIPTOR Config_Descriptor_USBD_VENDOR_CONFIG_DESC = {
     USBD_SIZE_CONFIG_DESC
 };
 
-ONE_DESCRIPTOR Report_Descriptor_USBD_COMPOSITE[USBD_COMPOSITE_ITF_NUM] = {
+ONE_DESCRIPTOR Report_Descriptor_USBD_COMPOSITE[USBD_ITF_NUM_COMPOSITE] = {
     {(uint8_t*)USBD_KB_REPORT_DESC, USBD_KB_REPORT_DESC_SIZE},
+    {(uint8_t*) USBD_REPORT_DESC_CNTLR, USBD_REPORT_DESC_SIZE_CNTLR},
     {(uint8_t*)USBD_MOUSE_REPORT_DESC, HID_MOUSE_REPORT_DESC_SIZE},
-    {(uint8_t*)USBD_CNTLR_REPORT_DESC, HID_CNTLR_REPORT_DESC_SIZE}
 };
 
 ONE_DESCRIPTOR Report_Descriptor_USBD_KB[2] = {
@@ -136,10 +136,10 @@ ONE_DESCRIPTOR Report_Descriptor_USBD_KB[2] = {
     //	{(uint8_t*)USBD_MouseRepDesc, USBD_SIZE_MOUSE_DESC},
 };
 
-ONE_DESCRIPTOR Hid_Descriptor_USBD_COMPOSITE[USBD_COMPOSITE_ITF_NUM] = {
+ONE_DESCRIPTOR Hid_Descriptor_USBD_COMPOSITE[USBD_ITF_NUM_COMPOSITE] = {
     {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.kb_inf.iInterface, 0x09},
-    {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.mouse_inf.iInterface, 0x09},
     {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.cntlr_inf.iInterface, 0x09},
+    {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.mouse_inf.iInterface, 0x09},
 };
 
 ONE_DESCRIPTOR Hid_Descriptor_USBD_KB[2] = {
@@ -299,25 +299,25 @@ void USBD_Reset(void)
           SetEPType(ENDP1, EP_INTERRUPT);
           SetEPTxAddr(ENDP1, ENDP1_TXADDR);
           SetEPRxAddr(ENDP1, ENDP1_RXADDR);
-          SetEPRxCount(ENDP1, USBD_KB_RECEV_SIZE);
+          SetEPRxCount(ENDP1, DEF_USBD_UEP0_SIZE);
           SetEPRxStatus(ENDP1, EP_RX_VALID);
           SetEPTxStatus(ENDP1, EP_TX_NAK);
           ClearDTOG_RX(ENDP1);
           ClearDTOG_TX(ENDP1);
 
           SetEPType(ENDP2, EP_INTERRUPT);
-          SetEPTxAddr(ENDP2, ENDP1_TXADDR);
-          SetEPRxAddr(ENDP2, ENDP1_RXADDR);
-          SetEPRxCount(ENDP2, USBD_KB_RECEV_SIZE);
+          SetEPTxAddr(ENDP2, ENDP2_TXADDR);
+          SetEPRxAddr(ENDP2, ENDP2_RXADDR);
+          SetEPRxCount(ENDP2, DEF_USBD_UEP0_SIZE);
           SetEPRxStatus(ENDP2, EP_RX_VALID);
           SetEPTxStatus(ENDP2, EP_TX_NAK);
           ClearDTOG_RX(ENDP2);
           ClearDTOG_TX(ENDP2);
 
           SetEPType(ENDP3, EP_INTERRUPT);
-          SetEPTxAddr(ENDP3, ENDP1_TXADDR);
-          SetEPRxAddr(ENDP3, ENDP1_RXADDR);
-          SetEPRxCount(ENDP3, USBD_KB_RECEV_SIZE);
+          SetEPTxAddr(ENDP3, ENDP3_TXADDR);
+          SetEPRxAddr(ENDP3, ENDP3_RXADDR);
+          SetEPRxCount(ENDP3, DEF_USBD_UEP0_SIZE);
           SetEPRxStatus(ENDP3, EP_RX_VALID);
           SetEPTxStatus(ENDP3, EP_TX_NAK);
           ClearDTOG_RX(ENDP3);

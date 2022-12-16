@@ -1658,8 +1658,8 @@ void USBH_MainDeal( void )
                             {
                                 kb_flag |= KB_FLAG_COUNT;
                                 for (uint16_t j = 0; j < len; ++j) {
-//                                    kb_usbhd_buf[j] = kb_usbd_buf[j] | Com_Buf[j];
-                                    kb_usbh_buf[j] = Com_Buf[j];
+//                                    kb_report_usbhd[j] = kb_report_usbd[j] | Com_Buf[j];
+kb_report_usbh[j] = Com_Buf[j];
                                 }
                             }
 
