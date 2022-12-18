@@ -8,11 +8,11 @@ one's left side connect to pc and right side connect to another's left side.
 both left side connect to pc directly.
 * Hardware
 ** keychron low profile optical
-** latency
+** response time
 |    |       tr |       tf | unit |
 | pt |       18 |        5 | us   |
 | sw | 200-2000 | 200-2000 | us   |
-optical switch's speed approximate to finger's speed, which fastest is around 200 us, but nomally it takes a few ms.
+The speed of optical switch depends on the speed of finger, the shortest time for finger to press a switch is about 200 us, but usually it takes a few milliseconds.
 ** dimension: 122 * 133 * 13.4 mm
 * Firmware
 ** optical switch
