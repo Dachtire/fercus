@@ -683,20 +683,10 @@ static void SetSysClockTo144_HSE(void)
   {
     /* HCLK = SYSCLK */
     RCC->CFGR0 |= (uint32_t)RCC_HPRE_DIV1;
-    switch (kb_device) {
-        default:
-        case KB_DEVICE_KEYBORAD:
-            /* PCLK2 = HCLK */
-            RCC->CFGR0 |= (uint32_t)RCC_PPRE2_DIV1;
-            break;
+    /* PCLK2 = HCLK */
+//    RCC->CFGR0 |= (uint32_t)RCC_PPRE2_DIV1;
+    RCC->CFGR0 |= (uint32_t)RCC_PPRE2_DIV2;
 
-        case KB_DEVICE_COMPOSITE:
-        case KB_DEVICE_VENDOR:
-        case KB_DEVICE_KEYBOARD_ADC_DIFF:
-        case KB_DEVICE_KEYBOARD_ADC_TRIGGER:
-            RCC->CFGR0 |= (uint32_t)RCC_PPRE2_DIV2;
-            break;
-    }
     /* PCLK1 = HCLK */
     RCC->CFGR0 |= (uint32_t)RCC_PPRE1_DIV2;
 

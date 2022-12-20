@@ -53,7 +53,7 @@ void gpio_config(void)
     switch (kb_device) {
         default:
         case KB_DEVICE_KEYBORAD:
-        case KB_DEVICE_COMPOSITE:
+//        case KB_DEVICE_COMPOSITE:
             GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
             break;
 
@@ -99,7 +99,8 @@ void gpio_config(void)
 void adc_config() {
     switch (kb_device) {
         default:
-        case KB_DEVICE_COMPOSITE:
+        case KB_DEVICE_KEYBORAD:
+//        case KB_DEVICE_COMPOSITE:
             DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)js_axis_adc, JS_NUM);
             DMA_Cmd(DMA1_Channel1, ENABLE);
 
@@ -132,9 +133,6 @@ void adc_config() {
             ADC_RegularChannelConfig(ADC1, ADC_Channel_5, 6, ADC_SampleTime_71Cycles5);
 
             ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-            break;
-
-        case KB_DEVICE_KEYBORAD:
             break;
 
         case KB_DEVICE_VENDOR:
@@ -189,7 +187,7 @@ void TIM1_Init()
     switch (kb_device) {
         default:
         case KB_DEVICE_KEYBORAD:
-        case KB_DEVICE_COMPOSITE:
+//        case KB_DEVICE_COMPOSITE:
             TIM_TimeBaseInitStructure.TIM_Period = 2 * 1000 / 8 - 1;
             break;
 
@@ -262,7 +260,8 @@ void ADC_Function_Init(void)
             ADC_InitStructure.ADC_NbrOfChannel = KB_ROW_NUM;
             break;
 
-        case KB_DEVICE_COMPOSITE:
+//        case KB_DEVICE_COMPOSITE:
+        case KB_DEVICE_KEYBORAD:
             ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
             ADC_InitStructure.ADC_ScanConvMode = ENABLE;
             ADC_InitStructure.ADC_NbrOfChannel = JS_NUM;
@@ -272,9 +271,6 @@ void ADC_Function_Init(void)
             ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
             ADC_InitStructure.ADC_ScanConvMode = DISABLE;
             ADC_InitStructure.ADC_NbrOfChannel = 1;
-            break;
-
-        case KB_DEVICE_KEYBORAD:
             break;
     }
 

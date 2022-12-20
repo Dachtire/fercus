@@ -30,24 +30,24 @@ void EP1_IN_Callback (void)
 { 
 //	USBD_Endp1_Busy = 0;
     usbd_epin_busy[ENDP1] = FALSE;
-    if (kb_device == KB_DEVICE_VENDOR) {
-        if (mult_length != 0) {
-            usbd_vendor_send_mult(mult_ptr, mult_length, ENDP1);
-        }
-    }
+//    if (kb_device == KB_DEVICE_VENDOR) {
+//        if (mult_length != 0) {
+//            usbd_vendor_send_mult(mult_ptr, mult_length, ENDP1);
+//        }
+//    }
 }
 
 void EP1_OUT_Callback(void)
 {
-    switch (kb_device) {
-        default:
-        case KB_DEVICE_KEYBORAD:
-            break;
-
-        case KB_DEVICE_VENDOR:
-            usbd_vendor_receive((uint8_t *) kb_report_recev, ENDP1);
-            break;
-    }
+//    switch (kb_device) {
+//        default:
+//        case KB_DEVICE_KEYBORAD:
+//            break;
+//
+//        case KB_DEVICE_VENDOR:
+//            usbd_vendor_receive((uint8_t *) kb_report_recev, ENDP1);
+//            break;
+//    }
 }
 
 /*********************************************************************
@@ -64,15 +64,15 @@ void EP2_IN_Callback (void)
 
 void EP2_OUT_Callback(void)
 {
-    switch (kb_device) {
-        default:
-        case KB_DEVICE_KEYBORAD:
-            break;
-
-        case KB_DEVICE_VENDOR:
-            usbd_vendor_receive((uint8_t *) kb_report_recev, ENDP2);
-            break;
-    }
+//    switch (kb_device) {
+//        default:
+//        case KB_DEVICE_KEYBORAD:
+//            break;
+//
+//        case KB_DEVICE_VENDOR:
+//            usbd_vendor_receive((uint8_t *) kb_report_recev, ENDP2);
+//            break;
+//    }
 }
 
 void EP3_IN_Callback (void)
@@ -82,15 +82,15 @@ void EP3_IN_Callback (void)
 
 void EP3_OUT_Callback(void)
 {
-    switch (kb_device) {
-        default:
-        case KB_DEVICE_KEYBORAD:
-            break;
-
-        case KB_DEVICE_VENDOR:
-            usbd_vendor_receive((uint8_t *) kb_report_recev, ENDP2);
-            break;
-    }
+//    switch (kb_device) {
+//        default:
+//        case KB_DEVICE_KEYBORAD:
+//            break;
+//
+//        case KB_DEVICE_VENDOR:
+//            usbd_vendor_receive((uint8_t *) kb_report_recev, ENDP2);
+//            break;
+//    }
 }
 
 /*********************************************************************

@@ -115,8 +115,8 @@ void kb_init_sync() {
 }
 
 void kb_init() {
-    kb_device = KB_DEVICE_COMPOSITE;
-//    kb_device = KB_DEVICE_KEYBORAD;
+//    kb_device = KB_DEVICE_COMPOSITE;
+    kb_device = KB_DEVICE_KEYBORAD;
 //    kb_device = KB_DEVICE_VENDOR;
 //    kb_device = KB_DEVICE_KEYBOARD_ADC_DIFF;
 //    kb_device = KB_DEVICE_KEYBOARD_ADC_TRIGGER;
@@ -212,23 +212,23 @@ void kb_fn_handler() {
             case KEY_F7: {
                 switch (kb_device) {
                     default:
-                        kb_device = KB_DEVICE_COMPOSITE;
-                        printf("KB_DEVICE_COMPOSITE: %d\n", kb_device);
+                        kb_device = KB_DEVICE_KEYBORAD;
+//                        printf("KB_DEVICE_COMPOSITE: %d\n", kb_device);
                         break;
 
-                    case KB_DEVICE_COMPOSITE:
+                    case KB_DEVICE_KEYBORAD:
                         kb_device = KB_DEVICE_CNTLR;
-                        printf("KB_DEVICE_CNTLR: %d\n", kb_device);
+//                        printf("KB_DEVICE_CNTLR: %d\n", kb_device);
                         break;
 
                     case KB_DEVICE_CNTLR:
                         kb_device = KB_DEVICE_MOUSE;
-                        printf("KB_DEVICE_MOUSE: %d\n", kb_device);
+//                        printf("KB_DEVICE_MOUSE: %d\n", kb_device);
                         break;
 
                     case KB_DEVICE_MOUSE:
-                        kb_device = KB_DEVICE_COMPOSITE;
-                        printf("KB_DEVICE_COMPOSITE: %d\n", kb_device);
+                        kb_device = KB_DEVICE_KEYBORAD;
+//                        printf("KB_DEVICE_COMPOSITE: %d\n", kb_device);
                         break;
                 }
                 break;

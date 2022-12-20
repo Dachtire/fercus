@@ -63,16 +63,14 @@ USER_STANDARD_REQUESTS User_Standard_Requests =
 	USBD_SetDeviceAddress
 };
 
-ONE_DESCRIPTOR Device_Descriptor =
-{
-	(uint8_t*)USBD_DeviceDescriptor,
-	USBD_SIZE_DEVICE_DESC
+ONE_DESCRIPTOR Device_Descriptor = {
+        (uint8_t*)&USBD_COMPOSITE_DEV_DESC,
+        USBD_SIZE_DEVICE_DESC
 };
 
-ONE_DESCRIPTOR Config_Descriptor =
-{
-	(uint8_t*)USBD_ConfigDescriptor,
-	USBD_SIZE_CONFIG_DESC
+ONE_DESCRIPTOR Config_Descriptor = {
+        (uint8_t*)&USBD_COMPOSITE_CONFIG_DESC,
+        USBD_COMPOSITE_CONFIG_DESC_SIZE
 };
 
 ONE_DESCRIPTOR String_Descriptor[4] =
@@ -83,70 +81,17 @@ ONE_DESCRIPTOR String_Descriptor[4] =
 	{(uint8_t*)USBD_StringSerial, USBD_SIZE_STRING_SERIAL}
 };
 
-ONE_DESCRIPTOR Report_Descriptor[2] =
-{
-	{(uint8_t*)USBD_KeyRepDesc, USBD_SIZE_REPORT_DESC_KB},
-	{(uint8_t*)USBD_MouseRepDesc, USBD_SIZE_REPORT_DESC_MS},
-};
-
-ONE_DESCRIPTOR Hid_Descriptor[2] =
-{
-	{(uint8_t*)&USBD_ConfigDescriptor[18], 0x09},
-	{(uint8_t*)&USBD_ConfigDescriptor[43], 0x09},
-};
-
-ONE_DESCRIPTOR Device_Descriptor_USBD_COMPOSITE_DEV_DESC = {
-    (uint8_t*)&USBD_COMPOSITE_DEV_DESC,
-    USBD_SIZE_DEVICE_DESC
-};
-
-ONE_DESCRIPTOR Device_Descriptor_USBD_KB_DEV_DESC = {
-    (uint8_t*)&USBD_KB_DEV_DESC,
-    USBD_SIZE_DEVICE_DESC
-};
-
-ONE_DESCRIPTOR Device_Descriptor_USBD_VENDOR_DEV_DESC = {
-    (uint8_t*)&USBD_VENDOR_DEV_DESC,
-    USBD_SIZE_DEVICE_DESC
-};
-
-ONE_DESCRIPTOR Config_Descriptor_USBD_COMPOSITE_CONFIG_DESC = {
-    (uint8_t*)&USBD_COMPOSITE_CONFIG_DESC,
-    USBD_COMPOSITE_CONFIG_DESC_SIZE
-};
-
-ONE_DESCRIPTOR Config_Descriptor_USBD_KB_CONFIG_DESC = {
-    (uint8_t*)&USBD_KB_CONFIG_DESC,
-    USBD_SIZE_CONFIG_DESC
-};
-
-ONE_DESCRIPTOR Config_Descriptor_USBD_VENDOR_CONFIG_DESC = {
-    (uint8_t*)&USBD_VENDOR_CONFIG_DESC,
-    USBD_SIZE_CONFIG_DESC
-};
-
-ONE_DESCRIPTOR Report_Descriptor_USBD_COMPOSITE[USBD_ITF_NUM_COMPOSITE] = {
+ONE_DESCRIPTOR Report_Descriptor[USBD_ITF_NUM_COMPOSITE] = {
     {(uint8_t*)USBD_KB_REPORT_DESC, USBD_REPORT_DESC_SIZE_KB},
-    {(uint8_t*) USBD_REPORT_DESC_CNTLR, USBD_REPORT_DESC_SIZE_CNTLR},
+    {(uint8_t*)USBD_REPORT_DESC_CNTLR, USBD_REPORT_DESC_SIZE_CNTLR},
     {(uint8_t*)USBD_MOUSE_REPORT_DESC, HID_MOUSE_REPORT_DESC_SIZE},
 };
 
-ONE_DESCRIPTOR Report_Descriptor_USBD_KB[2] = {
-    {(uint8_t*)USBD_KB_REPORT_DESC, USBD_REPORT_DESC_SIZE_KB},
-    //	{(uint8_t*)USBD_MouseRepDesc, USBD_SIZE_MOUSE_DESC},
-};
-
-ONE_DESCRIPTOR Hid_Descriptor_USBD_COMPOSITE[USBD_ITF_NUM_COMPOSITE] = {
+ONE_DESCRIPTOR Hid_Descriptor[USBD_ITF_NUM_COMPOSITE] = {
     {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.kb_inf.iInterface, 0x09},
     {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.cntlr_inf.iInterface, 0x09},
     {(uint8_t*)&USBD_COMPOSITE_CONFIG_DESC.mouse_inf.iInterface, 0x09},
 };
-
-ONE_DESCRIPTOR Hid_Descriptor_USBD_KB[2] = {
-    {(uint8_t*)&USBD_KB_CONFIG_DESC.itf.iInterface, 0x09},
-//    {(uint8_t*)&USBD_ConfigDescriptor[43], 0x09},
-};
-
 
 /*********************************************************************
  * @fn      USBD_SetConfiguration.
@@ -280,8 +225,6 @@ void USBD_Reset(void)
   _ClearDTOG_RX(ENDP0);
   _ClearDTOG_TX(ENDP0);
 
-    switch (kb_device) {
-      default:
 //          SetEPType(ENDP1, EP_INTERRUPT);
 //          SetEPTxAddr(ENDP1, ENDP1_TXADDR);
 //          SetEPTxStatus(ENDP1, EP_TX_NAK);
@@ -293,48 +236,41 @@ void USBD_Reset(void)
 //          SetEPTxStatus(ENDP2, EP_TX_NAK);
 //          _ClearDTOG_TX(ENDP2);
 //          _ClearDTOG_RX(ENDP2);
-//          break;
-      case KB_DEVICE_COMPOSITE:
-      case KB_DEVICE_KEYBORAD:
-          SetEPType(ENDP1, EP_INTERRUPT);
-          SetEPTxAddr(ENDP1, ENDP1_TXADDR);
-          SetEPRxAddr(ENDP1, ENDP1_RXADDR);
-          SetEPRxCount(ENDP1, DEF_USBD_UEP0_SIZE);
-          SetEPRxStatus(ENDP1, EP_RX_VALID);
-          SetEPTxStatus(ENDP1, EP_TX_NAK);
-          ClearDTOG_RX(ENDP1);
-          ClearDTOG_TX(ENDP1);
+    SetEPType(ENDP1, EP_INTERRUPT);
+    SetEPTxAddr(ENDP1, ENDP1_TXADDR);
+    SetEPRxAddr(ENDP1, ENDP1_RXADDR);
+    SetEPRxCount(ENDP1, DEF_USBD_UEP0_SIZE);
+    SetEPRxStatus(ENDP1, EP_RX_VALID);
+    SetEPTxStatus(ENDP1, EP_TX_NAK);
+    ClearDTOG_RX(ENDP1);
+    ClearDTOG_TX(ENDP1);
 
-          SetEPType(ENDP2, EP_INTERRUPT);
-          SetEPTxAddr(ENDP2, ENDP2_TXADDR);
-          SetEPRxAddr(ENDP2, ENDP2_RXADDR);
-          SetEPRxCount(ENDP2, DEF_USBD_UEP0_SIZE);
-          SetEPRxStatus(ENDP2, EP_RX_VALID);
-          SetEPTxStatus(ENDP2, EP_TX_NAK);
-          ClearDTOG_RX(ENDP2);
-          ClearDTOG_TX(ENDP2);
+    SetEPType(ENDP2, EP_INTERRUPT);
+    SetEPTxAddr(ENDP2, ENDP2_TXADDR);
+    SetEPRxAddr(ENDP2, ENDP2_RXADDR);
+    SetEPRxCount(ENDP2, DEF_USBD_UEP0_SIZE);
+    SetEPRxStatus(ENDP2, EP_RX_VALID);
+    SetEPTxStatus(ENDP2, EP_TX_NAK);
+    ClearDTOG_RX(ENDP2);
+    ClearDTOG_TX(ENDP2);
 
-          SetEPType(ENDP3, EP_INTERRUPT);
-          SetEPTxAddr(ENDP3, ENDP3_TXADDR);
-          SetEPRxAddr(ENDP3, ENDP3_RXADDR);
-          SetEPRxCount(ENDP3, DEF_USBD_UEP0_SIZE);
-          SetEPRxStatus(ENDP3, EP_RX_VALID);
-          SetEPTxStatus(ENDP3, EP_TX_NAK);
-          ClearDTOG_RX(ENDP3);
-          ClearDTOG_TX(ENDP3);
-          break;
+    SetEPType(ENDP3, EP_INTERRUPT);
+    SetEPTxAddr(ENDP3, ENDP3_TXADDR);
+    SetEPRxAddr(ENDP3, ENDP3_RXADDR);
+    SetEPRxCount(ENDP3, DEF_USBD_UEP0_SIZE);
+    SetEPRxStatus(ENDP3, EP_RX_VALID);
+    SetEPTxStatus(ENDP3, EP_TX_NAK);
+    ClearDTOG_RX(ENDP3);
+    ClearDTOG_TX(ENDP3);
 
-      case KB_DEVICE_VENDOR:
-          SetEPType(ENDP1, EP_BULK);
-          SetEPTxAddr(ENDP1, ENDP1_TXADDR);
-          SetEPRxAddr(ENDP1, ENDP1_RXADDR);
-          SetEPRxCount(ENDP1, ENDP1_OUT_SIZE);
-          SetEPRxStatus(ENDP1, EP_RX_VALID);
-          SetEPTxStatus(ENDP1, EP_TX_NAK);
-          ClearDTOG_RX(ENDP1);
-          ClearDTOG_TX(ENDP1);
-          break;
-    }
+//          SetEPType(ENDP1, EP_BULK);
+//          SetEPTxAddr(ENDP1, ENDP1_TXADDR);
+//          SetEPRxAddr(ENDP1, ENDP1_RXADDR);
+//          SetEPRxCount(ENDP1, ENDP1_OUT_SIZE);
+//          SetEPRxStatus(ENDP1, EP_RX_VALID);
+//          SetEPTxStatus(ENDP1, EP_TX_NAK);
+//          ClearDTOG_RX(ENDP1);
+//          ClearDTOG_TX(ENDP1);
 
     SetDeviceAddress(0);
 
@@ -352,18 +288,7 @@ void USBD_Reset(void)
  */
 uint8_t *USBD_GetDeviceDescriptor(uint16_t Length)
 {
-    switch (kb_device) {
-        default:
-//              return Standard_GetDescriptorData(Length, &Device_Descriptor);
-        case KB_DEVICE_COMPOSITE:
-            return Standard_GetDescriptorData(Length, &Device_Descriptor_USBD_COMPOSITE_DEV_DESC);
-
-        case KB_DEVICE_KEYBORAD:
-            return Standard_GetDescriptorData(Length, &Device_Descriptor_USBD_KB_DEV_DESC);
-
-        case KB_DEVICE_VENDOR:
-            return Standard_GetDescriptorData(Length, &Device_Descriptor_USBD_VENDOR_DEV_DESC);
-    }
+    return Standard_GetDescriptorData(Length, &Device_Descriptor);
 }
 
 /*******************************************************************************
@@ -377,18 +302,7 @@ uint8_t *USBD_GetDeviceDescriptor(uint16_t Length)
  */
 uint8_t *USBD_GetConfigDescriptor(uint16_t Length)
 {
-    switch (kb_device) {
-        default:
-//            return Standard_GetDescriptorData(Length, &Config_Descriptor);
-        case KB_DEVICE_COMPOSITE:
-            return Standard_GetDescriptorData(Length, &Config_Descriptor_USBD_COMPOSITE_CONFIG_DESC);
-
-        case KB_DEVICE_KEYBORAD:
-            return Standard_GetDescriptorData(Length, &Config_Descriptor_USBD_KB_CONFIG_DESC);
-
-        case KB_DEVICE_VENDOR:
-            return Standard_GetDescriptorData(Length, &Config_Descriptor_USBD_VENDOR_CONFIG_DESC);
-    }
+    return Standard_GetDescriptorData(Length, &Config_Descriptor);
 }
 
 /*******************************************************************************
@@ -432,19 +346,7 @@ uint8_t *USBD_GetReportDescriptor(uint16_t Length)
   }
   else
   {
-      switch (kb_device) {
-          default:
-//              return Standard_GetDescriptorData(Length, &Report_Descriptor[wIndex0]);
-          case KB_DEVICE_COMPOSITE:
-              return Standard_GetDescriptorData(Length, &Report_Descriptor_USBD_COMPOSITE[wIndex0]);
-
-          case KB_DEVICE_KEYBORAD:
-              return Standard_GetDescriptorData(Length, &Report_Descriptor_USBD_KB[wIndex0]);
-
-          case KB_DEVICE_VENDOR:
-//              return Standard_GetDescriptorData(Length, &Config_Descriptor_USBD_VENDOR_CONFIG_DESC);
-              break;
-      }
+      return Standard_GetDescriptorData(Length, &Report_Descriptor[wIndex0]);
   }
 }
 
@@ -466,19 +368,7 @@ uint8_t *USBD_GetHidDescriptor(uint16_t Length)
   }
   else
   {
-      switch (kb_device) {
-          default:
-//              return Standard_GetDescriptorData(Length, &Hid_Descriptor[wIndex0]);
-          case KB_DEVICE_COMPOSITE:
-              return Standard_GetDescriptorData(Length, &Hid_Descriptor_USBD_COMPOSITE[wIndex0]);
-
-          case KB_DEVICE_KEYBORAD:
-              return Standard_GetDescriptorData(Length, &Hid_Descriptor_USBD_KB[wIndex0]);
-
-          case KB_DEVICE_VENDOR:
-//              return Standard_GetDescriptorData(Length, &Config_Descriptor_USBD_VENDOR_CONFIG_DESC);
-              break;
-      }
+      return Standard_GetDescriptorData(Length, &Hid_Descriptor[wIndex0]);
   }
 }
 

@@ -50,7 +50,6 @@ OF SUCH DAMAGE.
 #define NO_CMD                           0xFFU
 
 const uint8_t USBD_REPORT_DESC_CNTLR[USBD_REPORT_DESC_SIZE_CNTLR];
-//uint8_t cntlr_report[USBD_REPORT_SIZE_CNTLR];
 
 //typedef struct {
 //    uint32_t protocol;
