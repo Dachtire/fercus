@@ -442,50 +442,50 @@ void kb_handler(){
                         break;
 
 //                    case CNTLR_LEFT_STICK_LEFT:
-//                        kb_cntlr_buf_num = CNTLR_REPORT_POS;
+//                        kb_cntlr_buf_num = USBD_REPORT_SIZE_CNTLR_BUTTON;
 //                        kb_cntlr_buf_tmp = CNTLR_AXIS_MIN;
 //                        break;
 //                    case CNTLR_LEFT_STICK_RIGHT:
-//                        kb_cntlr_buf_num = CNTLR_REPORT_POS;
+//                        kb_cntlr_buf_num = USBD_REPORT_SIZE_CNTLR_BUTTON;
 //                        kb_cntlr_buf_tmp = CNTLR_AXIS_MAX;
 //                        break;
 //
 //                    case CNTLR_LEFT_STICK_UP:
-//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 1;
+//                        kb_cntlr_buf_num = USBD_REPORT_SIZE_CNTLR_BUTTON + 1;
 //                        kb_cntlr_buf_tmp = CNTLR_AXIS_MIN;
 //                        break;
 //                    case CNTLR_LEFT_STICK_DOWN:
-//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 1;
+//                        kb_cntlr_buf_num = USBD_REPORT_SIZE_CNTLR_BUTTON + 1;
 //                        kb_cntlr_buf_tmp = CNTLR_AXIS_MAX;
 //                        break;
 //
 //                    case CNTLR_RIGHT_STICK_LEFT:
-//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 2;
+//                        kb_cntlr_buf_num = USBD_REPORT_SIZE_CNTLR_BUTTON + 2;
 //                        kb_cntlr_buf_tmp = CNTLR_AXIS_MIN;
 //                        break;
 //                    case CNTLR_RIGHT_STICK_RIGHT:
-//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 2;
+//                        kb_cntlr_buf_num = USBD_REPORT_SIZE_CNTLR_BUTTON + 2;
 //                        kb_cntlr_buf_tmp = CNTLR_AXIS_MAX;
 //                        break;
 //
 //                    case CNTLR_RIGHT_STICK_UP:
-//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 3;
+//                        kb_cntlr_buf_num = USBD_REPORT_SIZE_CNTLR_BUTTON + 3;
 //                        kb_cntlr_buf_tmp = CNTLR_AXIS_MIN;
 //                        break;
 //                    case CNTLR_RIGHT_STICK_DOWN:
-//                        kb_cntlr_buf_num = CNTLR_REPORT_POS + 3;
+//                        kb_cntlr_buf_num = USBD_REPORT_SIZE_CNTLR_BUTTON + 3;
 //                        kb_cntlr_buf_tmp = CNTLR_AXIS_MAX;
 //                        break;
                 }
 
                 if (signal == KB_PRESS) {
-                    if (kb_cntlr_buf_num < CNTLR_REPORT_POS) {
+                    if (kb_cntlr_buf_num < USBD_REPORT_SIZE_CNTLR_BUTTON) {
                         cntlr_report.button[kb_cntlr_buf_num] |= kb_cntlr_buf_tmp;
                     } else {
 //                        cntlr_report[kb_cntlr_buf_num] = kb_cntlr_buf_tmp;
                     }
                 } else {
-                    if (kb_cntlr_buf_num < CNTLR_REPORT_POS) {
+                    if (kb_cntlr_buf_num < USBD_REPORT_SIZE_CNTLR_BUTTON) {
                         cntlr_report.button[kb_cntlr_buf_num] &= ~kb_cntlr_buf_tmp;
                     } else {
 //                        cntlr_report[kb_cntlr_buf_num] = 0;

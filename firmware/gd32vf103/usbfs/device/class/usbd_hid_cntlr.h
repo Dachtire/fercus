@@ -80,10 +80,10 @@ __attribute__((optimize("O0"))) uint8_t usbd_cntlr_report_receive();
 __attribute__((optimize("O0"))) uint8_t usbd_cntlr_check_send();
 __attribute__((optimize("O0"))) uint8_t usbd_cntlr_check_recev();
 
-#define CNTLR_REPORT_POS 10
+#define USBD_REPORT_SIZE_CNTLR_BUTTON 5
 
 struct _cntlr_report {
-    uint16_t button[5];
+    uint16_t button[USBD_REPORT_SIZE_CNTLR_BUTTON];
     uint16_t axis[4];
 }cntlr_report;
 

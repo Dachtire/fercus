@@ -35,10 +35,8 @@ OF SUCH DAMAGE.
 #ifndef __HID_MOUSE_CORE_H
 #define __HID_MOUSE_CORE_H
 
-//#include "usbd_enum.h"
 #include "usb_hid.h"
 #include "usbd_conf.h"
-//#include "usb_composite.h"
 
 //#define HID_MOUSE_CONFIG_DESC_LEN          0x22U
 #define HID_MOUSE_CONFIG_DESC_LEN USBD_HID_CONFIG_DESC_SIZE

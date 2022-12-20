@@ -1,18 +1,11 @@
 #ifndef __KEYBOARD_H
 #define __KEYBOARD_H
 
-//#include "usb_conf.h"
-//#include "main.h"
-//#include "gd32vf103_it.h"
-//#include "gd32vf103.h"
 #include "debug.h"
 #include "usb_type.h"
 #include "app.h"
 #include "app_km.h"
-//#include "usbd_hid_cntlr.h"
 #include "usbd_composite.h"
-//#include "usb.h"
-//#include "usbd_conf.h"
 
 #define KB_LYR_NUM 4
 #define KB_ROW_NUM 6

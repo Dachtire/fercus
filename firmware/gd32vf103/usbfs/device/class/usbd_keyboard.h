@@ -35,13 +35,9 @@ OF SUCH DAMAGE.
 #ifndef __USBD_KEYBOARD_CORE_H
 #define __USBD_KEYBOARD_CORE_H
 
-//#include "usbd_enum.h"
 #include "usb_hid.h"
 #include "keyboard.h"
 #include "usbd_conf.h"
-//#include "ch32v20x.h"
-
-//#define USBD_KB_EP0_MAX_PACKET 0x40
 
 #define USBD_CONFIG_DESC_SIZE_KB (USB_CFG_DESC_LEN + USB_ITF_DESC_LEN + USB_HID_DESC_LEN + USB_EP_DESC_LEN * 2)
 #define USBD_REPORT_DESC_SIZE_KB 0x33
