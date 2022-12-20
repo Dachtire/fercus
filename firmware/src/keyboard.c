@@ -24,7 +24,6 @@ uint32_t kb_flag;
 uint8_t kb_key_count = 0;
 
 uint32_t kb_ctl = 0;
-uint8_t *kb_report = 0;
 
 uint8_t kb_row_read = 0;
 uint16_t kb_adc_value[KB_ADC_SIZE] = {}, kb_adc_buf1[KB_ADC_SIZE] = {};

@@ -75,7 +75,7 @@ const usb_desc_dev USBD_KB_DEV_DESC;
 const usb_hid_desc_config_set USBD_KB_CONFIG_DESC;
 const uint8_t USBD_KB_REPORT_DESC[USBD_REPORT_DESC_SIZE_KB];
 
-uint8_t *kb_report;
+uint32_t *kb_report;
 uint32_t kb_report_usbd[USBD_REPORT_4BYTE_KB], kb_report_usbhd[USBD_REPORT_4BYTE_KB], kb_report_usbh[USBD_REPORT_4BYTE_KB], kb_report_empty[USBD_REPORT_4BYTE_KB];
 uint8_t kb_report_recev[USBD_REPORT_RECEV_SIZE_KB];
 
