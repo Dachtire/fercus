@@ -113,7 +113,7 @@ const usbd_composite_desc_config_set USBD_COMPOSITE_CONFIG_DESC =
         .bCountryCode         = HID_COUNTRYCODE,
         .bNumDescriptors      = 0x01U,
         .bDescriptorType      = USB_DESCTYPE_REPORT,
-        .wDescriptorLength    = USBD_KB_REPORT_DESC_SIZE,
+        .wDescriptorLength    = USBD_REPORT_DESC_SIZE_KB,
     },
 
     // endpoint descriptor

@@ -36,8 +36,8 @@ OF SUCH DAMAGE.
 #define USB_COMPOSITE_H
 
 #include "usbd_hid_cntlr.h"
-#include "usbd_hid_keyboard.h"
 #include "usbd_hid_mouse.h"
+#include "usbd_keyboard.h"
 //#include "cdc_acm_core.h"
 
 #define USBD_COMPOSITE_CONFIG_DESC_SIZE (USB_CFG_DESC_LEN + 3 * (USB_ITF_DESC_LEN + USB_HID_DESC_LEN + USB_EP_DESC_LEN * 2))

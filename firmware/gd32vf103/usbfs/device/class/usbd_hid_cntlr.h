@@ -82,12 +82,12 @@ __attribute__((optimize("O0"))) uint8_t usbd_cntlr_check_recev();
 
 #define CNTLR_REPORT_POS 10
 
-struct cntlr_report_struct {
+struct _cntlr_report {
     uint16_t button[5];
     uint16_t axis[4];
 }cntlr_report;
 
-enum cntlr_report_code {
+enum cntlr_report_map {
     CNTLR_BUTTON_1 = (uint8_t) 0x00,
     CNTLR_BUTTON_2,
     CNTLR_BUTTON_3,
@@ -120,7 +120,7 @@ enum cntlr_report_code {
 
 };
 
-enum cntlr_report_xbox_code {
+enum cntlr_report_xbox_map {
     CNTLR_A = (uint8_t) 0x00,
     CNTLR_B,
     CNTLR_X,

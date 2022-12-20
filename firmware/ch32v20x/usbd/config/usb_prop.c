@@ -15,11 +15,11 @@
 #include "hw_config.h"
 #include "app.h"
 
-#include "usbd_hid_keyboard.h"
-#include "usbd_vendor.h"
 #include "usbd_composite.h"
-#include "usbd_hid_mouse.h"
 #include "usbd_hid_cntlr.h"
+#include "usbd_hid_mouse.h"
+#include "usbd_keyboard.h"
+#include "usbd_vendor.h"
 
 uint8_t Request = 0;
 
@@ -126,13 +126,13 @@ ONE_DESCRIPTOR Config_Descriptor_USBD_VENDOR_CONFIG_DESC = {
 };
 
 ONE_DESCRIPTOR Report_Descriptor_USBD_COMPOSITE[USBD_ITF_NUM_COMPOSITE] = {
-    {(uint8_t*)USBD_KB_REPORT_DESC, USBD_KB_REPORT_DESC_SIZE},
+    {(uint8_t*)USBD_KB_REPORT_DESC, USBD_REPORT_DESC_SIZE_KB},
     {(uint8_t*) USBD_REPORT_DESC_CNTLR, USBD_REPORT_DESC_SIZE_CNTLR},
     {(uint8_t*)USBD_MOUSE_REPORT_DESC, HID_MOUSE_REPORT_DESC_SIZE},
 };
 
 ONE_DESCRIPTOR Report_Descriptor_USBD_KB[2] = {
-    {(uint8_t*)USBD_KB_REPORT_DESC, USBD_KB_REPORT_DESC_SIZE},
+    {(uint8_t*)USBD_KB_REPORT_DESC, USBD_REPORT_DESC_SIZE_KB},
     //	{(uint8_t*)USBD_MouseRepDesc, USBD_SIZE_MOUSE_DESC},
 };
 

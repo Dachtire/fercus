@@ -215,7 +215,7 @@ static const usb_desc_str serial_string =
 
 /* report desc */
 // bitmap
-//const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
+//const uint8_t USBD_KB_REPORT_DESC[USBD_REPORT_DESC_SIZE_KB] = {
 //    USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
 //    USAGE, USAGE_GENERIC_DESKTOP_PAGE_KEYBOARD,
 //    COLLECTION, COLLECTION_APPLICATION,
@@ -326,7 +326,7 @@ static const usb_desc_str serial_string =
 //
 //    hid->sent_flag = 0U;
 //
-//    usbd_ep_send(udev, USBD_EP_IN_KB, report, USBD_REPORT_SIZE_KB);
+//    usbd_ep_send(udev, USBD_EP_IN_KB, report, USBD_REPORT_BYTE_KB);
 //
 //    return USBD_OK;
 //}
@@ -341,7 +341,7 @@ static const usb_desc_str serial_string =
 //{
 //    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
 //    hid->receive_flag = 0U;
-//    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_report_recev, USBD_KB_RECEV_SIZE);
+//    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_report_recev, USBD_REPORT_RECEV_SIZE_KB);
 //    return USBD_OK;
 //}
 //
@@ -362,7 +362,7 @@ static const usb_desc_str serial_string =
 //    usbd_ep_setup (udev, &(hid_kb_config_desc.epin));
 //    usbd_ep_setup (udev, &(hid_kb_config_desc.epout));
 //
-//    usbd_ep_recev (udev, USBD_EP_OUT_KB, hid_handler.data_out, USBD_KB_RECEV_SIZE);
+//    usbd_ep_recev (udev, USBD_EP_OUT_KB, hid_handler.data_out, USBD_REPORT_RECEV_SIZE_KB);
 //
 //    hid_handler.sent_flag = 1U;
 //    hid_handler.receive_flag = 1U;
@@ -436,7 +436,7 @@ static const usb_desc_str serial_string =
 //
 //        case USB_GET_DESCRIPTOR:
 //            if (USB_DESCTYPE_REPORT == (req->wValue >> 8U)) {
-//                transc->remain_len = USB_MIN(USBD_KB_REPORT_DESC_SIZE, req->wLength);
+//                transc->remain_len = USB_MIN(USBD_REPORT_DESC_SIZE_KB, req->wLength);
 //                transc->xfer_buf = (uint8_t *)USBD_KB_REPORT_DESC;
 //
 //                return REQ_SUPP;

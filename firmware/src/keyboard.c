@@ -1,5 +1,5 @@
 #include "keyboard.h"
-#include "usbd_hid_keyboard.h"
+#include "usbd_keyboard.h"
 #include "usbd_vendor.h"
 
 const uint16_t KB_ROW_GPIO_PIN[KB_ROW_NUM] = {
@@ -17,10 +17,6 @@ const uint16_t JS_AXIS_GPIO_PIN[JS_AXIS_NUM] = {
 GPIO_TypeDef* const JS_AXIS_GPIO_PORT[JS_AXIS_NUM] = {
         JS0_A1_GPIO_PORT, JS0_A2_GPIO_PORT, JS1_A1_GPIO_PORT, JS1_A2_GPIO_PORT};
 
-uint8_t kb_report_usbhd[USBD_REPORT_SIZE_KB] = {}, kb_report_usbd[USBD_REPORT_SIZE_KB] = {}, kb_buf_device[USBD_REPORT_SIZE_KB] = {}, kb_report_empty[USBD_REPORT_SIZE_KB] = {};
-
-uint8_t kb_report_recev[USBD_KB_RECEV_SIZE];
-
 uint8_t kb_col_num = 0, kb_row_num = 0;
 uint8_t (*kb_layout)[KB_COL_NUM] = kb_lyrs[0];
 bool kb_key_state[KB_ROW_NUM][KB_COL_NUM] = {};
@@ -28,7 +24,7 @@ uint32_t kb_flag;
 uint8_t kb_key_count = 0;
 
 uint32_t kb_ctl = 0;
-uint8_t *kb_usb_buf = 0;
+uint8_t *kb_report = 0;
 
 uint8_t kb_row_read = 0;
 uint16_t kb_adc_value[KB_ADC_SIZE] = {}, kb_adc_buf1[KB_ADC_SIZE] = {};
@@ -127,9 +123,9 @@ void kb_init() {
 //    kb_device = KB_DEVICE_KEYBOARD_ADC_TRIGGER;
 
     if ((kb_ctl & KB_CTL_HOST) != 0) {
-        kb_usb_buf = kb_report_usbhd;
+        kb_report = kb_report_usbhd;
     } else {
-        kb_usb_buf = kb_report_usbd;
+        kb_report = kb_report_usbd;
     }
 //    printf("kb_ctl:%02lx\n", kb_ctl);
 }
@@ -319,7 +315,7 @@ void kb_fn_handler() {
 //                            break;
 //                        case kb_fn_uart:
 //                            kb_ctl &= ~KB_CTL_USART;
-//                            kb_usb_buf = kb_report_usbd;
+//                            kb_report = kb_report_usbd;
 //                            break;
 //                        case kb_fn_ms:
 //                            kb_ctl &= ~KB_CTL_HOST;
@@ -344,7 +340,7 @@ void kb_fn_handler() {
 //                            break;
 //                        case kb_fn_uart:
 //                            kb_ctl |= KB_CTL_USART;
-//                            kb_usb_buf = kb_report_usbhd;
+//                            kb_report = kb_report_usbhd;
 //                            break;
 //                        case kb_fn_ms:
 //                            kb_ctl |= KB_CTL_HOST;
@@ -417,9 +413,11 @@ void kb_handler(){
         switch (kb_device) {
             default:
             case KB_DEVICE_KEYBORAD: {
-                uint8_t kb_buf_tmp, kb_buf_num;
-                kb_buf_num = kb_layout[kb_row_num][kb_col_num] / 8;
-                kb_buf_tmp = 1U << kb_layout[kb_row_num][kb_col_num] % 8;
+                uint32_t kb_buf_tmp, kb_buf_num;
+//                kb_buf_num = kb_layout[kb_row_num][kb_col_num] / 8;
+//                kb_buf_tmp = 1U << (kb_layout[kb_row_num][kb_col_num] % 8);
+                kb_buf_num = kb_layout[kb_row_num][kb_col_num] >> 5;
+                kb_buf_tmp = 1U << (kb_layout[kb_row_num][kb_col_num] & 31);
                 if (signal == KB_PRESS) {
                     ++kb_key_count;
                     kb_report_usbd[kb_buf_num] |= kb_buf_tmp;
@@ -427,17 +425,11 @@ void kb_handler(){
                     --kb_key_count;
                     kb_report_usbd[kb_buf_num] &= ~kb_buf_tmp;
                 }
-
-//                printf("axis: %d, %d\n", js_axis_adc[0], js_axis_adc[1]);
-
                 break;
             }
 
             case KB_DEVICE_CNTLR: {
 //                if (kb_ctl & KB_CTL_CNTLR) {
-//                if (kb_cntlr_lyrs[0][kb_row_num][kb_col_num] != CNTLR_NONE) {
-//                kb_cntlr_usb_buf_handler();
-//                }
 //                }
                 uint16_t kb_cntlr_buf_num, kb_cntlr_buf_tmp;
                 switch (kb_cntlr_lyrs[0][kb_row_num][kb_col_num]) {
@@ -677,7 +669,7 @@ void kb_usb_send() {
                     case KB_REPEAT_NONE:
                         if ((kb_flag & KB_FLAG_COUNT) && (usbd_kb_check_send() == USB_SUCCESS)) {
                             kb_flag &= ~KB_FLAG_COUNT;
-                            usbd_kb_report_send(kb_usb_buf);
+                            usbd_kb_report_send(kb_report);
                         }
                         break;
 
@@ -685,7 +677,7 @@ void kb_usb_send() {
                         if (kb_key_count != 0) {
                             if (!(kb_flag & KB_FLAG_REPEAT) && (usbd_kb_check_send() == USB_SUCCESS)) {
                                 kb_flag |= KB_FLAG_REPEAT;
-                                usbd_kb_report_send(kb_usb_buf);
+                                usbd_kb_report_send(kb_report);
                             } else {
                                 kb_flag &= ~KB_FLAG_REPEAT;
                                 usbd_kb_report_send(kb_report_empty);
@@ -697,7 +689,7 @@ void kb_usb_send() {
                                     kb_flag &= ~KB_FLAG_REPEAT;
                                 }
                                 kb_flag &= ~KB_FLAG_COUNT;
-                                usbd_kb_report_send(kb_usb_buf);
+                                usbd_kb_report_send(kb_report);
                             }
                         }
                         break;
@@ -709,7 +701,7 @@ void kb_usb_send() {
                             if ((kb_repeat_delay == KB_REPEAT_SLOW_DELAY && kb_repeat_rate == KB_REPEAT_SLOW_RATE) || (kb_repeat_first == 0)) {
                                 if (!(kb_flag & KB_FLAG_REPEAT) && (usbd_kb_check_send() == USB_SUCCESS)) {
                                     kb_flag |= KB_FLAG_REPEAT;
-                                    usbd_kb_report_send(kb_usb_buf);
+                                    usbd_kb_report_send(kb_report);
     //                                kb_repeat_delay = 0;
                                     kb_repeat_rate = 0;
                                     kb_repeat_first = 1;
@@ -733,7 +725,7 @@ void kb_usb_send() {
                             if ((kb_flag & KB_FLAG_COUNT) && (usbd_kb_check_send() == USB_SUCCESS)) {
                                 kb_flag &= ~KB_FLAG_REPEAT;
                                 kb_flag &= ~KB_FLAG_COUNT;
-                                usbd_kb_report_send(kb_usb_buf);
+                                usbd_kb_report_send(kb_report);
                                 kb_repeat_first = 0;
                                 kb_repeat_delay = 0;
                                 kb_repeat_rate = 0;
@@ -885,9 +877,9 @@ void kb_usb_receive() {
 void kb_usbhd_combine() {
     if ((kb_flag & KB_FLAG_COUNT) && (kb_ctl & KB_CTL_HOST)) {
 //        printf("usbhd: ");
-        for (uint8_t i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
+        for (uint8_t i = 0; i < USBD_REPORT_4BYTE_KB; ++i) {
             kb_report_usbhd[i] = kb_report_usbd[i] | kb_report_usbh[i];
-//            printf("%02x ", kb_usb_buf[i]);
+//            printf("%02x ", kb_report[i]);
         }
 //        printf("\n");
     }
@@ -909,7 +901,7 @@ void kb_usbhd_combine() {
 
                 // delete noise
                 if (dma_transfer_number_get(DMA0, DMA_CH2) != 0) {
-                    for (uint8_t i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
+                    for (uint8_t i = 0; i < USBD_REPORT_BYTE_KB; ++i) {
                         kb_buf_device[i] = 0;
                     }
                 } else {
@@ -925,7 +917,7 @@ void kb_usbhd_combine() {
 
             }
 
-            for (uint8_t i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
+            for (uint8_t i = 0; i < USBD_REPORT_BYTE_KB; ++i) {
                 kb_report_usbhd[i] = kb_report_usbd[i] | kb_buf_device[i];
             }
 
@@ -963,20 +955,20 @@ void kb_usbhd_combine() {
 //        dma_channel_enable(DMA0, DMA_CH2);
 //        usart_polling();
     if (kb_ctl & KB_CTL_USBD) {
-//        cdc_acm_data_send_2(&usb_device, kb_usb_buf, 12);
-        cdc_acm_data_send_2(&usb_device, kb_buf_device, USBD_REPORT_SIZE_KB);
+//        cdc_acm_data_send_2(&usb_device, kb_report, 12);
+        cdc_acm_data_send_2(&usb_device, kb_buf_device, USBD_REPORT_BYTE_KB);
     }
         //    usart_flag_clear(USART2, USART_FLAG_RBNE);
-//        for (int i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
+//        for (int i = 0; i < USBD_REPORT_BYTE_KB; ++i) {
 //            kb_buf_device[i] = 0x01;
 //        }
-//        for (int i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
+//        for (int i = 0; i < USBD_REPORT_BYTE_KB; ++i) {
 //            kb_report_usbhd[i] = 0x02;
 //        }
     #else
     // tx
         static uint8_t j = 0;
-        for (int i = 0; i < USBD_REPORT_SIZE_KB; ++i) {
+        for (int i = 0; i < USBD_REPORT_BYTE_KB; ++i) {
             if (j == 0xff) {
                 j = 0;
             }
@@ -1145,18 +1137,18 @@ void kb_adc_it() {
 void kb_usbd_test(uint8_t data, uint16_t length) {
 //    uint8_t a[12] = {0x02,};
 //    uint8_t b[12] = {0x00,};
-//    kb_usb_buf[0] = 0x02;
+//    kb_report[0] = 0x02;
 //    static uint16_t c = 0;
 //    switch (c) {
 //        case 125 - 1:
-//            kb_usb_buf[0] = 0x02;
-//            usbd_kb_report_send(kb_usb_buf);
+//            kb_report[0] = 0x02;
+//            usbd_kb_report_send(kb_report);
 //            ++c;
 //            break;
 //
 //        case 250 - 1:
-//            kb_usb_buf[0] = 0x00;
-//            usbd_kb_report_send(kb_usb_buf);
+//            kb_report[0] = 0x00;
+//            usbd_kb_report_send(kb_report);
 //            c = 0;
 //            break;
 //
@@ -1180,15 +1172,15 @@ void kb_usbd_hid_test() {
         count = 0;
 
         if (!flag) {
-            kb_usb_buf[0] = 2;
+            kb_report[0] = 2;
         } else {
-            kb_usb_buf[0] = 0;
+            kb_report[0] = 0;
         }
 
         flag = !flag;
 
         if (kb_ctl & KB_CTL_USBD) {
-            usbd_kb_report_send(kb_usb_buf);
+            usbd_kb_report_send(kb_report);
         }
     } else {
         ++count;

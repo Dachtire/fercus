@@ -32,7 +32,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "usbd_hid_keyboard.h"
+#include "usbd_keyboard.h"
 //#include <string.h>
 #include "main.h"
 //#include "usb_prop.h"
@@ -79,7 +79,7 @@ const usb_hid_desc_config_set USBD_KB_CONFIG_DESC =
              .bLength         = USB_CFG_DESC_LEN,
              .bDescriptorType = USB_DESCTYPE_CONFIG
          },
-        .wTotalLength         = USBD_KB_CONFIG_DESC_SIZE,
+        .wTotalLength         = USBD_CONFIG_DESC_SIZE_KB,
         .bNumInterfaces       = 0x01U,
         .bConfigurationValue  = 0x01U,
         .iConfiguration       = 0x00U,
@@ -116,7 +116,7 @@ const usb_hid_desc_config_set USBD_KB_CONFIG_DESC =
         .bCountryCode         = HID_COUNTRYCODE,
         .bNumDescriptors      = 0x01U,
         .bDescriptorType      = USB_DESCTYPE_REPORT,
-        .wDescriptorLength    = USBD_KB_REPORT_DESC_SIZE,
+        .wDescriptorLength    = USBD_REPORT_DESC_SIZE_KB,
     },
 
     // endpoint descriptor
@@ -206,7 +206,7 @@ static const usb_desc_str serial_string =
 
 /* report desc */
 // bitmap
-const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
+const uint8_t USBD_KB_REPORT_DESC[USBD_REPORT_DESC_SIZE_KB] = {
     USAGE_PAGE, USAGE_PAGE_GENERIC_DESKTOP,
     USAGE, USAGE_GENERIC_DESKTOP_PAGE_KEYBOARD,
     COLLECTION, COLLECTION_APPLICATION,
@@ -317,7 +317,7 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //
 //    hid->sent_flag = 0U;
 //
-//    usbd_ep_send(udev, USBD_EP_IN_KB, report, USBD_REPORT_SIZE_KB);
+//    usbd_ep_send(udev, USBD_EP_IN_KB, report, USBD_REPORT_BYTE_KB);
 //
 //    return USBD_OK;
 //}
@@ -332,7 +332,7 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //{
 //    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
 //    hid->receive_flag = 0U;
-//    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_report_recev, USBD_KB_RECEV_SIZE);
+//    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_report_recev, USBD_REPORT_RECEV_SIZE_KB);
 //    return USBD_OK;
 //}
 //
@@ -353,7 +353,7 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //    usbd_ep_setup (udev, &(hid_kb_config_desc.epin));
 //    usbd_ep_setup (udev, &(hid_kb_config_desc.epout));
 //
-//    usbd_ep_recev (udev, USBD_EP_OUT_KB, hid_handler.data_out, USBD_KB_RECEV_SIZE);
+//    usbd_ep_recev (udev, USBD_EP_OUT_KB, hid_handler.data_out, USBD_REPORT_RECEV_SIZE_KB);
 //
 //    hid_handler.sent_flag = 1U;
 //    hid_handler.receive_flag = 1U;
@@ -427,7 +427,7 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 //
 //        case USB_GET_DESCRIPTOR:
 //            if (USB_DESCTYPE_REPORT == (req->wValue >> 8U)) {
-//                transc->remain_len = USB_MIN(USBD_KB_REPORT_DESC_SIZE, req->wLength);
+//                transc->remain_len = USB_MIN(USBD_REPORT_DESC_SIZE_KB, req->wLength);
 //                transc->xfer_buf = (uint8_t *)USBD_KB_REPORT_DESC;
 //
 //                return REQ_SUPP;
@@ -476,8 +476,8 @@ const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE] = {
 
 void usbd_kb_report_send(uint8_t *report)
 {
-    UserToPMABufferCopy(report, ENDP1_TXADDR, USBD_REPORT_SIZE_KB);
-    SetEPTxCount(ENDP1, USBD_REPORT_SIZE_KB);
+    UserToPMABufferCopy(report, ENDP1_TXADDR, USBD_REPORT_BYTE_KB);
+    SetEPTxCount(ENDP1, USBD_REPORT_BYTE_KB);
     SetEPTxValid(ENDP1);
     usbd_epin_busy[ENDP1] = TRUE;
 }
@@ -486,7 +486,7 @@ uint8_t usbd_kb_report_receive()
 {
     //    hid_kb_handler *hid = (hid_kb_handler *)udev->dev.class_data[USBD_INF_KB];
     //    hid->receive_flag = 0U;
-    //    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_report_recev, USBD_KB_RECEV_SIZE);
+    //    usbd_ep_recev(udev, CDC_DATA_OUT_EP, kb_report_recev, USBD_REPORT_RECEV_SIZE_KB);
     //    return USBD_OK;
 }
 

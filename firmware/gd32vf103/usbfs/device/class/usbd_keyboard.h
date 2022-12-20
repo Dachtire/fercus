@@ -43,8 +43,11 @@ OF SUCH DAMAGE.
 
 //#define USBD_KB_EP0_MAX_PACKET 0x40
 
-#define USBD_KB_CONFIG_DESC_SIZE (USB_CFG_DESC_LEN + USB_ITF_DESC_LEN + USB_HID_DESC_LEN + USB_EP_DESC_LEN * 2)
-#define USBD_KB_REPORT_DESC_SIZE 0x33U
+#define USBD_CONFIG_DESC_SIZE_KB (USB_CFG_DESC_LEN + USB_ITF_DESC_LEN + USB_HID_DESC_LEN + USB_EP_DESC_LEN * 2)
+#define USBD_REPORT_DESC_SIZE_KB 0x33
+#define USBD_REPORT_BYTE_KB 12
+#define USBD_REPORT_4BYTE_KB (USBD_REPORT_BYTE_KB / 4)
+#define USBD_REPORT_RECEV_SIZE_KB 12
 
 #define NO_CMD                           0xFFU
 
@@ -74,7 +77,11 @@ OF SUCH DAMAGE.
 
 const usb_desc_dev USBD_KB_DEV_DESC;
 const usb_hid_desc_config_set USBD_KB_CONFIG_DESC;
-const uint8_t USBD_KB_REPORT_DESC[USBD_KB_REPORT_DESC_SIZE];
+const uint8_t USBD_KB_REPORT_DESC[USBD_REPORT_DESC_SIZE_KB];
+
+uint8_t *kb_report;
+uint32_t kb_report_usbd[USBD_REPORT_4BYTE_KB], kb_report_usbhd[USBD_REPORT_4BYTE_KB], kb_report_usbh[USBD_REPORT_4BYTE_KB], kb_report_empty[USBD_REPORT_4BYTE_KB];
+uint8_t kb_report_recev[USBD_REPORT_RECEV_SIZE_KB];
 
 ///* function declarations */
 ///* register HID interface operation functions */
@@ -90,7 +97,7 @@ __attribute__((optimize("O0"))) uint8_t usbd_kb_report_receive();
 __attribute__((optimize("O0"))) uint8_t usbd_kb_check_send();
 __attribute__((optimize("O0"))) uint8_t usbd_kb_check_recev();
 
-enum kb_repert_code {
+enum kb_repert_map {
     KEY_LEFT_CONTROL = (uint8_t)0x00,
     KEY_LEFT_SHIFT,
     KEY_LEFT_ALT,
@@ -315,6 +322,17 @@ enum kb_repert_code {
     KEY_KEYPAD_HEXADECIMAL, // 0xd9
 
     KEY_FN = (uint8_t)0xFF,
+};
+
+enum led_report_map {
+    LED_NONE = (uint8_t)0x00,
+    LED_NUM_LOCK,
+    LED_CAPS_LOCK,
+    LED_SCROLL_LOCK,
+    LED_COMPOSE,
+    LED_KANA,
+    LED_POWER,
+    LED_SHIFT,
 };
 
 #endif /* __USBD_KEYBOARD_CORE_H */

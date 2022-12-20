@@ -84,7 +84,7 @@ GPIO_TypeDef* const JS_AXIS_GPIO_PORT[JS_AXIS_NUM];
 //#define KB_CTL_LED BIT(1)
 #define KB_CTL_USBD          BIT(2)
 #define KB_CTL_HOST          BIT(3)
-#define KB_CTL_USART BIT(4)
+//#define KB_CTL_USART BIT(4)
 //#define KB_CTL_USBFS_D          BIT(20)
 //#define KB_CTL_USBFS_H          BIT(21)
 
@@ -106,8 +106,6 @@ enum kb_fn_flag {
 #define KB_FLAG_FN BIT(3)
 //#define KB_FLAG_REPEAT_SLOW BIT(2)
 //#define KB_FLAG_DEBUG BIT(2)
-
-
 
 void kb_remap(uint8_t lyr);
 //void kb_usb_buf_handler();
@@ -131,17 +129,6 @@ void kb_row_adc_trigger();
 
 static uint8_t kb_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM], kb_cntlr_lyrs[KB_LYR_NUM][KB_ROW_NUM][KB_COL_NUM];
 
-uint8_t *kb_usb_buf;
-//extern *usb_hid_cntlr_buf;
-uint8_t kb_report_usbd[USBD_REPORT_SIZE_KB], kb_report_usbhd[USBD_REPORT_SIZE_KB], kb_report_usbh[USBD_REPORT_SIZE_KB];
-uint8_t kb_report_recev[USBD_KB_RECEV_SIZE], kb_report_empty[USBD_REPORT_SIZE_KB];
-//struct cntlr_buf_type {
-//    uint16_t button;
-//    int8_t stick[4];
-//};
-//extern struct cntlr_buf_type cntlr_buf;
-//uint8_t cntlr_report[USBD_REPORT_SIZE_CNTLR];
-//uint8_t mouse_report[USBD_REPORT_SIZE_MOUSE];
 uint8_t kb_col_num, kb_row_num;
 uint8_t (*kb_layout)[KB_COL_NUM];
 bool kb_key_state[KB_ROW_NUM][KB_COL_NUM];
@@ -150,7 +137,6 @@ extern uint8_t kb_key_count;
 uint32_t kb_ctl;
 uint8_t kb_repeat, kb_device, kb_usb;
 uint16_t kb_row_adc[KB_ROW_NUM], js_axis_adc[JS_NUM];
-
 
 #define KB_ADC_SIZE (1)
 #define KB_ADC_LEN (KB_ADC_SIZE * 2)
@@ -191,39 +177,6 @@ enum kb_ctl_option {
     KB_CTL_USBD_ON,
     KB_CTL_USBD_OFF,
     KB_CTL_SYSCLK
-};
-
-enum kb_led_report_hid {
-    LED_NONE = (uint8_t)0x00,
-    LED_NUM_LOCK,
-    LED_CAPS_LOCK,
-    LED_SCROLL_LOCK,
-    LED_COMPOSE,
-    LED_KANA,
-    LED_POWER,
-    LED_SHIFT,
-};
-
-#define MOUSE_REPORT_POS 10
-enum usbd_repert_mouse_set {
-    MOUSE_BUTTON_1 = (uint8_t) 0x00,
-    MOUSE_BUTTON_2,
-    MOUSE_BUTTON_3,
-    MOUSE_BUTTON_4,
-    MOUSE_BUTTON_5,
-    MOUSE_BUTTON_6,
-    MOUSE_BUTTON_7,
-    MOUSE_BUTTON_8,
-
-    MOUSE_X_NEG,
-    MOUSE_X_POS,
-    MOUSE_Y_NEG,
-    MOUSE_Y_POS,
-
-    MOUSE_WHEEL_NEG,
-    MOUSE_WHEEL_POS,
-
-    MOUSE_NONE = 0xff
 };
 
 #endif /* __KEYBOARD_H */

@@ -50,6 +50,7 @@ OF SUCH DAMAGE.
 
 const uint8_t USBD_MOUSE_REPORT_DESC[HID_MOUSE_REPORT_DESC_SIZE];
 uint8_t mouse_report[USBD_REPORT_SIZE_MOUSE];
+
 //typedef struct {
 //    uint32_t protocol;
 //    uint32_t idle_state;
@@ -77,5 +78,27 @@ __attribute__((optimize("O0"))) void usbd_mouse_report_send(uint8_t *report/*, u
 __attribute__((optimize("O0"))) uint8_t usbd_mouse_report_receive();
 __attribute__((optimize("O0"))) uint8_t usbd_mouse_check_send();
 __attribute__((optimize("O0"))) uint8_t usbd_mouse_check_recev();
+
+#define MOUSE_REPORT_POS 10
+enum usbd_repert_mouse_set {
+    MOUSE_BUTTON_1 = (uint8_t) 0x00,
+    MOUSE_BUTTON_2,
+    MOUSE_BUTTON_3,
+    MOUSE_BUTTON_4,
+    MOUSE_BUTTON_5,
+    MOUSE_BUTTON_6,
+    MOUSE_BUTTON_7,
+    MOUSE_BUTTON_8,
+
+    MOUSE_X_NEG,
+    MOUSE_X_POS,
+    MOUSE_Y_NEG,
+    MOUSE_Y_POS,
+
+    MOUSE_WHEEL_NEG,
+    MOUSE_WHEEL_POS,
+
+    MOUSE_NONE = 0xff
+};
 
 #endif /* __HID_MOUSE_CORE_H */

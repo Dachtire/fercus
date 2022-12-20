@@ -27,7 +27,7 @@
 //#include "riscv_encoding.h"
 //#include "gd32vf103_it.h"
 //#include "cdc_acm_core.h"
-#include "usbd_hid_keyboard.h"
+#include "usbd_keyboard.h"
 
 //extern uint8_t HIDKey[],HIDMouse[];
 

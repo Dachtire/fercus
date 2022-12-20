@@ -81,9 +81,6 @@ OF SUCH DAMAGE.
 #define CDC_DATA_IN_EP                           EP1_IN
 #define CDC_DATA_OUT_EP                          EP3_OUT
 
-#define USBD_REPORT_SIZE_KB    12
-#define USBD_KB_RECEV_SIZE 12
-
 /* DFU endpoint define */
 #define DFU_IN_EP                    EP0_IN
 #define DFU_OUT_EP                   EP0_OUT
