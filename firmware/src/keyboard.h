@@ -108,14 +108,14 @@ void kb_init_sync();
 void kb_init();
 void kb_enable_usbd();
 void kb_polling(/*uint8_t col*/);
-void kb_usart_polling();
+//void kb_usart_polling();
 void kb_it();
-void kb_uart_init();
-void kb_adc_it();
-void kb_usart_debug();
-void kb_usbd_test(uint8_t data, uint16_t length);
+//void kb_uart_init();
+//void kb_adc_it();
+//void kb_usart_debug();
+//void kb_usbd_test(uint8_t data, uint16_t length);
 void kb_adc_time();
-void kb_usbd_hid_test();
+//void kb_usbd_hid_test();
 void kb_usbhd_combine();
 void kb_row_adc_diff();
 void kb_row_adc_trigger();
@@ -128,11 +128,11 @@ bool kb_key_state[KB_ROW_NUM][KB_COL_NUM];
 uint32_t kb_flag;
 extern uint8_t kb_key_count;
 uint32_t kb_ctl;
-uint8_t kb_repeat, kb_device, kb_usb;
+uint8_t kb_repeat, kb_device;
 uint16_t kb_row_adc[KB_ROW_NUM], js_axis_adc[JS_NUM];
 
 #define KB_ADC_SIZE (1)
-#define KB_ADC_LEN (KB_ADC_SIZE * 2)
+//#define KB_ADC_LEN (KB_ADC_SIZE * 2)
 uint16_t kb_adc_value[KB_ADC_SIZE];
 
 enum kb_repeat {
@@ -150,11 +150,6 @@ enum kb_device {
     KB_DEVICE_KEYBOARD_ADC_DIFF,
     KB_DEVICE_KEYBOARD_ADC_TRIGGER
 };
-
-//enum kb_usb {
-//    KB_USBD_DEVICE,
-//    KB_USBFS_DEVICE
-//};
 
 enum kb_ctl_option {
     KB_CTL_LYR_0 = (uint8_t)0x80,

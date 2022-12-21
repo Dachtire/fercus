@@ -53,7 +53,6 @@ void gpio_config(void)
     switch (kb_device) {
         default:
         case KB_DEVICE_KEYBORAD:
-//        case KB_DEVICE_COMPOSITE:
             GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
             break;
 
@@ -92,8 +91,6 @@ void gpio_config(void)
     //    // usart2
     //    gpio_init(GPIOB, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_10);
     //    gpio_init(GPIOB, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, GPIO_PIN_11);
-
-
 }
 
 void adc_config() {
