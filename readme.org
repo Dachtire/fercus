@@ -1,0 +1,40 @@
+#+TITLE: Fercus
+Symmetry Optical Keyboard
+[[./doc/image/overview.jpg]]
+* Firmware
+** Connect via RF 2.4GHz, BLE 5.3, USB
+# 1. Interconnected
+# one's left side connect to pc and right side connect to another's left side.
+# 2. Independent
+# both left side connect to pc directly.
+** COMMENT usb host, device
+** optical switch
+# - schmitt trigger mode
+# - adc trigger mode
+# - adc difference mode
+** COMMENT function
+- multiple layers
+- fn
+# - repeat mode
+* Hardware
+** low profile optical
+** 42 keys of each side
+** response time
+|    |       tr |       tf | unit |
+| pt |       18 |        5 | us   |
+# | sw | 200-2000 | 200-2000 | us   |
+The speed of optical switch depends on the speed of finger, the shortest time for finger to press a switch is about 200 us, but usually it takes a few milliseconds.
+Test on mcu's adc at f_adc = 12MHz, f_s = 12 / 14 MHz, resolution = 12 bits. Get the average of the five.
+** dimension: 133 * 133 * 13.4 mm
+** COMMENT current: 40 mA * 7 * 15 / 1000 = 4.2 mA
+** COMMENT cable: usb-c to usb-c 1 m, usb-c to usb-a 2 m
+* Thanks
+[[https://discord.com/channels/715975244896272618][Optical Future]]
+* COMMENT FAQ
+** COMMENT keys layout
+*** thumb
+finger splay increase the x axis distence between rows
+more thumb keys will be hard to access
+*** mid finger
+mid finger at wsad postion, non stagger is better to press w
+same for pinky stagger 8 mm instand of 12 mm

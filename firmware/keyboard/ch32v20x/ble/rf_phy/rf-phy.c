@@ -1,0 +1,234 @@
+/********************************** (C) COPYRIGHT *******************************
+ * File Name          : main.c
+ * Author             : WCH
+ * Version            : V1.0
+ * Date               : 2020/08/06
+ * Description        :
+ *********************************************************************************
+ * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
+ * Attention: This software (modified or not) and binary are used for 
+ * microcontroller manufactured by Nanjing Qinheng Microelectronics.
+ *******************************************************************************/
+
+/******************************************************************************/
+/* Header file contains */
+#include "rf-phy.h"
+#include "config.h"
+#include "keyboard.h"
+#include "tmos-keyboard.h"
+#include "usbd-hid-keyboard.h"
+
+/*********************************************************************
+ * GLOBAL TYPEDEFS
+ */
+
+uint8_t taskID;
+uint8_t TX_DATA[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+
+volatile uint8_t tx_end_flag=0;
+
+/*********************************************************************
+ * @fn      RF_Wait_Tx_End
+ *
+ * @brief   手动模式等待发送完成，自动模式等待发送-接收完成，必须在RAM中等待，等待时可以执行用户代码，但需要注意执行的代码必须运行在RAM中，否则影响发送
+ *
+ * @return  none
+ */
+__attribute__((section(".highcode")))
+__attribute__((noinline))
+void RF_Wait_Tx_End()
+{
+    uint32_t i=0;
+    while(!tx_end_flag)
+    {
+        i++;
+        __NOP();
+        __NOP();
+        // 约5ms超时
+        if(i>(SystemCoreClock/1000))
+        {
+            tx_end_flag = TRUE;
+        }
+    }
+}
+
+/*********************************************************************
+ * @fn      RF_2G4StatusCallBack
+ *
+ * @brief   RF status callback 
+ * @Note    Do not call RF receiving or sending APIs in this function directly, 
+ *          setting the event instead
+ *
+ * @param   sta     - State
+ * @param   crc     - CRC verification results
+ * @param   rxBuf   - Data BUF pointer
+ *
+ * @return  none
+ */
+void RF_2G4StatusCallBack(uint8_t sta, uint8_t crc, uint8_t *rxBuf)
+{
+    switch(sta)
+    {
+        case TX_MODE_TX_FINISH:
+        {
+            tx_end_flag = TRUE;
+            break;
+        }
+        case TX_MODE_TX_FAIL:
+        {
+            tx_end_flag = TRUE;
+            break;
+        }
+        case TX_MODE_RX_DATA:
+        {
+            break;
+        }
+        case TX_MODE_RX_TIMEOUT: // Timeout is about 200us
+        {
+            break;
+        }
+        case RX_MODE_RX_DATA:
+        {
+            if (crc == 0) {
+                uint8_t i;
+                PRINT("rx recv, rssi: %d\n", (int8_t)rxBuf[0]);
+                PRINT("len:%d-", rxBuf[1]);
+
+                for (i = 0; i < rxBuf[1]; i++) {
+                    PRINT("%x ", rxBuf[i + 2]);
+                }
+                PRINT("\n");
+            } else {
+                if (crc & (1<<0)) {
+                    PRINT("crc error\n");
+                }
+
+                if (crc & (1<<1)) {
+                    PRINT("match type error\n");
+                }
+            }
+            tmos_set_event(taskID, SBP_RF_RF_RX_EVT);
+            break;
+        }
+        case RX_MODE_TX_FINISH:
+        {
+            break;
+        }
+        case RX_MODE_TX_FAIL:
+        {
+            break;
+        }
+    }
+}
+
+/*********************************************************************
+ * @fn      RF_ProcessEvent
+ *
+ * @brief   RF event processing
+ *
+ * @param   task_id - Task ID
+ * @param   events  - Event logo
+ *
+ * @return  Unfinished events
+ */
+uint16_t RF_ProcessEvent(uint8_t task_id, uint16_t events)
+{
+    if(events & SYS_EVENT_MSG)
+    {
+        uint8_t *pMsg;
+
+        if((pMsg = tmos_msg_receive(task_id)) != NULL)
+        {
+            // Release the TMOS message
+            tmos_msg_deallocate(pMsg);
+        }
+        // return unprocessed events
+        return (events ^ SYS_EVENT_MSG);
+    }
+    if(events & SBP_RF_START_DEVICE_EVT)
+    {
+        tmos_start_task(taskID, SBP_RF_PERIODIC_EVT, 1000);
+        return events ^ SBP_RF_START_DEVICE_EVT;
+    }
+    if(events & SBP_RF_PERIODIC_EVT)
+    {
+        RF_Shut();
+        tx_end_flag = FALSE;
+
+        if ((kb_flag & KB_FLAG_COUNT)/* && (usbd_kb_check_send() == USB_SUCCESS)*/) {
+            kb_flag &= ~KB_FLAG_COUNT;
+            if (!RF_Tx(kb_report_usbd, USBD_REPORT_BYTE_KB, 0xFF, 0xFF)) {
+                RF_Wait_Tx_End();
+            }
+        }
+
+        tmos_start_task(taskID, SBP_RF_PERIODIC_EVT, KEYBOARD_SCAN_EVENT_INTERVAL);
+//        tmos_set_event(taskID, SBP_RF_PERIODIC_EVT);
+        return events ^ SBP_RF_PERIODIC_EVT;
+    }
+    if(events & SBP_RF_RF_RX_EVT)
+    {
+        uint8_t state;
+        RF_Shut();
+        TX_DATA[0]++;
+        state = RF_Rx(TX_DATA, 10, 0xFF, 0xFF);
+        PRINT("RX mode.state = %x\n", state);
+        return events ^ SBP_RF_RF_RX_EVT;
+    }
+    return 0;
+}
+
+/*********************************************************************
+ * @fn      RF_Init
+ *
+ * @brief  Frequency(MHz)  channel
+ *              2402      37
+ *              2404      0
+ *                    .
+ *              f =2404+ n*2M
+ *                    .
+ *              2424      10
+ *              2426      38
+ *              2428      11
+ *                    .
+ *              f =2428+ (n-11)*2M
+ *                    .
+ *              2478      36
+ *              2480      39
+ *
+ *
+ * @return  none
+ */
+void RF_Init(void)
+{
+    uint8_t    state;
+    rfConfig_t rf_Config;
+
+    tmos_memset(&rf_Config, 0, sizeof(rfConfig_t));
+    taskID = TMOS_ProcessEventRegister(RF_ProcessEvent);
+    // 0x55555555 and 0xAAAAAAAA are prohibited (recommended no more than 24 bit reversals, and no more than 6 consecutive 0 or 1)
+    rf_Config.accessAddress = 0x71764129;
+    rf_Config.CRCInit = 0x555555;
+    rf_Config.Channel = 39;
+    rf_Config.Frequency = 2480000;
+    // Enabling LLE_MODE_EX_CHANNEL means selecting rfConfig.Frequency as the communication frequency
+    rf_Config.LLEMode = LLE_MODE_BASIC | LLE_MODE_EX_CHANNEL;
+    rf_Config.rfStatusCB = RF_2G4StatusCallBack;
+    rf_Config.RxMaxlen = 251;
+    state = RF_Config(&rf_Config);
+    PRINT("rf 2.4g init: %x\n", state);
+//    { // RX mode
+//        state = RF_Rx(TX_DATA, 10, 0xFF, 0xFF);
+//        PRINT("RX mode.state = %x\n", state);
+//    }
+
+    { // TX mode
+        tmos_set_event( taskID , SBP_RF_PERIODIC_EVT );
+    }
+}
+
+/******************************** endfile @ main ******************************/
+
+void rf_deinit() {
+    taskID = 0;
+}
