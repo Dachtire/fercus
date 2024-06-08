@@ -20,6 +20,7 @@
 //#include "hidkbd.h"
 
 uint8_t tmos_pm_id = 0;
+uint8_t pwr_mgr_trigger = PWR_MGR_TRIG_AUTO;
 
 #define CONFIG_PM_DBG
 
@@ -182,14 +183,18 @@ void power_manager_enter_standby(void)
     Delay_Ms(500);
     led_red_off();
 
-    GPIO_ALL_Init();
-
     rf_deinit();
     tmos_keyboard_deinit();
-    EXTI_DeInit();
 
-//    eta9184_vbus_exti_event_init();
-    kb_fn_exti_event_init();
+    GPIO_ALL_Init();
+    eta9184_vbus_gpio_init();
+
+    EXTI_DeInit();
+//    if (pwr_mgr_trigger == PWR_MGR_TRIG_AUTO) {
+        eta9184_vbus_exti_event_init();
+//    } else {
+        kb_fn_exti_event_init();
+//    }
 
     PWR_EnterSTANDBYMode();
 }

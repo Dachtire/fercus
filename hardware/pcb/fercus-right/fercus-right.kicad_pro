@@ -61,6 +61,11 @@
         {
           "gap": 0.15,
           "via_gap": 0.2,
+          "width": 0.2
+        },
+        {
+          "gap": 0.15,
+          "via_gap": 0.2,
           "width": 0.3
         },
         {
@@ -69,10 +74,7 @@
           "width": 0.4
         }
       ],
-      "drc_exclusions": [
-        "clearance|140021142|24321142|1a5c3766-bf6f-42c6-96d9-a2a6da0e81d4|020f00dd-6415-4026-b59b-5c4463f6a222",
-        "clearance|140250244|24550244|1a5c3766-bf6f-42c6-96d9-a2a6da0e81d4|7d406e5b-1078-456b-9c0f-4f254689b165"
-      ],
+      "drc_exclusions": [],
       "meta": {
         "version": 2
       },
@@ -93,6 +95,7 @@
         "footprint_type_mismatch": "warning",
         "hole_clearance": "error",
         "hole_near_hole": "error",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -131,8 +134,8 @@
         "allow_blind_buried_vias": false,
         "allow_microvias": false,
         "max_error": 0.005,
-        "min_clearance": 0.1,
-        "min_connection": 0.1,
+        "min_clearance": 0.15,
+        "min_connection": 0.15,
         "min_copper_edge_clearance": 0.3,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.254,
@@ -143,7 +146,7 @@
         "min_text_height": 1.0,
         "min_text_thickness": 0.15,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.1,
+        "min_track_width": 0.15,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
         "solder_mask_clearance": 0.0,
@@ -203,6 +206,7 @@
         0.5,
         0.6,
         0.7,
+        0.75,
         0.8,
         1.0,
         1.2,
@@ -239,6 +243,10 @@
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 0.5,
+          "drill": 0.3
         },
         {
           "diameter": 0.6,
@@ -479,12 +487,11 @@
   },
   "libraries": {
     "pinned_footprint_libs": [
-      "gae",
       "chulaine"
     ],
     "pinned_symbol_libs": [
-      "gae",
-      "chulaine"
+      "chulaine",
+      "MCU_WCH_CH32V2"
     ]
   },
   "meta": {
@@ -512,17 +519,17 @@
       },
       {
         "bus_width": 12,
-        "clearance": 0.1,
-        "diff_pair_gap": 0.1,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.15,
         "diff_pair_via_gap": 0.25,
-        "diff_pair_width": 0.2,
+        "diff_pair_width": 0.35,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
         "name": "usb",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.2,
+        "track_width": 0.35,
         "via_diameter": 0.6,
         "via_drill": 0.3,
         "wire_width": 6
@@ -560,6 +567,7 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -590,7 +598,7 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
@@ -623,7 +631,7 @@
           "show": false
         }
       ],
-      "filter_string": "",
+      "filter_string": "r37",
       "group_symbols": true,
       "name": "",
       "sort_asc": true,

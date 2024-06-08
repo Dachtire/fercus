@@ -6,7 +6,7 @@
 * Description        : USB Processing
 * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
 * SPDX-License-Identifier: Apache-2.0
-*******************************************************************************/ 
+*******************************************************************************/
 #include "usb_lib.h"
 #include "usb_conf.h"
 #include "usb_prop.h"
@@ -25,8 +25,8 @@ uint8_t Request = 0;
 
 volatile uint8_t HIDReportOut[8] = {0};
 volatile uint8_t USBD_Sleep_Status = 0x00;
-volatile uint8_t HID_Idle_Value[2] = {0};
-volatile uint8_t HID_Protocol_Value[2] = {0};
+volatile uint8_t HID_Idle_Value[8] = {0};
+volatile uint8_t HID_Protocol_Value[8] = {0};
 
 DEVICE Device_Table =
 {
@@ -85,12 +85,16 @@ ONE_DESCRIPTOR Report_Descriptor[USBD_ITF_NUM_COMPOSITE] = {
     {(uint8_t*)usbd_kb_report_desc, USBD_REPORT_DESC_SIZE_KB},
     {(uint8_t*)usbd_report_desc_cntlr, USBD_REPORT_DESC_SIZE_CNTLR},
     {(uint8_t*)usbd_mouse_report_desc, HID_MOUSE_REPORT_DESC_SIZE},
+//    {(uint8_t*)usbd_report_desc_sim, USBD_REPORT_DESC_SIZE_SIM},
+    {(uint8_t*)usbd_hid_comp_report_desc, USBD_REPORT_DESC_SIZE_COMP}
 };
 
 ONE_DESCRIPTOR Hid_Descriptor[USBD_ITF_NUM_COMPOSITE] = {
     {(uint8_t*)&usbd_composite_config_desc.kb_inf.iInterface, 0x09},
     {(uint8_t*)&usbd_composite_config_desc.cntlr_inf.iInterface, 0x09},
     {(uint8_t*)&usbd_composite_config_desc.mouse_inf.iInterface, 0x09},
+//    {(uint8_t*)&usbd_composite_config_desc.sim_inf.iInterface, 0x09},
+    {(uint8_t*)&usbd_composite_config_desc.comp_inf.iInterface, 0x09}
 };
 
 /*********************************************************************
@@ -228,7 +232,7 @@ void USBD_Reset(void)
     SetEPType(ENDP1, EP_INTERRUPT);
     SetEPTxAddr(ENDP1, ENDP1_TXADDR);
     SetEPRxAddr(ENDP1, ENDP1_RXADDR);
-    SetEPRxCount(ENDP1, DEF_USBD_UEP0_SIZE);
+    SetEPRxCount(ENDP1, HID_KYBD_OUT_PACKET);
     SetEPRxStatus(ENDP1, EP_RX_VALID);
     SetEPTxStatus(ENDP1, EP_TX_NAK);
     ClearDTOG_RX(ENDP1);
@@ -237,7 +241,7 @@ void USBD_Reset(void)
     SetEPType(ENDP2, EP_INTERRUPT);
     SetEPTxAddr(ENDP2, ENDP2_TXADDR);
     SetEPRxAddr(ENDP2, ENDP2_RXADDR);
-    SetEPRxCount(ENDP2, DEF_USBD_UEP0_SIZE);
+    SetEPRxCount(ENDP2, HID_CNTLR_OUT_PACKET);
     SetEPRxStatus(ENDP2, EP_RX_VALID);
     SetEPTxStatus(ENDP2, EP_TX_NAK);
     ClearDTOG_RX(ENDP2);
@@ -246,11 +250,29 @@ void USBD_Reset(void)
     SetEPType(ENDP3, EP_INTERRUPT);
     SetEPTxAddr(ENDP3, ENDP3_TXADDR);
     SetEPRxAddr(ENDP3, ENDP3_RXADDR);
-    SetEPRxCount(ENDP3, DEF_USBD_UEP0_SIZE);
+    SetEPRxCount(ENDP3, HID_MOUSE_OUT_PACKET);
     SetEPRxStatus(ENDP3, EP_RX_VALID);
     SetEPTxStatus(ENDP3, EP_TX_NAK);
     ClearDTOG_RX(ENDP3);
     ClearDTOG_TX(ENDP3);
+    
+    SetEPType(ENDP4, EP_INTERRUPT);
+    SetEPTxAddr(ENDP4, ENDP4_TXADDR);
+    SetEPRxAddr(ENDP4, ENDP4_RXADDR);
+    SetEPRxCount(ENDP4, HID_SIM_OUT_PACKET);
+    SetEPRxStatus(ENDP4, EP_RX_VALID);
+    SetEPTxStatus(ENDP4, EP_TX_NAK);
+    ClearDTOG_RX(ENDP4);
+    ClearDTOG_TX(ENDP4);
+
+//    SetEPType(ENDP5, EP_INTERRUPT);
+//    SetEPTxAddr(ENDP5, ENDP5_TXADDR);
+//    SetEPRxAddr(ENDP5, ENDP5_RXADDR);
+//    SetEPRxCount(ENDP5, HID_COMP_OUT_PACKET);
+//    SetEPRxStatus(ENDP5, EP_RX_VALID);
+//    SetEPTxStatus(ENDP5, EP_TX_NAK);
+//    ClearDTOG_RX(ENDP5);
+//    ClearDTOG_TX(ENDP5);
 
 //          SetEPType(ENDP1, EP_BULK);
 //          SetEPTxAddr(ENDP1, ENDP1_TXADDR);
@@ -307,11 +329,11 @@ uint8_t *USBD_GetStringDescriptor(uint16_t Length)
 {
   uint8_t wValue0 = pInformation->USBwValue0;
 	
-  if (wValue0 > 4)
-  {
-    return NULL;
-  }
-  else
+//  if (wValue0 > 4)
+//  {
+//    return NULL;
+//  }
+//  else
   {
     return Standard_GetDescriptorData(Length, &String_Descriptor[wValue0]);
   }
@@ -329,11 +351,11 @@ uint8_t *USBD_GetStringDescriptor(uint16_t Length)
 uint8_t *USBD_GetReportDescriptor(uint16_t Length)
 {
   uint8_t wIndex0 = pInformation->USBwIndexs.bw.bb0;
-  if (wIndex0 > 2)
-  {
-    return NULL;
-  }
-  else
+//  if (wIndex0 > 2)
+//  {
+//    return NULL;
+//  }
+//  else
   {
       return Standard_GetDescriptorData(Length, &Report_Descriptor[wIndex0]);
   }
@@ -351,11 +373,11 @@ uint8_t *USBD_GetReportDescriptor(uint16_t Length)
 uint8_t *USBD_GetHidDescriptor(uint16_t Length)
 {
   uint8_t wIndex0 = pInformation->USBwIndexs.bw.bb0;
-  if (wIndex0 > 2)
-  {
-    return NULL;
-  }
-  else
+//  if (wIndex0 > 2)
+//  {
+//    return NULL;
+//  }
+//  else
   {
       return Standard_GetDescriptorData(Length, &Hid_Descriptor[wIndex0]);
   }
@@ -482,11 +504,11 @@ RESULT USBD_NoData_Setup(uint8_t RequestNo)
   {
     if (Request_No == HID_SET_IDLE)
     {
-      if (wIndex0 > 2)
-      {
-        return USB_UNSUPPORT;
-      }
-      else
+//      if (wIndex0 > 2)
+//      {
+//        return USB_UNSUPPORT;
+//      }
+//      else
       {
         HID_Idle_Value[wIndex0] = pInformation->USBwValues.bw.bb1;
       }
@@ -494,11 +516,11 @@ RESULT USBD_NoData_Setup(uint8_t RequestNo)
     }
     else if (Request_No == HID_SET_PROTOCOL)
     {
-      if (wIndex0 > 2)
-      {
-        return USB_UNSUPPORT;
-      }
-      else
+//      if (wIndex0 > 2)
+//      {
+//        return USB_UNSUPPORT;
+//      }
+//      else
       {
         HID_Protocol_Value[wIndex0] = pInformation->USBwValues.bw.bb0;
       }
@@ -524,11 +546,11 @@ RESULT USBD_NoData_Setup(uint8_t RequestNo)
 uint8_t *HID_Set_Report(uint16_t Length)
 {
   uint8_t wIndex0 = pInformation->USBwIndexs.bw.bb0;
-  if (wIndex0 > 1)
-  {
-    return NULL;
-  }
-  else
+//  if (wIndex0 > 1)
+//  {
+//    return NULL;
+//  }
+//  else
   {
     return (uint8_t *)&KB_LED_Cur_Status;
   }
@@ -546,11 +568,11 @@ uint8_t *HID_Set_Report(uint16_t Length)
 uint8_t *HID_Get_Idle(uint16_t Length)
 {
   uint8_t wIndex0 = pInformation->USBwIndexs.bw.bb0;
-  if (wIndex0 > 2)
-  {
-    return NULL;
-  }
-  else
+//  if (wIndex0 > 2)
+//  {
+//    return NULL;
+//  }
+//  else
   {
     return (uint8_t*)&HID_Idle_Value[wIndex0];
   }
@@ -567,11 +589,11 @@ uint8_t *HID_Get_Idle(uint16_t Length)
 uint8_t *HID_Get_Protocol(uint16_t Length)
 {
   uint8_t wIndex0 = pInformation->USBwIndexs.bw.bb0;
-  if (wIndex0 > 2)
-  {
-    return NULL;
-  }
-  else
+//  if (wIndex0 > 2)
+//  {
+//    return NULL;
+//  }
+//  else
   {
     return (uint8_t*)&HID_Protocol_Value[wIndex0];
   }

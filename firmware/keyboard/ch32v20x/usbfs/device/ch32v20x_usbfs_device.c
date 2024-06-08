@@ -40,14 +40,16 @@ volatile uint8_t  USBFS_DevSleepStatus;
 volatile uint8_t  USBFS_DevEnumStatus;
 
 /* HID Class Command */
-volatile uint8_t  USBFS_HidIdle[ 3 ];
-volatile uint8_t  USBFS_HidProtocol[ 3 ];
+volatile uint8_t  USBFS_HidIdle[ 5 ];
+volatile uint8_t  USBFS_HidProtocol[ 5 ];
 
 /* Endpoint Buffer */
 __attribute__ ((aligned(4))) uint8_t USBFS_EP0_Buf[ DEF_USBD_UEP0_SIZE ];     //ep0(64)
 __attribute__ ((aligned(4))) uint8_t USBFS_EP1_Buf[ DEF_USB_EP1_FS_SIZE ];    //ep1_in(64)
 __attribute__ ((aligned(4))) uint8_t USBFS_EP2_Buf[ DEF_USB_EP2_FS_SIZE ];    //ep2_in(64)
 __attribute__ ((aligned(4))) uint8_t USBFS_EP3_Buf[ DEF_USB_EP3_FS_SIZE ];    //ep2_in(64)
+__attribute__ ((aligned(4))) uint8_t USBFS_EP4_Buf[ DEF_USB_EP4_FS_SIZE ];    //ep2_in(64)
+__attribute__ ((aligned(4))) uint8_t USBFS_EP5_Buf[ DEF_USB_EP5_FS_SIZE ];    //ep2_in(64)
 
 /* USB IN Endpoint Busy Flag */
 volatile uint8_t  USBFS_Endp_Busy[ DEF_UEP_NUM ];
@@ -89,20 +91,25 @@ void USBFS_RCC_Init( void )
  */
 void USBFS_Device_Endp_Init( void )
 {
-    USBOTG_FS->UEP4_1_MOD = USBFS_UEP1_TX_EN;
-    USBOTG_FS->UEP2_3_MOD = USBFS_UEP2_TX_EN;
-    USBOTG_FS->UEP2_3_MOD = USBFS_UEP3_TX_EN;
+    USBOTG_FS->UEP4_1_MOD = USBFS_UEP1_TX_EN | USBFS_UEP4_TX_EN;
+    USBOTG_FS->UEP2_3_MOD = USBFS_UEP2_TX_EN | USBFS_UEP3_TX_EN;
+//    USBOTG_FS->UEP2_3_MOD = USBFS_UEP3_TX_EN;
+    USBOTG_FS->UEP5_6_MOD = USBFS_UEP5_TX_EN;
 
     USBOTG_FS->UEP0_DMA = (uint32_t)USBFS_EP0_Buf;
     USBOTG_FS->UEP1_DMA = (uint32_t)USBFS_EP1_Buf;
     USBOTG_FS->UEP2_DMA = (uint32_t)USBFS_EP2_Buf;
     USBOTG_FS->UEP3_DMA = (uint32_t)USBFS_EP3_Buf;
+    USBOTG_FS->UEP4_DMA = (uint32_t)USBFS_EP4_Buf;
+    USBOTG_FS->UEP5_DMA = (uint32_t)USBFS_EP5_Buf;
 
     USBOTG_FS->UEP0_RX_CTRL = USBFS_UEP_R_RES_ACK;
     USBOTG_FS->UEP0_TX_CTRL = USBFS_UEP_T_RES_NAK;
     USBOTG_FS->UEP1_TX_CTRL = USBFS_UEP_T_RES_NAK;
     USBOTG_FS->UEP2_TX_CTRL = USBFS_UEP_T_RES_NAK;
     USBOTG_FS->UEP3_TX_CTRL = USBFS_UEP_T_RES_NAK;
+    USBOTG_FS->UEP4_TX_CTRL = USBFS_UEP_T_RES_NAK;
+    USBOTG_FS->UEP5_TX_CTRL = USBFS_UEP_T_RES_NAK;
 
 }
 
@@ -423,7 +430,15 @@ void USBHD_IRQHandler( void )
                                 }
                                 else if( USBFS_SetupReqIndex == 0x02 )
                                 {
+                                    USBFS_HidIdle[ 2 ] = (uint8_t)( USBFS_SetupReqValue >> 8 );
+                                }
+                                else if( USBFS_SetupReqIndex == 0x03 )
+                                {
                                     USBFS_HidIdle[ 3 ] = (uint8_t)( USBFS_SetupReqValue >> 8 );
+                                }
+                                else if( USBFS_SetupReqIndex == 0x04 )
+                                {
+                                    USBFS_HidIdle[ 4 ] = (uint8_t)( USBFS_SetupReqValue >> 8 );
                                 }
                                 else
                                 {
@@ -443,6 +458,14 @@ void USBHD_IRQHandler( void )
                                 else if( USBFS_SetupReqIndex == 0x02 )
                                 {
                                     USBFS_HidProtocol[ 2 ] = (uint8_t)USBFS_SetupReqValue;
+                                }
+                                else if( USBFS_SetupReqIndex == 0x03 )
+                                {
+                                    USBFS_HidProtocol[ 3 ] = (uint8_t)USBFS_SetupReqValue;
+                                }
+                                else if( USBFS_SetupReqIndex == 0x04 )
+                                {
+                                    USBFS_HidProtocol[ 4 ] = (uint8_t)USBFS_SetupReqValue;
                                 }
                                 else
                                 {
@@ -466,6 +489,16 @@ void USBHD_IRQHandler( void )
                                     USBFS_EP0_Buf[ 0 ] = USBFS_HidIdle[ 2 ];
                                     len = 1;
                                 }
+                                else if( USBFS_SetupReqIndex == 0x03 )
+                                {
+                                    USBFS_EP0_Buf[ 0 ] = USBFS_HidIdle[ 3 ];
+                                    len = 1;
+                                }
+                                else if( USBFS_SetupReqIndex == 0x04 )
+                                {
+                                    USBFS_EP0_Buf[ 0 ] = USBFS_HidIdle[ 4 ];
+                                    len = 1;
+                                }
                                 else
                                 {
                                     errflag = 0xFF;
@@ -486,6 +519,16 @@ void USBHD_IRQHandler( void )
                                 else if( USBFS_SetupReqIndex == 0x02 )
                                 {
                                     USBFS_EP0_Buf[ 0 ] = USBFS_HidProtocol[ 2 ];
+                                    len = 1;
+                                }
+                                else if( USBFS_SetupReqIndex == 0x03 )
+                                {
+                                    USBFS_EP0_Buf[ 0 ] = USBFS_HidProtocol[ 3 ];
+                                    len = 1;
+                                }
+                                else if( USBFS_SetupReqIndex == 0x04 )
+                                {
+                                    USBFS_EP0_Buf[ 0 ] = USBFS_HidProtocol[ 4 ];
                                     len = 1;
                                 }
                                 else
@@ -538,6 +581,16 @@ void USBHD_IRQHandler( void )
                                         pUSBFS_Descr = (uint8_t*)&usbd_composite_config_desc.mouse_inf.iInterface;
                                         len = 9;
                                     }
+//                                    else if( USBFS_SetupReqIndex == 0x03 )
+//                                    {
+//                                        pUSBFS_Descr = (uint8_t*)&usbd_composite_config_desc.sim_inf.iInterface;
+//                                        len = 9;
+//                                    }
+                                    else if( USBFS_SetupReqIndex == 0x03 )
+                                    {
+                                        pUSBFS_Descr = (uint8_t*)&usbd_composite_config_desc.comp_inf.iInterface;
+                                        len = 9;
+                                    }
                                     else
                                     {
                                         errflag = 0xFF;
@@ -560,6 +613,16 @@ void USBHD_IRQHandler( void )
                                     {
                                         pUSBFS_Descr = usbd_mouse_report_desc;
                                         len = HID_MOUSE_REPORT_DESC_SIZE;
+                                    }
+//                                    else if( USBFS_SetupReqIndex == 0x03 )
+//                                    {
+//                                        pUSBFS_Descr = usbd_report_desc_sim;
+//                                        len = USBD_REPORT_DESC_SIZE_SIM;
+//                                    }
+                                    else if( USBFS_SetupReqIndex == 0x03 )
+                                    {
+                                        pUSBFS_Descr = usbd_hid_comp_report_desc;
+                                        len = USBD_REPORT_DESC_SIZE_COMP;
                                     }
                                     else
                                     {
@@ -673,6 +736,16 @@ void USBHD_IRQHandler( void )
                                             USBOTG_FS->UEP3_TX_CTRL = USBFS_UEP_T_RES_NAK;
                                             break;
 
+                                        case ( DEF_UEP_IN | DEF_UEP4 ):
+                                            /* Set End-point 2 IN NAK */
+                                            USBOTG_FS->UEP4_TX_CTRL = USBFS_UEP_T_RES_NAK;
+                                            break;
+
+                                        case ( DEF_UEP_IN | DEF_UEP5 ):
+                                            /* Set End-point 2 IN NAK */
+                                            USBOTG_FS->UEP5_TX_CTRL = USBFS_UEP_T_RES_NAK;
+                                            break;
+
                                         default:
                                             errflag = 0xFF;
                                             break;
@@ -728,6 +801,14 @@ void USBHD_IRQHandler( void )
 
                                         case ( DEF_UEP_IN | DEF_UEP3 ):
                                             USBOTG_FS->UEP3_TX_CTRL = ( USBOTG_FS->UEP3_TX_CTRL & ~USBFS_UEP_T_RES_MASK ) | USBFS_UEP_T_RES_STALL;
+                                            break;
+
+                                        case ( DEF_UEP_IN | DEF_UEP4 ):
+                                            USBOTG_FS->UEP4_TX_CTRL = ( USBOTG_FS->UEP4_TX_CTRL & ~USBFS_UEP_T_RES_MASK ) | USBFS_UEP_T_RES_STALL;
+                                            break;
+
+                                        case ( DEF_UEP_IN | DEF_UEP5 ):
+                                            USBOTG_FS->UEP5_TX_CTRL = ( USBOTG_FS->UEP5_TX_CTRL & ~USBFS_UEP_T_RES_MASK ) | USBFS_UEP_T_RES_STALL;
                                             break;
 
                                         default:
@@ -792,6 +873,20 @@ void USBHD_IRQHandler( void )
                                 else if( (uint8_t)( USBFS_SetupReqIndex & 0xFF ) == ( DEF_UEP_IN | DEF_UEP3 ) )
                                 {
                                     if( ( USBOTG_FS->UEP3_TX_CTRL & USBFS_UEP_T_RES_MASK ) == USBFS_UEP_T_RES_STALL )
+                                    {
+                                        USBFS_EP0_Buf[ 0 ] = 0x01;
+                                    }
+                                }
+                                else if( (uint8_t)( USBFS_SetupReqIndex & 0xFF ) == ( DEF_UEP_IN | DEF_UEP4 ) )
+                                {
+                                    if( ( USBOTG_FS->UEP4_TX_CTRL & USBFS_UEP_T_RES_MASK ) == USBFS_UEP_T_RES_STALL )
+                                    {
+                                        USBFS_EP0_Buf[ 0 ] = 0x01;
+                                    }
+                                }
+                                else if( (uint8_t)( USBFS_SetupReqIndex & 0xFF ) == ( DEF_UEP_IN | DEF_UEP5 ) )
+                                {
+                                    if( ( USBOTG_FS->UEP5_TX_CTRL & USBFS_UEP_T_RES_MASK ) == USBFS_UEP_T_RES_STALL )
                                     {
                                         USBFS_EP0_Buf[ 0 ] = 0x01;
                                     }

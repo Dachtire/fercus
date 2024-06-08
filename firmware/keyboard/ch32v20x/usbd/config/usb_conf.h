@@ -13,7 +13,7 @@
 
 #include "debug.h"
 
-#define EP_NUM              (4)
+#define EP_NUM              (15)
 
 /* Buffer Description Table */
 /* buffer table base address */
@@ -27,12 +27,17 @@
 
 /* EP1  */
 /* tx buffer base address */
-#define ENDP1_TXADDR        (ENDP0_TXADDR + 0x40)
-#define ENDP1_RXADDR        (ENDP1_TXADDR + 0x40)
-#define ENDP2_TXADDR        (ENDP1_RXADDR + 0x40)
-#define ENDP2_RXADDR        (ENDP2_TXADDR + 0x40)
-#define ENDP3_TXADDR        (ENDP2_RXADDR + 0x40)
-#define ENDP3_RXADDR        (ENDP3_TXADDR + 0x40)
+// max 512 kByte
+#define ENDP1_TXADDR        (ENDP0_TXADDR + 0x10)
+#define ENDP1_RXADDR        (ENDP1_TXADDR + 0x10)
+#define ENDP2_TXADDR        (ENDP1_RXADDR + 0x10)
+#define ENDP2_RXADDR        (ENDP2_TXADDR + 0x10)
+#define ENDP3_TXADDR        (ENDP2_RXADDR + 0x10)
+#define ENDP3_RXADDR        (ENDP3_TXADDR + 0x10)
+#define ENDP4_TXADDR        (ENDP3_RXADDR + 0x10)
+#define ENDP4_RXADDR        (ENDP4_TXADDR + 0x10)
+#define ENDP5_TXADDR        (ENDP4_RXADDR + 0x40)
+#define ENDP5_RXADDR        (ENDP5_TXADDR + 0x40)
 
 /* ISTR events */
 /* IMR_MSK */

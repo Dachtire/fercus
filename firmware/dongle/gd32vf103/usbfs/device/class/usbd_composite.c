@@ -290,10 +290,10 @@ const usb_desc_str product_string =
 {
     .header =
      {
-         .bLength         = USB_STRING_LEN(4U),
+         .bLength         = USB_STRING_LEN(13U),
          .bDescriptorType = USB_DESCTYPE_STR,
      },
-    .unicode_string = {'e', 'm', 'e', 'r'}
+    .unicode_string = {'f', 'e', 'r', 'c', 'u', 's', '-', 'd', 'o', 'n', 'g', 'l', 'e'}
 };
 
 /* USBD serial string */

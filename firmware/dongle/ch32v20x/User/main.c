@@ -106,6 +106,9 @@ int main(void)
 
     RF_Init();
 
+    if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) == SET) {
+        RF_BondingErase();
+    }
 //    rf_dongle_init();
 //    rf_dev_init();
 

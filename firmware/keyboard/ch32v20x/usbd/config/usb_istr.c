@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : usb_istr.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2021/08/08
+ * Version            : V1.0.1
+ * Date               : 2022/12/28
  * Description        : ISTR events interrupt service routines
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  * SPDX-License-Identifier: Apache-2.0
@@ -11,6 +11,8 @@
 #include "usb_prop.h"
 #include "usb_pwr.h"
 #include "usb_istr.h"
+
+uint16_t Ep0RxBlks;
 
 /* Private variables */
 __IO uint16_t wIstr;  
@@ -48,9 +50,12 @@ void (*pEpInt_OUT[7])(void) ={
  */
 void USB_Istr(void)
 {
-    uint32_t i=0;
- __IO uint32_t EP[8];
-  
+  uint32_t i=0;
+  __IO uint32_t EP[8];
+  if ((*_pEPRxCount(0) & 0xFC00 )!= Ep0RxBlks)
+  {
+    *_pEPRxCount(0) |= (Ep0RxBlks & 0xFC00);
+  }
   wIstr = _GetISTR();
 #if (IMR_MSK & ISTR_SOF)
   if (wIstr & ISTR_SOF & wInterrupt_Mask)

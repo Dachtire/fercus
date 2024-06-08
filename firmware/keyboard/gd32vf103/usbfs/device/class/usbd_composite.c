@@ -36,11 +36,14 @@ OF SUCH DAMAGE.
 #include "usbd_conf.h"
 #include "usbd_enum.h"
 
+#include "usb_desc.h"
+#include "usbd-hid-compatibility.h"
 #include "usbd-hid-keyboard.h"
+#include "usbd-hid-simulation.h"
 #include "usbd_hid_cntlr.h"
 #include "usbd_hid_mouse.h"
 
-#define USBD_VID                     0x28e9U
+#define USBD_VID                     0x861aU
 #if KB_SIDE == KB_SIDE_LEFT
     #define USBD_PID 0x038aU
 #else
@@ -129,9 +132,9 @@ const usbd_composite_desc_config_set usbd_composite_config_desc =
             .bLength         = USB_EP_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_EP
         },
-        .bEndpointAddress     = USBD_EP_IN_KB,
+        .bEndpointAddress     = USBD_EP_IN_KYBD,
         .bmAttributes         = USB_EP_ATTR_INT,
-        .wMaxPacketSize       = HID_KB_IN_PACKET,
+        .wMaxPacketSize       = HID_KYBD_IN_PACKET,
         .bInterval            = 0x01U
     },
 
@@ -142,9 +145,9 @@ const usbd_composite_desc_config_set usbd_composite_config_desc =
             .bLength         = USB_EP_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_EP
         },
-        .bEndpointAddress     = USBD_EP_OUT_KB,
+        .bEndpointAddress     = USBD_EP_OUT_KYBD,
         .bmAttributes         = USB_EP_ATTR_INT,
-        .wMaxPacketSize       = HID_KB_OUT_PACKET,
+        .wMaxPacketSize       = HID_KYBD_OUT_PACKET,
         .bInterval            = 0x01U
     },
 
@@ -205,7 +208,6 @@ const usbd_composite_desc_config_set usbd_composite_config_desc =
         .bInterval            = 0x01U
     },
 
-    // interface descriptor
     .mouse_inf =
     {
         .header =
@@ -260,6 +262,118 @@ const usbd_composite_desc_config_set usbd_composite_config_desc =
         .bmAttributes         = USB_EP_ATTR_INT,
         .wMaxPacketSize       = HID_MOUSE_OUT_PACKET,
         .bInterval            = 0x01U
+    },
+
+//    .sim_inf =
+//    {
+//        .header =
+//         {
+//             .bLength         = USB_ITF_DESC_LEN,
+//             .bDescriptorType = USB_DESCTYPE_ITF
+//         },
+//        .bInterfaceNumber     = USBD_INF_SIM,
+//        .bAlternateSetting    = 0x00U,
+//        .bNumEndpoints        = 0x02U,
+//        .bInterfaceClass      = USB_HID_CLASS,
+//        .bInterfaceSubClass   = USB_HID_SUBCLASS_BOOT_ITF,
+//        .bInterfaceProtocol   = USB_HID_PROTOCOL_CNTLR,
+//        .iInterface           = 0x00U
+//    },
+
+//    .sim_hid =
+//    {
+//        .header =
+//         {
+//             .bLength         = USB_HID_DESC_LEN,
+//             .bDescriptorType = USB_DESCTYPE_HID
+//         },
+//        .bcdHID               = HID_CD,
+//        .bCountryCode         = HID_COUNTRYCODE,
+//        .bNumDescriptors      = 0x01U,
+//        .bDescriptorType      = USB_DESCTYPE_REPORT,
+//        .wDescriptorLength    = USBD_REPORT_DESC_SIZE_SIM,
+//    },
+//
+//    .sim_epin =
+//    {
+//        .header =
+//         {
+//             .bLength         = USB_EP_DESC_LEN,
+//             .bDescriptorType = USB_DESCTYPE_EP
+//         },
+//        .bEndpointAddress     = USBD_EP_IN_SIM,
+//        .bmAttributes         = USB_EP_ATTR_INT,
+//        .wMaxPacketSize       = HID_SIM_IN_PACKET,
+//        .bInterval            = 0x01U
+//    },
+//
+//    .sim_epout =
+//    {
+//        .header =
+//         {
+//             .bLength         = USB_EP_DESC_LEN,
+//             .bDescriptorType = USB_DESCTYPE_EP
+//         },
+//        .bEndpointAddress     = USBD_EP_OUT_SIM,
+//        .bmAttributes         = USB_EP_ATTR_INT,
+//        .wMaxPacketSize       = HID_SIM_OUT_PACKET,
+//        .bInterval            = 0x01U
+//    },
+                
+    .comp_inf =
+    {
+        .header =
+        {
+            .bLength         = USB_ITF_DESC_LEN,
+            .bDescriptorType = USB_DESCTYPE_ITF
+        },
+        .bInterfaceNumber     = USBD_INF_COMP,
+        .bAlternateSetting    = 0x00U,
+        .bNumEndpoints        = 0x02U,
+        .bInterfaceClass      = USB_HID_CLASS,
+        .bInterfaceSubClass   = 0x00U,
+        .bInterfaceProtocol   = 0x00U,
+        .iInterface           = 0x00U
+    },
+
+    .comp_hid =
+    {
+        .header =
+        {
+            .bLength         = USB_HID_DESC_LEN,
+            .bDescriptorType = USB_DESCTYPE_HID
+        },
+        .bcdHID               = HID_CD,
+        .bCountryCode         = HID_COUNTRYCODE,
+        .bNumDescriptors      = 0x01U,
+        .bDescriptorType      = USB_DESCTYPE_REPORT,
+        .wDescriptorLength    = USBD_REPORT_DESC_SIZE_COMP,
+    },
+
+    .comp_epin =
+    {
+        .header =
+        {
+            .bLength         = USB_EP_DESC_LEN,
+            .bDescriptorType = USB_DESCTYPE_EP
+        },
+        .bEndpointAddress     = USBD_EP_IN_COMP,
+        .bmAttributes         = USB_EP_ATTR_INT,
+        .wMaxPacketSize       = HID_COMP_IN_PACKET,
+        .bInterval            = 0x01U
+    },
+
+    .comp_epout =
+    {
+        .header =
+        {
+            .bLength         = USB_EP_DESC_LEN,
+            .bDescriptorType = USB_DESCTYPE_EP
+        },
+        .bEndpointAddress     = USBD_EP_OUT_COMP,
+        .bmAttributes         = USB_EP_ATTR_INT,
+        .wMaxPacketSize       = HID_COMP_OUT_PACKET,
+        .bInterval            = 0x01U
     }
 };
 
@@ -286,15 +400,25 @@ const usb_desc_str manufacturer_string =
 };
 
 /* USB product string */
-const usb_desc_str product_string =
-{
-    .header =
-     {
-         .bLength         = USB_STRING_LEN(6U),
-         .bDescriptorType = USB_DESCTYPE_STR,
-     },
-    .unicode_string = {'f', 'e', 'r', 'c', 'u', 's'}
+#if KB_SIDE == KB_SIDE_LEFT
+const usb_desc_str product_string = {
+    .header = {
+        .bLength         = USB_STRING_LEN(11U),
+        .bDescriptorType = USB_DESCTYPE_STR,
+    },
+    .unicode_string = {'f', 'e', 'r', 'c', 'u', 's', '-', 'l', 'e', 'f', 't'}
 };
+#else
+const usb_desc_str product_string =
+        {
+                .header =
+                        {
+                                .bLength         = USB_STRING_LEN(12U),
+                                .bDescriptorType = USB_DESCTYPE_STR,
+                        },
+                .unicode_string = {'f', 'e', 'r', 'c', 'u', 's', '-', 'r', 'i', 'g', 'h', 't'}
+};
+#endif
 
 /* USBD serial string */
 const usb_desc_str serial_string =
@@ -426,8 +550,8 @@ const usb_desc_str serial_string =
 //static uint8_t usb_composite_data_in (usb_dev *udev, uint8_t ep_num)
 //{
 //    switch (ep_num) {
-////        case USBD_EP_IN_KB & 0x7F:
-//        case EP_ID(USBD_EP_IN_KB):
+////        case USBD_EP_IN_KYBD & 0x7F:
+//        case EP_ID(USBD_EP_IN_KYBD):
 //            return hid_kb_cb.data_in(udev, ep_num);
 ////        case USBD_EP_IN_MOUSE & 0x7F:
 //        case EP_ID(USBD_EP_IN_MOUSE):
@@ -450,8 +574,8 @@ const usb_desc_str serial_string =
 //static uint8_t usb_composite_data_out (usb_dev *udev, uint8_t ep_num)
 //{
 //    switch (ep_num) {
-////        case USBD_EP_OUT_KB & 0x7F:
-//        case EP_ID(USBD_EP_IN_KB):
+////        case USBD_EP_OUT_KYBD & 0x7F:
+//        case EP_ID(USBD_EP_IN_KYBD):
 //            return hid_kb_cb.data_out(udev, ep_num);
 ////        case USBD_EP_OUT_MOUSE & 0x7F:
 //        case EP_ID(USBD_EP_IN_MOUSE):

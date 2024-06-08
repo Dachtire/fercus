@@ -32,7 +32,9 @@ enum EP_BUF_NUM
   EP_BUF1
 };
 
-#define RegBase  (0x40005C00L)  
+extern uint16_t Ep0RxBlks;
+
+#define RegBase  (0x40005C00L)
 #define PMAAddr  (0x40006000L)  
 
 /******************************************************************************/
@@ -472,7 +474,18 @@ enum EP_BUF_NUM
     else {_BlocksOf2(dwReg,wCount,wNBlocks);}\
   }/* _SetEPCountRxReg */
 
-
+#define _GetNumBlock(wCount,wValue)  {\
+    uint16_t wNBlocks;\
+    if(wCount > 62){\
+      wNBlocks = wCount >> 5;\
+      if((wCount & 0x1f) == 0) wNBlocks--;\
+      wValue = (uint32_t)((wNBlocks << 10) | 0x8000);\
+    }\
+    else {wNBlocks = wCount >> 1;\
+      if((wCount & 0x1) != 0) wNBlocks++;\
+      wValue = (uint32_t)(wNBlocks << 10);\
+    }\
+}
 
 #define _SetEPRxDblBuf0Count(bEpNum,wCount) {\
     uint32_t *pdwReg = _pEPTxCount(bEpNum); \
@@ -490,6 +503,8 @@ enum EP_BUF_NUM
 #define _SetEPRxCount(bEpNum,wCount) {\
     uint32_t *pdwReg = _pEPRxCount(bEpNum); \
     _SetEPCountRxReg(pdwReg, wCount);\
+    if (bEpNum == ENDP0) \
+      _GetNumBlock(Device_Property.MaxPacketSize,Ep0RxBlks);\
   }
 
 /*******************************************************************************

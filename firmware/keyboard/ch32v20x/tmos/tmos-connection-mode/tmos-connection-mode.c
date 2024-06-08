@@ -84,7 +84,7 @@ void connection_mode_init(uint8_t connection) {
         case CONN_TMOS_USBFS:
             WCHBLE_Init();
             HAL_Init();
-//            USBFS_Task_Init();
+            USBFS_Task_Init();
             tmos_keyboard_init();
             kb_digtal_analog_select();
             kb_enable_usbd();

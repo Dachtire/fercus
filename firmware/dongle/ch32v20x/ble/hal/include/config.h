@@ -83,7 +83,7 @@
 #define WAKE_UP_MAX_TIME_US                 2400
 #endif
 #ifndef HAL_KEY
-#define HAL_KEY                             FALSE
+#define HAL_KEY                             TRUE
 #endif
 #ifndef HAL_LED
 #define HAL_LED                             FALSE

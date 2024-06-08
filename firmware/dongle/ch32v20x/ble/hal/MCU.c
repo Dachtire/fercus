@@ -201,8 +201,8 @@ tmosEvents HAL_ProcessEvent(tmosTaskID task_id, tmosEvents events)
     if(events & HAL_KEY_EVENT)
     {
 #if(defined HAL_KEY) && (HAL_KEY == TRUE)
-        HAL_KeyPoll(); /* Check for keys */
-        tmos_start_task(halTaskID, HAL_KEY_EVENT, MS1_TO_SYSTEM_TIME(100));
+//        HAL_KeyPoll(); /* Check for keys */
+//        tmos_start_task(halTaskID, HAL_KEY_EVENT, MS1_TO_SYSTEM_TIME(100));
         return events ^ HAL_KEY_EVENT;
 #endif
     }
@@ -247,17 +247,26 @@ void HAL_Init()
     led_gpio_init();
 #endif
 #if(defined HAL_KEY) && (HAL_KEY == TRUE)
+
+    //    void kb_fn_gpio_init() {
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+
+    GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPD;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+//    }
 //    HAL_KeyInit();
 //    gpio_config();
-    eta_gpio_init();
-    eta_dischrg_exti_init();
-
-    kb_fn_gpio_init();
-    kb_fn_exti_init();
-
-    kb_col_gpio_init();
-    kb_row_gpio_init();
-    keyscan_task_init();
+//    eta_gpio_init();
+//    eta_dischrg_exti_init();
+//
+//    kb_fn_gpio_init();
+//    kb_fn_exti_init();
+//
+//    kb_col_gpio_init();
+//    kb_row_gpio_init();
+//    keyscan_task_init();
 #endif
 #if(defined BLE_CALIBRATION_ENABLE) && (BLE_CALIBRATION_ENABLE == TRUE)
     // Add a calibration task, and a single calibration takes less than 10ms

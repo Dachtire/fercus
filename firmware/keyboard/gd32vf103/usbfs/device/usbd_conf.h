@@ -37,10 +37,11 @@ OF SUCH DAMAGE.
 
 //#include "usb_conf.h"
 #include "drv_usb_regs.h"
+#include "usb_regs.h"
 
 
 #define USBD_CFG_MAX_NUM                    1U
-#define USBD_ITF_NUM_COMPOSITE              3
+#define USBD_ITF_NUM_COMPOSITE              4
 //#define USBD_ITF_MAX_NUM                    1U
 
 //#define USB_STR_DESC_MAX_SIZE               64
@@ -50,6 +51,8 @@ OF SUCH DAMAGE.
 #define USBD_INF_KB    0x00
 #define USBD_INF_CNTLR 0x01
 #define USBD_INF_MOUSE 0x02
+//#define USBD_INF_SIM 0x03
+#define USBD_INF_COMP 0x03
 
 #define CDC_COM_INTERFACE 0x00U
 #define CDC_DATA_INTERFACE 0x02U
@@ -68,14 +71,20 @@ OF SUCH DAMAGE.
 #define USBD_EP_CNTLR ENDP2
 #define USBD_EP_MOUSE ENDP3
 
-#define USBD_EP_IN_KB                          EP1_IN
-#define USBD_EP_OUT_KB                         EP1_OUT
+#define USBD_EP_IN_KYBD                        EP1_IN
+#define USBD_EP_OUT_KYBD                       EP1_OUT
 
 #define USBD_EP_IN_CNTLR                          EP2_IN
 #define USBD_EP_OUT_CNTLR                         EP2_OUT
 
 #define USBD_EP_IN_MOUSE                          EP3_IN
 #define USBD_EP_OUT_MOUSE                         EP3_OUT
+
+//#define USBD_EP_IN_SIM                          EP4_IN
+//#define USBD_EP_OUT_SIM                         EP4_OUT
+
+#define USBD_EP_IN_COMP                          EP4_IN
+#define USBD_EP_OUT_COMP                         EP4_OUT
 
 #define CDC_CMD_EP                          EP2_IN
 #define CDC_DATA_IN_EP                           EP1_IN
@@ -89,15 +98,20 @@ OF SUCH DAMAGE.
 //#define HID_IN_PACKET                       8
 //#define HID_OUT_PACKET                      8
 
-#define HID_KB_IN_PACKET                       64
-#define HID_KB_OUT_PACKET                      64
+#define HID_KYBD_IN_PACKET                     16
+#define HID_KYBD_OUT_PACKET                    16
 
-#define HID_CNTLR_IN_PACKET                       64
-#define HID_CNTLR_OUT_PACKET                      64
+#define HID_CNTLR_IN_PACKET                       16
+#define HID_CNTLR_OUT_PACKET                      16
 
-#define HID_MOUSE_IN_PACKET                       64
-#define HID_MOUSE_OUT_PACKET                      64
+#define HID_MOUSE_IN_PACKET                       16
+#define HID_MOUSE_OUT_PACKET                      16
 
+#define HID_SIM_IN_PACKET                       16
+#define HID_SIM_OUT_PACKET                      16
+
+#define HID_COMP_IN_PACKET                       64
+#define HID_COMP_OUT_PACKET                      64
 
 //#define HID_COMPOSITE_IN_PACKET                       8
 //#define HID_COMPOSITE_OUT_PACKET                      8

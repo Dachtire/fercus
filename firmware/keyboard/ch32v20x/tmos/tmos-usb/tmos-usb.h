@@ -9,8 +9,11 @@
 #define USB_TEST_EVT            0x0008
 
 extern uint8_t USBTaskID;
+extern uint8_t USBFSTaskID;
 
 void USB_Task_Init(void);
 void USB_Task_deinit(void);
 
+void USBFS_Task_Init(void);
+void USBFS_Task_deinit(void);
 #endif

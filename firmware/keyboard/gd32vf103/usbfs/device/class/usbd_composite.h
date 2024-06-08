@@ -39,9 +39,11 @@ OF SUCH DAMAGE.
 #include "usbd-hid-keyboard.h"
 #include "usbd_hid_cntlr.h"
 #include "usbd_hid_mouse.h"
+#include "usbd-hid-compatibility.h"
+#include "usbd-hid-simulation.h"
 //#include "cdc_acm_core.h"
 
-#define USBD_COMPOSITE_CONFIG_DESC_SIZE (USB_CFG_DESC_LEN + 3 * (USB_ITF_DESC_LEN + USB_HID_DESC_LEN + USB_EP_DESC_LEN * 2))
+#define USBD_COMPOSITE_CONFIG_DESC_SIZE (USB_CFG_DESC_LEN + 4 * (USB_ITF_DESC_LEN + USB_HID_DESC_LEN + USB_EP_DESC_LEN * 2))
 
 typedef struct
 {
@@ -61,6 +63,16 @@ typedef struct
     usb_desc_hid mouse_hid;
     usb_desc_ep mouse_epin;
     usb_desc_ep mouse_epout;
+
+//    usb_desc_itf sim_inf;
+//    usb_desc_hid sim_hid;
+//    usb_desc_ep sim_epin;
+//    usb_desc_ep sim_epout;
+    
+    usb_desc_itf comp_inf;
+    usb_desc_hid comp_hid;
+    usb_desc_ep comp_epin;
+    usb_desc_ep comp_epout;
 } usbd_composite_desc_config_set;
 
 extern const usb_desc_dev usbd_composite_dev_desc;

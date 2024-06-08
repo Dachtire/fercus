@@ -16,7 +16,7 @@
 
 //#include "usbd_vendor.h"
 
-uint8_t USBD_Endp1_Busy,USBD_Endp2_Busy;
+uint8_t USBD_Endp1_Busy,USBD_Endp2_Busy, USBD_Endp3_Busy, USBD_Endp4_Busy;
 uint8_t usbd_epin_busy[8];
 u16 USB_Rx_Cnt=0; 
 
@@ -49,7 +49,7 @@ void EP1_OUT_Callback(void)
 //            usbd_vendor_receive((uint8_t *) kb_rep_recv, ENDP1);
 //            break;
 //    }
-    kb_usb_receive();
+//    kb_usb_receive();
 }
 
 /*********************************************************************
@@ -95,6 +95,24 @@ void EP3_OUT_Callback(void)
 //    }
 }
 
+//void EP4_IN_Callback (void)
+//{
+//    usbd_epin_busy[ENDP4] = FALSE;
+//}
+
+//void EP4_OUT_Callback(void)
+//{
+//    //    switch (kb_device) {
+//    //        default:
+//    //        case KB_DEVICE_KEYBORAD:
+//    //            break;
+//    //
+//    //        case KB_DEVICE_VENDOR:
+//    //            usbd_vendor_receive((uint8_t *) kb_rep_recv, ENDP2);
+//    //            break;
+//    //    }
+//}
+
 /*********************************************************************
  * @fn      USBD_ENDPx_DataUp
  *
@@ -129,6 +147,26 @@ uint8_t USBD_ENDPx_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len )
 		USBD_Endp2_Busy = 1;
 		SetEPTxStatus( ENDP2, EP_TX_VALID );
 	}
+    else if( endp == ENDP3 )
+    {
+        if (USBD_Endp3_Busy)
+        {
+            return USB_ERROR;
+        }
+        USB_SIL_Write( EP3_IN, pbuf, len );
+        USBD_Endp3_Busy = 1;
+        SetEPTxStatus( ENDP3, EP_TX_VALID );
+    }
+    else if( endp == ENDP4 )
+    {
+        if (USBD_Endp4_Busy)
+        {
+            return USB_ERROR;
+        }
+        USB_SIL_Write( EP4_IN, pbuf, len );
+        USBD_Endp4_Busy = 1;
+        SetEPTxStatus( ENDP4, EP_TX_VALID );
+    }
 	else
 	{
 		return USB_ERROR;

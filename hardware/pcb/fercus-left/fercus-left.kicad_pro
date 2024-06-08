@@ -61,6 +61,11 @@
         {
           "gap": 0.15,
           "via_gap": 0.2,
+          "width": 0.2
+        },
+        {
+          "gap": 0.15,
+          "via_gap": 0.2,
           "width": 0.3
         },
         {
@@ -70,8 +75,7 @@
         }
       ],
       "drc_exclusions": [
-        "clearance|32699999|24600000|aef9d9a5-8e03-479a-8b18-b3ada616e0ea|82c0a2ba-24c9-4556-9f5c-e766abbbe872",
-        "clearance|32978858|24321142|aef9d9a5-8e03-479a-8b18-b3ada616e0ea|020f00dd-6415-4026-b59b-5c4463f6a222"
+        "clearance|31675650|25662742|d89c485c-4ecd-427f-a403-8d64a51c242c|20a7fc48-f1fd-4880-9691-19825a529919"
       ],
       "meta": {
         "version": 2
@@ -93,6 +97,7 @@
         "footprint_type_mismatch": "warning",
         "hole_clearance": "error",
         "hole_near_hole": "error",
+        "holes_co_located": "warning",
         "invalid_outline": "error",
         "isolated_copper": "warning",
         "item_on_disabled_layer": "error",
@@ -110,7 +115,7 @@
         "pth_inside_courtyard": "ignore",
         "shorting_items": "error",
         "silk_edge_clearance": "warning",
-        "silk_over_copper": "error",
+        "silk_over_copper": "warning",
         "silk_overlap": "warning",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
@@ -131,8 +136,8 @@
         "allow_blind_buried_vias": false,
         "allow_microvias": false,
         "max_error": 0.005,
-        "min_clearance": 0.1,
-        "min_connection": 0.1,
+        "min_clearance": 0.15,
+        "min_connection": 0.15,
         "min_copper_edge_clearance": 0.3,
         "min_hole_clearance": 0.25,
         "min_hole_to_hole": 0.254,
@@ -143,7 +148,7 @@
         "min_text_height": 1.0,
         "min_text_thickness": 0.15,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.1,
+        "min_track_width": 0.15,
         "min_via_annular_width": 0.1,
         "min_via_diameter": 0.5,
         "solder_mask_clearance": 0.0,
@@ -196,13 +201,13 @@
       ],
       "track_widths": [
         0.0,
-        0.15,
         0.2,
         0.3,
         0.4,
         0.5,
         0.6,
         0.7,
+        0.75,
         0.8,
         1.0,
         1.2,
@@ -239,6 +244,10 @@
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 0.5,
+          "drill": 0.3
         },
         {
           "diameter": 0.6,
@@ -479,11 +488,10 @@
   },
   "libraries": {
     "pinned_footprint_libs": [
-      "gae",
+      "wch-ant",
       "chulaine"
     ],
     "pinned_symbol_libs": [
-      "gae",
       "chulaine"
     ]
   },
@@ -513,9 +521,9 @@
       {
         "bus_width": 12,
         "clearance": 0.1,
-        "diff_pair_gap": 0.1,
+        "diff_pair_gap": 0.15,
         "diff_pair_via_gap": 0.25,
-        "diff_pair_width": 0.2,
+        "diff_pair_width": 0.35,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
@@ -560,6 +568,7 @@
   },
   "schematic": {
     "annotate_start_num": 0,
+    "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",
@@ -590,7 +599,7 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,

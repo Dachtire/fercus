@@ -26,6 +26,7 @@ uint8_t TX_DATA[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
 //uint8_t RX_DATA[10] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
 
 volatile uint8_t tx_end_flag=0;
+volatile uint8_t rx_end_flag=0;
 
 /*********************************************************************
  * @fn      RF_Wait_Tx_End
@@ -53,6 +54,31 @@ void RF_Wait_Tx_End()
 }
 
 /*********************************************************************
+ * @fn      RF_Wait_Rx_End
+ *
+ * @brief   自动模式等待应答发送完成，必须在RAM中等待，等待时可以执行用户代码，但需要注意执行的代码必须运行在RAM中，否则影响发送
+ *
+ * @return  none
+ */
+__attribute__((section(".highcode")))
+__attribute__((noinline))
+void RF_Wait_Rx_End()
+{
+    uint32_t i=0;
+    while(!rx_end_flag)
+    {
+        i++;
+        __NOP();
+        __NOP();
+        // 约5ms超时
+        if(i>(SystemCoreClock/1000))
+        {
+            rx_end_flag = TRUE;
+        }
+    }
+}
+
+/*********************************************************************
  * @fn      RF_2G4StatusCallBack
  *
  * @brief   RF status callback 
@@ -71,7 +97,7 @@ void RF_2G4StatusCallBack(uint8_t sta, uint8_t crc, uint8_t *rxBuf)
     {
         case TX_MODE_TX_FINISH:
         {
-            tx_end_flag = TRUE;
+//            tx_end_flag = TRUE;
             break;
         }
         case TX_MODE_TX_FAIL:
@@ -81,28 +107,65 @@ void RF_2G4StatusCallBack(uint8_t sta, uint8_t crc, uint8_t *rxBuf)
         }
         case TX_MODE_RX_DATA:
         {
-            break;
-        }
-        case TX_MODE_RX_TIMEOUT: // Timeout is about 200us
-        {
-            break;
-        }
-        case RX_MODE_RX_DATA:
-        {
+            tx_end_flag = TRUE;
             if (crc == 0) {
 //                uint8_t i;
-//                PRINT("rx recv, rssi: %d\n", (int8_t)rxBuf[0]);
+//
+//                PRINT("tx recv,rssi:%d\n", (int8_t)rxBuf[0]);
 //                PRINT("len:%d-", rxBuf[1]);
+//
+//                for (i = 0; i < rxBuf[1]; i++) {
+//                    PRINT("%x ", rxBuf[i + 2]);
+//                }
+//                PRINT("\n");
 
                 tmos_memcpy(kb_report_usbh, &rxBuf[2], rxBuf[1]);
                 if (tmos_memcmp(kb_report_usbd, kb_report_usbh, rxBuf[1]) == FALSE) {
                     tmos_memcpy(kb_report_usbd, kb_report_usbh, rxBuf[1]);
                     tmos_set_event(USBTaskID, USB_IN_EVT);
                 }
+            } else {
+                if (crc & (1<<0)) {
+                    PRINT("crc error\n");
+                }
+
+                if (crc & (1<<1)) {
+                    PRINT("match type error\n");
+                }
+            }
+            break;
+        }
+        case TX_MODE_RX_TIMEOUT: // Timeout is about 200us
+        {
+            tx_end_flag = TRUE;
+            break;
+        }
+        case TX_MODE_HOP_SHUT:
+        {
+            tx_end_flag = TRUE;
+            PRINT("TX_MODE_HOP_SHUT...\n");
+            tmos_set_event(taskID, SBP_RF_CHANNEL_HOP_TX_EVT);
+            break;
+        }
+        case RX_MODE_RX_DATA:
+        {
+            if (crc == 0) {
+//                uint8_t i;
+
+                RF_Wait_Rx_End();
+//                PRINT("rx recv, rssi: %d\n", (int8_t)rxBuf[0]);
+//                PRINT("len:%d-", rxBuf[1]);
+
 //                for (i = 0; i < rxBuf[1]; i++) {
 //                    PRINT("%x ", rxBuf[i + 2]);
 //                }
 //                PRINT("\n");
+
+                tmos_memcpy(kb_report_usbh, &rxBuf[2], rxBuf[1]);
+                if (tmos_memcmp(kb_report_usbd, kb_report_usbh, rxBuf[1]) == FALSE) {
+                    tmos_memcpy(kb_report_usbd, kb_report_usbh, rxBuf[1]);
+                    tmos_set_event(USBTaskID, USB_IN_EVT);
+                }
             } else {
                 if (crc & (1<<0)) {
                     PRINT("crc error\n");
@@ -117,10 +180,19 @@ void RF_2G4StatusCallBack(uint8_t sta, uint8_t crc, uint8_t *rxBuf)
         }
         case RX_MODE_TX_FINISH:
         {
+            rx_end_flag = TRUE;
             break;
         }
         case RX_MODE_TX_FAIL:
         {
+            rx_end_flag = TRUE;
+            break;
+        }
+        case RX_MODE_HOP_SHUT:
+        {
+            PRINT("RX_MODE_HOP_SHUT...\n");
+            rx_end_flag = TRUE;
+            tmos_set_event(taskID, SBP_RF_CHANNEL_HOP_RX_EVT);
             break;
         }
     }
@@ -158,6 +230,7 @@ uint16_t RF_ProcessEvent(uint8_t task_id, uint16_t events)
     if(events & SBP_RF_PERIODIC_EVT)
     {
         RF_Shut();
+        TX_DATA[0]--;
         tx_end_flag = FALSE;
         if(!RF_Tx(TX_DATA, 10, 0xFF, 0xFF))
         {
@@ -171,9 +244,40 @@ uint16_t RF_ProcessEvent(uint8_t task_id, uint16_t events)
         uint8_t state;
         RF_Shut();
         TX_DATA[0]++;
+        rx_end_flag = FALSE;
         state = RF_Rx(TX_DATA, 10, 0xFF, 0xFF);
 //        PRINT("RX mode.state = %x\n", state);
         return events ^ SBP_RF_RF_RX_EVT;
+    }
+    // Turn on rf hop sending
+    if(events & SBP_RF_CHANNEL_HOP_TX_EVT)
+    {
+        PRINT("\n------------- hop tx...\n");
+        if(RF_FrequencyHoppingTx(16))
+        {
+            tmos_start_task(taskID, SBP_RF_CHANNEL_HOP_TX_EVT, 100);
+        }
+        else
+        {
+            tmos_start_task(taskID, SBP_RF_PERIODIC_EVT, 1000);
+        }
+        return events ^ SBP_RF_CHANNEL_HOP_TX_EVT;
+    }
+    // Turn on rf hop receiving
+    if(events & SBP_RF_CHANNEL_HOP_RX_EVT)
+    {
+        PRINT("hop rx...\n");
+        if(RF_FrequencyHoppingRx(200))
+        {
+            tmos_start_task(taskID, SBP_RF_CHANNEL_HOP_RX_EVT, 400);
+        }
+        else
+        {
+
+            rx_end_flag = FALSE;
+            RF_Rx(TX_DATA, 10, 0xFF, 0xFF);
+        }
+        return events ^ SBP_RF_CHANNEL_HOP_RX_EVT;
     }
     return 0;
 }
@@ -209,18 +313,24 @@ void RF_Init(void)
     // 0x55555555 and 0xAAAAAAAA are prohibited (recommended no more than 24 bit reversals, and no more than 6 consecutive 0 or 1)
     rf_Config.accessAddress = 0x71764129;
     rf_Config.CRCInit = 0x555555;
-    rf_Config.Channel = 39;
-    rf_Config.Frequency = 2480000;
+//    rf_Config.Channel = 39;
+//    rf_Config.Frequency = 2480000;
     // Enabling LLE_MODE_EX_CHANNEL means selecting rfConfig.Frequency as the communication frequency
-    rf_Config.LLEMode = LLE_MODE_BASIC | LLE_MODE_EX_CHANNEL;
+//    rf_Config.LLEMode = LLE_MODE_BASIC | LLE_MODE_EX_CHANNEL;
+    rf_Config.ChannelMap = 0xFFFFFFFF;
+    rf_Config.LLEMode = LLE_MODE_AUTO;
     rf_Config.rfStatusCB = RF_2G4StatusCallBack;
     rf_Config.RxMaxlen = 251;
     state = RF_Config(&rf_Config);
     PRINT("rf 2.4g init: %x\n", state);
 
+//    { // RX mode
+//        state = RF_Rx(TX_DATA, 10, 0xFF, 0xFF);
+//        PRINT("RX mode.state = %x\n", state);
+//    }
     { // RX mode
-        state = RF_Rx(TX_DATA, 10, 0xFF, 0xFF);
-        PRINT("RX mode.state = %x\n", state);
+        PRINT("RX mode...\n");
+        tmos_set_event(taskID, SBP_RF_CHANNEL_HOP_RX_EVT);
     }
 
 //    { // TX mode

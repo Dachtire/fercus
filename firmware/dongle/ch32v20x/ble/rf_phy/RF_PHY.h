@@ -21,7 +21,8 @@ extern "C" {
 #define SBP_RF_START_DEVICE_EVT    1
 #define SBP_RF_PERIODIC_EVT        2
 #define SBP_RF_RF_RX_EVT           4
-
+#define SBP_RF_CHANNEL_HOP_TX_EVT    (1 << 3)
+#define SBP_RF_CHANNEL_HOP_RX_EVT    (1 << 4)
 //If you add this macro when configured LLEMODE, the first byte received is the raw data, otherwise the RSSI value
 #define LLE_MODE_ORIGINAL_RX       (0x80) 
 

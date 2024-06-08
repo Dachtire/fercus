@@ -2,6 +2,7 @@
 #include "HAL.h"
 #include "joystick.h"
 #include "led.h"
+#include "tmos-connection-mode.h"
 #include "tmos-power-manager.h"
 
 
@@ -90,14 +91,14 @@ static uint16_t kb_adc_value[KB_ADC_SIZE] = {}, kb_adc_buf1[KB_ADC_SIZE] = {};
         KEY_EQUAL_PLUS, KEY_F, KEY_G, KEY_C, KEY_R, KEY_L, KEY_BACKSLASH_VERTICAL_BAR,
         KEY_MINUS_UNDERSCORE, KEY_D, KEY_H, KEY_T, KEY_N, KEY_S, KEY_BACKSPACE,
         KEY_SLASH_QUESTION, KEY_B, KEY_M, KEY_W, KEY_V, KEY_Z, KEY_RIGHT_SHIFT,
-        KEY_RIGHT_ALT, KEY_SPACEBAR, KEY_RIGHT_CONTROL, KEY_RIGHT_GUI, KEY_INSERT, KEY_PRINTSCREEN, KEY_FN,
+        KEY_RIGHT_ALT, KEY_SPACEBAR, KEY_RIGHT_CONTROL, KEY_RIGHT_GUI, KEY_INSERT, KEY_PRINTSCREEN, KEY_PAUSE,
 
         KEY_F12, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11,
         KEY_OBRACKET_AND_OBRACE, KEY_6_CARET, KEY_7_AMPERSAND, KEY_8_ASTERISK, KEY_9_OPARENTHESIS, KEY_0_CPARENTHESIS, KEY_CBRACKET_AND_CBRACE,
         KEY_EQUAL_PLUS, KEY_Y, KEY_U, KEY_I, KEY_O, KEY_P, KEY_BACKSLASH_VERTICAL_BAR,
         KEY_MINUS_UNDERSCORE, KEY_H, KEY_J, KEY_K, KEY_L, KEY_SEMICOLON_COLON, KEY_BACKSPACE,
         KEY_SLASH_QUESTION, KEY_N, KEY_M, KEY_COMMA_AND_LESS, KEY_DOT_GREATER, KEY_SINGLE_AND_DOUBLE_QUOTE, KEY_RIGHT_SHIFT,
-        KEY_RIGHT_ALT, KEY_SPACEBAR, KEY_RIGHT_CONTROL, KEY_RIGHT_GUI, KEY_CAPS_LOCK, KEY_PRINTSCREEN, KEY_FN,
+        KEY_RIGHT_ALT, KEY_SPACEBAR, KEY_RIGHT_CONTROL, KEY_RIGHT_GUI, KEY_CAPS_LOCK, KEY_PRINTSCREEN, KEY_PAUSE,
 
 };
 
@@ -393,6 +394,7 @@ void keyboard_fn_scan() {
     if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_14) == KB_FN_PRESS) {
         if (fn_state[0] != KB_FN_PRESS) {
             fn_state[0] = KB_FN_PRESS;
+            pwr_mgr_trigger = PWR_MGR_TRIG_MANNUAL;
             OnBoard_SendMsg(tmos_pm_id, PM_ENTER_STANDBY_MSG, 1, NULL);
         }
     }
@@ -440,6 +442,8 @@ void keyboard_fn_scan() {
 //            eta9184_pulse_it_init();
 //            eta9184_pulse_tim_init();
 //            uint16_t boost_adc = eta9184_adc_get();
+
+
 //            printf("%d\n", boost_adc);
         }
     } else if (fn_state[2] == KB_FN_PRESS && GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_2) != KB_FN_PRESS) {
@@ -459,6 +463,9 @@ void keyboard_fn_scan() {
 //                kb_col_curr = 0;
 //                GPIO_SetBits(KB_COL_GPIO_PORT[kb_col_curr], KB_COL_GPIO_PIN[kb_col_curr]);
 //            }
+
+            RF_BondingErase();
+
             led_blue_on();
         }
     } else if (fn_state[3] == KB_FN_PRESS && GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13) != KB_FN_PRESS) {
@@ -469,9 +476,14 @@ void keyboard_fn_scan() {
 //    if (EXTI_GetITStatus(EXTI_Line15) == SET) {
         if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_15) == SET) {
             //            printf("usb in\n");
+//            led_blue_off();
         } else {
             //            printf("usb out\n");
-            OnBoard_SendMsg(tmos_pm_id, PM_ENTER_STANDBY_MSG, 1, NULL);
+//            if (connection_mode == CONN_TMOS_USB) {
+//                pwr_mgr_trigger = PWR_MGR_TRIG_AUTO;
+                OnBoard_SendMsg(tmos_pm_id, PM_ENTER_STANDBY_MSG, 1, NULL);
+//                led_blue_on();
+//            }
         }
 //        EXTI_ClearITPendingBit(EXTI_Line15);
 //    }

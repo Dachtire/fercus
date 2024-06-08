@@ -50,8 +50,8 @@ OF SUCH DAMAGE.
 //    uint32_t protocol;
 //    uint32_t idle_state;
 //
-//    uint8_t data_in[HID_KB_IN_PACKET];
-//    uint8_t data_out[HID_KB_OUT_PACKET];
+//    uint8_t data_in[HID_KYBD_IN_PACKET];
+//    uint8_t data_out[HID_KYBD_OUT_PACKET];
 ////    uint8_t prev_transfer_complete;
 //    uint8_t sent_flag;
 //    uint8_t receive_flag;

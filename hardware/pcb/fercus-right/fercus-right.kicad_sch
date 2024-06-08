@@ -7955,16 +7955,8 @@
 		(uuid "aafdb5d8-7adb-4fa3-8912-c7120ebde4a4")
 	)
 	(no_connect
-		(at 276.86 54.61)
-		(uuid "c4fe6fd9-49ab-459e-8311-b0ff97c078a8")
-	)
-	(no_connect
 		(at 276.86 57.15)
-		(uuid "c4fe6fd9-49ab-459e-8311-b0ff97c078a9")
-	)
-	(no_connect
-		(at 281.94 92.71)
-		(uuid "c561982a-83d6-4622-a5f4-b91638a13187")
+		(uuid "c0df9aaa-32cd-4bc1-9dea-1ee87634dbe3")
 	)
 	(wire
 		(pts
@@ -9945,6 +9937,16 @@
 			(type default)
 		)
 		(uuid "3f7668f1-d419-4b03-aac1-653995bd23c5")
+	)
+	(wire
+		(pts
+			(xy 279.4 54.61) (xy 276.86 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3fd2717f-da34-4940-bf18-925e82097210")
 	)
 	(wire
 		(pts
@@ -17122,6 +17124,27 @@
 			)
 		)
 	)
+	(global_label "usart1_tx"
+		(shape output)
+		(at 279.4 54.61 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5a689d40-cb68-4159-8d37-ab7f3cb0b73a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 290.5821 54.5306 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "key_row0"
 		(shape input)
 		(at 200.66 78.74 0)
@@ -18103,7 +18126,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 53.34 138.9507 0)
 			(effects
 				(font
@@ -18173,7 +18196,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 66.04 138.9507 0)
 			(effects
 				(font
@@ -18243,7 +18266,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 78.74 138.9507 0)
 			(effects
 				(font
@@ -18313,7 +18336,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 91.44 138.9507 0)
 			(effects
 				(font
@@ -18383,7 +18406,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 104.14 138.9507 0)
 			(effects
 				(font
@@ -18453,7 +18476,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 116.84 138.9507 0)
 			(effects
 				(font
@@ -18523,7 +18546,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 129.54 138.9507 0)
 			(effects
 				(font
@@ -20796,7 +20819,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 158.75 204.47 0)
 			(effects
 				(font
@@ -20874,7 +20897,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "chulaine:ANT-F-1-2.4G-1.2MM-FR4-WCH_Right_NoMask"
+		(property "Footprint" "wch-ant:WCH_MIFA-1_2.4GHz_1.6mm_FR4_Right_NoMask"
 			(at 119.38 17.78 0)
 			(effects
 				(font
@@ -21070,7 +21093,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 66.04 191.0207 0)
 			(effects
 				(font
@@ -21344,7 +21367,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 78.74 241.8207 0)
 			(effects
 				(font
@@ -21481,7 +21504,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 116.84 191.0207 0)
 			(effects
 				(font
@@ -21616,7 +21639,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 234.95 152.4 0)
 			(effects
 				(font
@@ -21683,7 +21706,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 222.25 204.47 0)
 			(effects
 				(font
@@ -21750,7 +21773,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 209.55 152.4 0)
 			(effects
 				(font
@@ -22285,7 +22308,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 184.15 162.56 0)
 			(effects
 				(font
@@ -22422,7 +22445,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 129.54 241.8207 0)
 			(effects
 				(font
@@ -22492,7 +22515,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 66.04 241.8207 0)
 			(effects
 				(font
@@ -22560,7 +22583,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 234.95 204.47 0)
 			(effects
 				(font
@@ -22956,7 +22979,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 129.54 267.2207 0)
 			(effects
 				(font
@@ -23157,7 +23180,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 222.25 194.31 0)
 			(effects
 				(font
@@ -23425,7 +23448,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 171.45 204.47 0)
 			(effects
 				(font
@@ -23766,7 +23789,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 171.45 152.4 0)
 			(effects
 				(font
@@ -23835,7 +23858,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 53.34 164.3507 0)
 			(effects
 				(font
@@ -24309,7 +24332,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 91.44 191.0207 0)
 			(effects
 				(font
@@ -24444,7 +24467,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 158.75 214.63 0)
 			(effects
 				(font
@@ -24511,7 +24534,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 184.15 194.31 0)
 			(effects
 				(font
@@ -24647,7 +24670,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 129.54 191.0207 0)
 			(effects
 				(font
@@ -24913,7 +24936,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 184.15 214.63 0)
 			(effects
 				(font
@@ -24980,7 +25003,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 184.15 204.47 0)
 			(effects
 				(font
@@ -25124,7 +25147,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 116.84 216.4207 0)
 			(effects
 				(font
@@ -25259,7 +25282,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 222.25 152.4 0)
 			(effects
 				(font
@@ -25663,7 +25686,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 78.74 267.2207 0)
 			(effects
 				(font
@@ -25800,7 +25823,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 104.14 267.2207 0)
 			(effects
 				(font
@@ -25870,7 +25893,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 91.44 267.2207 0)
 			(effects
 				(font
@@ -26140,7 +26163,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 116.84 267.2207 0)
 			(effects
 				(font
@@ -26407,7 +26430,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 53.34 267.2207 0)
 			(effects
 				(font
@@ -26608,7 +26631,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 66.04 267.2207 0)
 			(effects
 				(font
@@ -26741,7 +26764,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Conn_01x06_MountingPin"
+		(property "Value" "AFH34-S06FIA-1H"
 			(at 381 43.5355 0)
 			(effects
 				(font
@@ -26966,7 +26989,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 209.55 214.63 0)
 			(effects
 				(font
@@ -27366,9 +27389,9 @@
 		(at 373.38 67.31 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
+		(in_bom no)
+		(on_board no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "57e6e6b8-9a2c-4a80-af65-e0a6dcda49a0")
 		(property "Reference" "TP2"
@@ -27856,7 +27879,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 158.75 152.4 0)
 			(effects
 				(font
@@ -27923,7 +27946,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 234.95 142.24 0)
 			(effects
 				(font
@@ -28256,7 +28279,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 196.85 204.47 0)
 			(effects
 				(font
@@ -28648,7 +28671,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 184.15 152.4 0)
 			(effects
 				(font
@@ -29321,7 +29344,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 171.45 162.56 0)
 			(effects
 				(font
@@ -29919,7 +29942,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 53.34 241.8207 0)
 			(effects
 				(font
@@ -30053,7 +30076,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 78.74 191.0207 0)
 			(effects
 				(font
@@ -30121,7 +30144,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 171.45 214.63 0)
 			(effects
 				(font
@@ -30322,7 +30345,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 158.75 142.24 0)
 			(effects
 				(font
@@ -30389,7 +30412,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 171.45 142.24 0)
 			(effects
 				(font
@@ -30658,7 +30681,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 158.75 194.31 0)
 			(effects
 				(font
@@ -30727,7 +30750,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 78.74 216.4207 0)
 			(effects
 				(font
@@ -31151,7 +31174,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 91.44 216.4207 0)
 			(effects
 				(font
@@ -31283,7 +31306,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 234.95 194.31 0)
 			(effects
 				(font
@@ -31421,7 +31444,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 104.14 164.3507 0)
 			(effects
 				(font
@@ -32114,7 +32137,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 129.54 216.4207 0)
 			(effects
 				(font
@@ -32447,7 +32470,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 234.95 162.56 0)
 			(effects
 				(font
@@ -32516,7 +32539,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 129.54 164.3507 0)
 			(effects
 				(font
@@ -32789,7 +32812,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 116.84 164.3507 0)
 			(effects
 				(font
@@ -33259,7 +33282,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 196.85 194.31 0)
 			(effects
 				(font
@@ -33933,7 +33956,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 116.84 241.8207 0)
 			(effects
 				(font
@@ -34217,7 +34240,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 104.14 241.8207 0)
 			(effects
 				(font
@@ -34487,7 +34510,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 91.44 241.8207 0)
 			(effects
 				(font
@@ -34624,7 +34647,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 158.75 162.56 0)
 			(effects
 				(font
@@ -34961,7 +34984,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 196.85 142.24 0)
 			(effects
 				(font
@@ -35753,7 +35776,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 209.55 204.47 0)
 			(effects
 				(font
@@ -36152,7 +36175,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 209.55 194.31 0)
 			(effects
 				(font
@@ -36416,7 +36439,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 184.15 142.24 0)
 			(effects
 				(font
@@ -36617,7 +36640,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 196.85 152.4 0)
 			(effects
 				(font
@@ -36686,7 +36709,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 66.04 164.3507 0)
 			(effects
 				(font
@@ -36957,7 +36980,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 78.74 164.3507 0)
 			(effects
 				(font
@@ -37025,7 +37048,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 171.45 194.31 0)
 			(effects
 				(font
@@ -37230,7 +37253,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 222.25 162.56 0)
 			(effects
 				(font
@@ -37364,7 +37387,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 209.55 162.56 0)
 			(effects
 				(font
@@ -37495,7 +37518,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 234.95 214.63 0)
 			(effects
 				(font
@@ -37769,7 +37792,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 257.302 100.33 90)
 			(effects
 				(font
@@ -38296,7 +38319,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 53.34 191.0207 0)
 			(effects
 				(font
@@ -38502,7 +38525,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 104.14 216.4207 0)
 			(effects
 				(font
@@ -38837,7 +38860,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 66.04 216.4207 0)
 			(effects
 				(font
@@ -39306,7 +39329,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 104.14 191.0207 0)
 			(effects
 				(font
@@ -39376,7 +39399,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 91.44 164.3507 0)
 			(effects
 				(font
@@ -39922,7 +39945,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Q_Photo_NPN_EC"
+		(property "Value" "KTR-0602PTD"
 			(at 53.34 216.4207 0)
 			(effects
 				(font
@@ -40122,7 +40145,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 222.25 142.24 0)
 			(effects
 				(font
@@ -40460,7 +40483,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 196.85 214.63 0)
 			(effects
 				(font
@@ -40873,7 +40896,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 222.25 214.63 0)
 			(effects
 				(font
@@ -41005,7 +41028,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 209.55 142.24 0)
 			(effects
 				(font
@@ -41547,7 +41570,7 @@
 				)
 			)
 		)
-		(property "Value" "IR"
+		(property "Value" "KTR-0602IRC-850"
 			(at 196.85 162.56 0)
 			(effects
 				(font

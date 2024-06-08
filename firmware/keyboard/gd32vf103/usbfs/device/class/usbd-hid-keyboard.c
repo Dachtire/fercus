@@ -136,9 +136,9 @@ const usb_hid_desc_config_set usbd_kb_config_desc =
             .bLength         = USB_EP_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_EP
         },
-        .bEndpointAddress     = USBD_EP_IN_KB,
+        .bEndpointAddress     = USBD_EP_IN_KYBD,
         .bmAttributes         = USB_EP_ATTR_INT,
-        .wMaxPacketSize       = HID_KB_IN_PACKET,
+        .wMaxPacketSize       = HID_KYBD_IN_PACKET,
         .bInterval            = 0x01U
     },
 
@@ -149,9 +149,9 @@ const usb_hid_desc_config_set usbd_kb_config_desc =
             .bLength         = USB_EP_DESC_LEN,
             .bDescriptorType = USB_DESCTYPE_EP
         },
-        .bEndpointAddress     = USBD_EP_OUT_KB,
+        .bEndpointAddress     = USBD_EP_OUT_KYBD,
         .bmAttributes         = USB_EP_ATTR_INT,
-        .wMaxPacketSize       = HID_KB_OUT_PACKET,
+        .wMaxPacketSize       = HID_KYBD_OUT_PACKET,
         .bInterval            = 0x01U
     }
 };
@@ -326,7 +326,7 @@ const uint8_t usbd_kb_report_desc[USBD_REPORT_DESC_SIZE_KB] = {
 //
 //    hid->sent_flag = 0U;
 //
-//    usbd_ep_send(udev, USBD_EP_IN_KB, report, USBD_REPORT_BYTE_KB);
+//    usbd_ep_send(udev, USBD_EP_IN_KYBD, report, USBD_REPORT_BYTE_KB);
 //
 //    return USBD_OK;
 //}
@@ -362,7 +362,7 @@ const uint8_t usbd_kb_report_desc[USBD_REPORT_DESC_SIZE_KB] = {
 //    usbd_ep_setup (udev, &(hid_kb_config_desc.epin));
 //    usbd_ep_setup (udev, &(hid_kb_config_desc.epout));
 //
-//    usbd_ep_recev (udev, USBD_EP_OUT_KB, hid_handler.data_out, USBD_REPORT_RECEV_SIZE_KB);
+//    usbd_ep_recev (udev, USBD_EP_OUT_KYBD, hid_handler.data_out, USBD_REPORT_RECEV_SIZE_KB);
 //
 //    hid_handler.sent_flag = 1U;
 //    hid_handler.receive_flag = 1U;
@@ -386,8 +386,8 @@ const uint8_t usbd_kb_report_desc[USBD_REPORT_DESC_SIZE_KB] = {
 //static uint8_t hid_kb_deinit (usb_dev *udev, uint8_t config_index)
 //{
 //     deinitialize HID endpoints
-//    usbd_ep_clear(udev, USBD_EP_IN_KB);
-//    usbd_ep_clear(udev, USBD_EP_OUT_KB);
+//    usbd_ep_clear(udev, USBD_EP_IN_KYBD);
+//    usbd_ep_clear(udev, USBD_EP_OUT_KYBD);
 //
 //    return USBD_OK;
 //}

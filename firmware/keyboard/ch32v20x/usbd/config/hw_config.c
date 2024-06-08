@@ -34,9 +34,9 @@ void USBWakeUp_IRQHandler(void)
 } 
 
 /*******************************************************************************
- * @fn           USBWakeUp_IRQHandler
+ * @fn           USB_LP_CAN1_RX0_IRQHandler
  *
- * @brief  T     his function handles USB exception.
+ * @brief        This function handles USB exception.
  *
  * @return None
  */
@@ -54,7 +54,18 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
  */
 void Set_USBConfig( )
 {
-	RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_Div3);
+	if( SystemCoreClock == 144000000 )
+    {
+        RCC_USBCLKConfig( RCC_USBCLKSource_PLLCLK_Div3 );
+    }
+    else if( SystemCoreClock == 96000000 )
+    {
+        RCC_USBCLKConfig( RCC_USBCLKSource_PLLCLK_Div2 );
+    }
+    else if( SystemCoreClock == 48000000 )
+    {
+        RCC_USBCLKConfig( RCC_USBCLKSource_PLLCLK_Div1 );
+    }
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);	 		 
 }
 
@@ -67,13 +78,13 @@ void Set_USBConfig( )
  */
 void Enter_LowPowerMode(void)
 {  
+	bDeviceState = SUSPENDED;
  	printf("usb enter low power mode\r\n");
 	USBD_Sleep_Status |= 0x02;
 	if (USBD_Sleep_Status == 0x03)
 	{
 		MCU_Sleep_Wakeup_Operate();
 	}
-	bDeviceState = SUSPENDED;
 } 
 
 /*******************************************************************************
@@ -106,10 +117,12 @@ void USB_Interrupts_Config(void)
 
 	EXTI_ClearITPendingBit(EXTI_Line18);
 	EXTI_InitStructure.EXTI_Line = EXTI_Line18; 
-	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Event;
 	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;	
 	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&EXTI_InitStructure); 	 
+
+    EXTI->INTENR |= EXTI_INTENR_MR18;
 
 	NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;	
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;

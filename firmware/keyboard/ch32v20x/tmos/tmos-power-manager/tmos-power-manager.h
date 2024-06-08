@@ -26,6 +26,11 @@ enum pm_state{
 #define PM_WORKING_TIMEOUT              (1000*60*5)//1min
 #define PM_IDLE_TIMEOUT                 PM_TIMEOUT_FOREVER
 
+extern uint8_t pwr_mgr_trigger;
+
+#define PWR_MGR_TRIG_AUTO 0
+#define PWR_MGR_TRIG_MANNUAL 1
+
 void pm_task_init(void);
 u8 pm_is_in_idle(void);
 void pm_start_working(int working_timeout, int idle_timeout);
