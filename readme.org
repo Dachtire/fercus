@@ -1,6 +1,6 @@
 #+TITLE: Fercus
-Wireless Symmetry Optical Keyboard
-[[./doc/image/overview.jpg]]
+Wireless Symmetry Optical Keyboard[[./doc/image/overview.jpg]]
+
 * Firmware
 ** Connect via RF 2.4GHz Proprietary, BLE 5.3, USB
 ** COMMENT optical switch with diff trigger mode
@@ -10,21 +10,35 @@ Wireless Symmetry Optical Keyboard
 ** COMMENT function
 # - multiple layers
 # - repeat mode
+
 * Hardware
-** low profile optical switch
+** Switch
+6*7 keys of each side, low profile optical switch
 # - raesha low profile optical switch
 # - keychron low profile optical switch
 # - razer low profile optical switch
-** 6*7 keys of each side
+
+** Spec
+Dimension: 133 * 137 * 14.35 mm
+
+Weight of each side: 159 ± 1 g
+
+power input: DC 5V 500mA
+
+# current: 40 mA * 7 * 15 / 1000 = 4.2 mA
+
 ** response time
 |    |       tr |       tf | unit |
 | pt |       18 |        5 | us   |
 # | sw | 200-2000 | 200-2000 | us   |
 The speed of optical switch depends on the speed of finger, the shortest time for finger to press a switch is about 200 us, but usually it takes a few milliseconds.
 Test on mcu's adc at f_adc = 12MHz, f_s = 12 / 14 MHz, resolution = 12 bits. Get the average of the five.
-** dimension: 133 * 137 * 14.35 mm
-** COMMENT current: 40 mA * 7 * 15 / 1000 = 4.2 mA
-* manual
+
+** COMMENT test
+|    | min | typ | max | unit | cond                    |
+| pt | 0.2 |     | 0.3 | V    | ir 20mA, without switch |
+
+* Manual
 ** fn key
 fn1: switch layout
 
@@ -51,19 +65,19 @@ fn4: power on led green. power off led red.
 #+end_src
 - usb2 to connect between left and right
 #+begin_src org
-                ┌────┐              
-                │ pc │              
-                └▲───┘              
-                 │                  
-      ┌───usb────┘                  
-      │                             
-      │      ┌───usb────┐           
-      │      │          │           
-  ┌───▼──┬───▼──┐    ┌──▼───┬──────┐
-  │ usb1 │ usb2 │    │ usb2 │ usb1 │
-  ├──────┴──────┤    ├──────┴──────┤
-  │    left     │    │    right    │
-  └─────────────┘    └─────────────┘
+              ┌────┐                                 ┌────┐              
+              │ pc │                                 │ pc │              
+              └▲───┘                                 └───▲┘              
+               │                                         │               
+    ┌───usb────┘                                         └────usb───┐    
+    │                                                               │    
+    │      ┌───usb────┐                           ┌───usb────┐      │    
+    │      │          │                           │          │      │    
+┌───▼──┬───▼──┐    ┌──▼───┬──────┐     ┌──────┬───▼──┐    ┌──▼───┬──▼───┐
+│ usb1 │ usb2 │    │ usb2 │ usb1 │     │ usb1 │ usb2 │    │ usb2 │ usb1 │
+├──────┴──────┤    ├──────┴──────┤     ├──────┴──────┤    ├──────┴──────┤
+│    left     │    │    right    │     │    left     │    │    right    │
+└─────────────┘    └─────────────┘     └─────────────┘    └─────────────┘
 #+end_src
 
 #               ┌────┐              
@@ -96,6 +110,7 @@ fn4: power on led green. power off led red.
 │    left     │    │    right    │
 └─────────────┘    └─────────────┘
 #+end_src
+
 ** BLE connection
 #+begin_src org
               ┌────┐              
@@ -108,6 +123,7 @@ fn4: power on led green. power off led red.
 │    left     │    │    right    │
 └─────────────┘    └─────────────┘
 #+end_src
+
 ** mix connection
 #+begin_src org
               ┌────┐              
@@ -124,31 +140,38 @@ fn4: power on led green. power off led red.
 │    left     │    │    right    │
 └─────────────┘    └─────────────┘
 #+end_src
+
 ** power
 auto power on/off when usb cable connected/disconnected
 
 when idle for a week, first use fn4 to power off in firmware, then turn off hardware power switch
 
 ** layout
-- qwerty
-[[./doc/keyboard-layout-editor/qwerty.png]]
-* build
+- qwerty[[./doc/keyboard-layout-editor/qwerty.png]]
+
+* Assembly
 ** compoment
-- pcb 1.6mm thinkness
-- plate 1.2mm thinkness
-- nut m2 2.5mm height
-- screw m2 4mm
-- rubber 1mm thinkness
+- pcb 1.6mm thickness
+- plate 1.2mm thickness
+- nut m2 length 2.5mm, od 3mm
+- screw m2 length 4mm
+- rubber 1mm thickness
 - li-on battery 101550 800mAh, molex picoblade 3 pin, 8 cm cable length
 - usb-c to usb-c cable 1 m
 - usb-c to usb-a cable 2 m
-** COMMENT build
-solder nut on plate. If plate made by other material can not be soldered, nut should solder on pcb.
-** COMMENT test
-|    | min | typ | max | unit | cond                    |
-| pt | 0.2 |     | 0.3 | V    | ir 20mA, without switch |
+  
+** COMMENT PCBA
+soldering nut on pcb, or soldering nut on plate
+
+** Overall
+1. Install switches on the plate, the LED position of the switch is facing upwards.
+2. Install the plate to the PCB.[[./doc/image/assembly/assembly-1.jpg]]
+3. Install the screws.[[./doc/image/assembly/assembly-2.jpg]]
+4. Install keycaps.
+
 * Thanks
 [[https://discord.com/channels/715975244896272618][Optical Future Discord]]
+
 * COMMENT FAQ
 ** COMMENT keys layout
 *** thumb
