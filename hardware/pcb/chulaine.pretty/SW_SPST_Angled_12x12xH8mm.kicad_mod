@@ -1,0 +1,152 @@
+(footprint "SW_SPST_Angled_12x12xH8mm"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "tactile switch SPST right angle, PTS645VL39-2 LFS")
+	(tags "tactile switch SPST angled PTS645VL39-2 LFS C&K Button")
+	(property "Reference" "REF**"
+		(at 2.25 2.5 0)
+		(layer "F.SilkS")
+		(uuid "97d0dad4-2435-4ce3-a18e-8b4ae3473531")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "SW_SPST_Angled_12x12xH8mm"
+		(at 2.25 5.38988 0)
+		(layer "F.Fab")
+		(uuid "c6801e5d-c57a-49b5-9f7a-430764bdd278")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ed85a4c2-4a43-4a48-92d5-3191802e61bc")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "2a014755-5f95-414b-a90c-aeecd7aff2da")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "563fa97b-886b-4f0e-8103-49a96fe97329")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_rect
+		(start -3.5 -2.1)
+		(end 8.5 1.3)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "2c5fa24c-59a8-42ec-ad8e-d41a84eff057")
+	)
+	(fp_rect
+		(start -3.5 -4.8)
+		(end 8.5 1.3)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill none)
+		(layer "F.CrtYd")
+		(uuid "2127a7a5-381e-4aee-b074-b685036c1066")
+	)
+	(fp_rect
+		(start -3.5 -2.1)
+		(end 8.5 1.25)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "F.Fab")
+		(uuid "d0539496-a7fb-42bb-97ac-3b56b186f87c")
+	)
+	(fp_rect
+		(start -0.9 -6.75)
+		(end 5.9 1.25)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "F.Fab")
+		(uuid "0e4bfbf2-f1e1-44f4-a9a9-6bd1a9603ca3")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 2.25 2.5 0)
+		(layer "F.Fab")
+		(uuid "97dac3f0-be47-48a8-b709-380d6b3c6c3f")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 2.1 2.1)
+		(drill 1.3)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "a485cb7a-1b80-44ed-bda9-bf9954c78ac2")
+	)
+	(pad "2" thru_hole circle
+		(at 5 0)
+		(size 2.1 2.1)
+		(drill 1.3)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "5199bd8c-0182-412e-8b49-0197d7e107ff")
+	)
+	(model "${KICAD8_3DMODEL_DIR}/Button_Switch_THT.3dshapes/SW_Tactile_SPST_Angled_PTS645Vx39-2LFS.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

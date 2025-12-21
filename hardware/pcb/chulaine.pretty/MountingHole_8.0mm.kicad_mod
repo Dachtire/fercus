@@ -1,0 +1,110 @@
+(footprint "MountingHole_8.0mm"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "Mounting Hole 6.5mm, no annular")
+	(tags "mounting hole 6.5mm no annular")
+	(property "Reference" "REF**"
+		(at 0 -7.5 0)
+		(layer "F.SilkS")
+		(uuid "37f1278a-aa7a-48ad-9b89-d83d3f5bd233")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "MountingHole_8.0mm"
+		(at 0 7.5 0)
+		(layer "F.Fab")
+		(uuid "b595de61-bb87-4b35-bfe2-d0314393ceaa")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "662b6231-1ee8-4fdf-9fcc-d6d73761efa3")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "fff0ea7c-9fd4-44e7-a040-25a351f0da31")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d01ad1c6-ab9d-4383-a3be-f92b579af138")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr exclude_from_pos_files exclude_from_bom)
+	(fp_circle
+		(center 0 0)
+		(end 6.5 0)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(fill none)
+		(layer "Cmts.User")
+		(uuid "0466ae85-3bad-41eb-b6cf-616c4b24073e")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 6.75 0)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill none)
+		(layer "F.CrtYd")
+		(uuid "5b013b9f-b9ac-4472-8d90-943de3bbd993")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "d9454e1a-3d17-4872-b2e3-3249517d3de3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "" np_thru_hole circle
+		(at 0 0)
+		(size 8 8)
+		(drill 8)
+		(layers "F&B.Cu" "*.Mask")
+		(uuid "c3c8b782-005b-43a5-bc2b-6b221aec4bce")
+	)
+)

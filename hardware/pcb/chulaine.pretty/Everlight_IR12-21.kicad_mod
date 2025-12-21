@@ -1,0 +1,240 @@
+(footprint "Everlight_IR12-21"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at -4 0 -90)
+		(layer "F.SilkS")
+		(uuid "896c65fe-0bdc-4da7-bea9-1729eed99703")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Everlight_IR12-21"
+		(at 0 -2.6 180)
+		(layer "F.Fab")
+		(uuid "64e2938f-5990-460f-bdb9-4605abce0906")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" "Everlight_IR12-21"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f317b21c-3679-43f5-a4ff-2770ccb05a52")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6bee41c6-a412-48ab-be65-772328fd9eb0")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "cec9d8de-803b-4379-a51c-2cb95007b925")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -2.4 1.2)
+		(end -2.4 -0.5)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5b0fc259-5f14-4387-af8e-d32c7d8bce36")
+	)
+	(fp_line
+		(start -0.675 0.525)
+		(end -0.875 0.525)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "527255a1-2ed0-4282-b359-b6f9fdaf55d9")
+	)
+	(fp_line
+		(start 0.875 0.525)
+		(end 0.675 0.525)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "37707aa3-89ed-45cc-ba84-11dbb92c01c8")
+	)
+	(fp_line
+		(start 2.4 1.2)
+		(end -2.4 1.2)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "8fdbde87-893b-4585-90e8-8bde6f555b52")
+	)
+	(fp_poly
+		(pts
+			(xy -2 1.5) (xy -1 2) (xy -2 2.5)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill solid)
+		(layer "F.SilkS")
+		(uuid "7ded084b-76c3-4461-bdd4-69e9d8fa1a21")
+	)
+	(fp_line
+		(start -2.4 -1.7)
+		(end 2.4 -1.7)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "b02b006e-1039-435b-98dc-482ddd3baa20")
+	)
+	(fp_line
+		(start -2.4 1.2)
+		(end -2.4 -1.7)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "38704372-842b-41be-9557-80cac6ac286b")
+	)
+	(fp_line
+		(start 2.4 -1.7)
+		(end 2.4 1.2)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "8f1a80a3-f211-4860-84c6-7383bd504926")
+	)
+	(fp_line
+		(start 2.4 1.2)
+		(end -2.4 1.2)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "5533191a-da18-4ead-a651-8d40f8cc470d")
+	)
+	(fp_line
+		(start -1.5 -0.7)
+		(end -1.5 0.4)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "539737af-3673-4bdb-90bd-6d5ab577280a")
+	)
+	(fp_line
+		(start -1.5 0.4)
+		(end 1.5 0.4)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "73d0c069-3d3b-43b8-8334-1a6a09547f71")
+	)
+	(fp_line
+		(start 1.5 -0.7)
+		(end -1.5 -0.7)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "a9d991f5-159e-4cc9-bc6a-fc749c1edf0b")
+	)
+	(fp_line
+		(start 1.5 0.4)
+		(end 1.5 -0.7)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "80827eab-db82-4385-bca1-1951171b06eb")
+	)
+	(fp_arc
+		(start -0.9 -0.7)
+		(mid 0 -1.6)
+		(end 0.9 -0.7)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "7c3192f0-73bd-4362-b5fd-7a624a30e0a4")
+	)
+	(pad "1" smd roundrect
+		(at -1.5 0)
+		(size 0.8 1.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(roundrect_rratio 0.15)
+		(uuid "02035362-47a7-4d14-9ff7-c5dead837d83")
+	)
+	(pad "2" smd roundrect
+		(at 1.5 0)
+		(size 0.8 1.4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(roundrect_rratio 0.15)
+		(uuid "2a373aec-7fa6-4adb-a8ea-7f5d2f7b48de")
+	)
+	(pad "3" smd roundrect
+		(at 0 0.55)
+		(size 0.9 0.6)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(roundrect_rratio 0.15)
+		(uuid "12d8b0c1-630f-4baa-b77b-ee220160eed9")
+	)
+	(model "${KISYS3DMOD}/LED_SMD.3dshapes/LED_0603_1608Metric.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
